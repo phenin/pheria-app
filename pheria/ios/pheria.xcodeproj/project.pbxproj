@@ -14,6 +14,7 @@
 		3F191AFED9B2AC1627C32597 /* libPods-pheria-pheriaTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DC9B256E7A9C172528534016 /* libPods-pheria-pheriaTests.a */; };
 		5F17ED6522F87B571F235D01 /* libPods-pheria.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AC69848520B96D43F07C2C19 /* libPods-pheria.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		D547411E26A4281300782190 /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = D547411D26A4281300782190 /* Fonts */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,6 +42,7 @@
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = pheria/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		AC69848520B96D43F07C2C19 /* libPods-pheria.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-pheria.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B2E913671BCC530E97476EC4 /* Pods-pheria.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-pheria.release.xcconfig"; path = "Target Support Files/Pods-pheria/Pods-pheria.release.xcconfig"; sourceTree = "<group>"; };
+		D547411D26A4281300782190 /* Fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Fonts; path = "../node_modules/react-native-vector-icons/Fonts"; sourceTree = "<group>"; };
 		DC9B256E7A9C172528534016 /* libPods-pheria-pheriaTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-pheria-pheriaTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		FC6203C68A7333181C14EF83 /* Pods-pheria-pheriaTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-pheria-pheriaTests.release.xcconfig"; path = "Target Support Files/Pods-pheria-pheriaTests/Pods-pheria-pheriaTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -86,6 +88,7 @@
 		13B07FAE1A68108700A75B9A /* pheria */ = {
 			isa = PBXGroup;
 			children = (
+				D547411D26A4281300782190 /* Fonts */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -145,7 +148,6 @@
 				5E06B890A43450246E137826 /* Pods-pheria-pheriaTests.debug.xcconfig */,
 				FC6203C68A7333181C14EF83 /* Pods-pheria-pheriaTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -243,6 +245,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D547411E26A4281300782190 /* Fonts in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 			);

@@ -12,6 +12,8 @@ target 'pheria' do
     :hermes_enabled => false
   )
 
+  pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
+
   target 'pheriaTests' do
     inherit! :complete
     # Pods for testing
