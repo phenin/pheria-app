@@ -26,53 +26,20 @@ const Stack = createStackNavigator();
 const store = configureStore();
 
 function App() {
-  const [token, setToken] = React.useState(null)
-
-  React.useEffect(()=>{
-    _retrieveData()
-  },[])
-
   _retrieveData = async () => {
     try {
       const value = await AsyncStorage.getItem('accessToken');
-        if (value !== null) {
-        // We have data!!
-        setToken(value)
-      }
+      return value
     } catch (error) {
-      // Error retrieving data
+      return null
     }
   };
 
-  const theme = extendTheme({
-    colors: {
-      // Add new color
-      primary: {
-        50: '#FFFFFF',
-        100: '#C5E4F3',
-        200: '#A2D4EC',
-        300: '#7AC1E4',
-        400: '#47A9DA',
-        500: '#0088CC',
-        600: '#007AB8',
-        700: '#006BA1',
-        800: '#005885',
-        900: '#000000',
-      },
-      // Redefinig only one shade, rest of the color will remain same.
-      amber: {
-        400: '#d97706',
-      },
-    },
-    config: {
-      // Changing initialColorMode to 'dark'
-      initialColorMode: 'dark',
-    },
-  });
+  const [token, setToken] = React.useState(_retrieveData())
 
   return (
     <Provider store={store}>
-      <NativeBaseProvider theme={theme}>
+      <NativeBaseProvider >
         <NavigationContainer>
           <Stack.Navigator initialRouteName="Home">
             {
