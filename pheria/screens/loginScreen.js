@@ -23,7 +23,6 @@ export default function LoginScreen() {
   const [form, setForm] = React.useState({})
 
   const handleChangeInput = (key, value) => {
-    console.log(key, value)
     setForm({
       ...form, 
       [key]: value
@@ -31,7 +30,6 @@ export default function LoginScreen() {
   }
 
   const handleSubmit = () => {
-    console.log(form)
     dispatch(login(form))
     
   }

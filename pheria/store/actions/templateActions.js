@@ -1,7 +1,7 @@
 import * as ActionTypes from '../actionTypes'
 import {
   fetchListTemplate,
-} from 'api/template'
+} from '../../api/template'
 
 export const getListTemplate = (params) => async (dispatch, getState) => {
   dispatch({

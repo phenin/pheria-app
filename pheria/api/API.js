@@ -2,8 +2,10 @@ import axios from "axios";
 import { AsyncStorage } from 'react-native';
 
 _retrieveData = async (key) => {
+  
   try {
     const value = await AsyncStorage.getItem(key);
+    console.log('key', value)
     if (value !== null) {
       return value
     }
@@ -37,8 +39,9 @@ axiosInstance.CancelToken = axios.CancelToken;
 axiosInstance.isCancel = axios.isCancel;
 
 axiosInstance.interceptors.request.use(
-  (config) => {
-    const accessToken = _retrieveData("accessToken");
+  async (config) => {
+    const accessToken = await _retrieveData("accessToken");
+    console.log("cc",accessToken)
     if (accessToken) {
       config.headers['Authorization'] = `Bearer ${accessToken}`
     }
@@ -54,7 +57,6 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   function (error) {
-    console.log(error.config)
     const originalRequest = error.config;
     let refreshToken = _retrieveData("refreshToken");
     if (

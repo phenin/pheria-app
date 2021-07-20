@@ -4,7 +4,7 @@ import {
   fetchDetailStory,
   fetchCreateStory,
   fetchUpdateStory
-} from 'api/story'
+} from '../../api/story'
 
 export const getListStory = (params) => async (dispatch, getState) => {
   dispatch({
