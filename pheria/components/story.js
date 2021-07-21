@@ -1,44 +1,32 @@
 import * as React from 'react';
 import {
   Box,
-  Image,
-  extendTheme,
-  NativeBaseProvider
 } from 'native-base';
-import { Dimensions } from "react-native";
-
-const window = Dimensions.get("window");
-const screen = Dimensions.get("screen");
+import { ImageBackground } from "react-native";
 
 function Story({data}) {
-
-  const [heigth, setHeight] = React.useState(window.width)
-
-  const theme = extendTheme({
-    components: {
-      Image: {
-        baseStyle: {
-          width: 400,
-          color: 'white'
-        },
-      }
-    },
-  });
-
+  const image = data.image ? {uri: data.image} : require('../images/imagenull.png')
   return (
-    <NativeBaseProvider theme={theme}>
-      <Box >
-        <Image
-          source={{
-            uri: data.image,
-          }}
-          alt="Alternate Text"
-          size={"xl"}
-        />
-      </Box>
-    </NativeBaseProvider>
-    
+    <Box bg="#1d232c" style={{
+      flex: 1,
+      justifyContent: "center",
+      width: 250,
+      margin: 10,
+      heigh: 400 }}>
+      <ImageBackground
+        source={image}
+        resizeMode="cover"
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          width: 250,
+          height:400
+        }}
+      >
+      </ImageBackground>
+    </Box>
   );
 }
+
 
 export default Story;

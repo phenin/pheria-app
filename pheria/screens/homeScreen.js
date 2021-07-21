@@ -1,8 +1,9 @@
 import * as React from 'react';
 import {
   NativeBaseProvider,
-  Center,
-  extendTheme
+  Box,
+  extendTheme,
+  ScrollView
 } from 'native-base';
 import Story from '../components/story'
 import { getListStory } from '../store/actions/storyActions'
@@ -22,17 +23,22 @@ function HomeScreen({ navigation }) {
       
     },
   });
+  
   return (
     <NativeBaseProvider theme={theme}>
-      <Center>
-        {
-          state.listStory.map((item, index)=>{
-            return  (
-              <Story data={item} key={index}/> 
-            )
-          })
-        }
-      </Center>
+      <Box flex={1}>
+        <ScrollView>
+          <Box style={{flex: 1}}>
+            {
+              state.listStory.map((item, index)=>{
+                return  (
+                  <Story data={item} key={index}/> 
+                )
+              })
+            }
+          </Box>
+        </ScrollView>
+      </Box>
     </NativeBaseProvider>
   );
 }
