@@ -2,16 +2,17 @@ import 'react-native-gesture-handler';
 import * as React from 'react';
 import { AsyncStorage } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { AnimatedTabBarNavigator } from 'react-native-animated-nav-tab-bar'
 import { Provider } from 'react-redux'
 import { NativeBaseProvider } from 'native-base';
+import Icon from 'react-native-vector-icons/Octicons';
 
 import LoginScreen from "./screens/loginScreen"
 import HomeScreen from "./screens/homeScreen"
 import configureStore from './store/configureStore'
 
-const Stack = createStackNavigator();
 const store = configureStore();
+const Tabs = AnimatedTabBarNavigator();
 
 function App() {
   _retrieveData = async () => {
@@ -29,21 +30,33 @@ function App() {
     <Provider store={store}>
       <NativeBaseProvider >
         <NavigationContainer>
-          <Stack.Navigator initialRouteName="Home">
+          <Tabs.Navigator initialRouteName="Home">
             {
               token ? (
                 <>
-                  <Stack.Screen name="Home" component={HomeScreen} options={{headerShown: false}}/>
+                  <Tabs.Screen name="Home" component={HomeScreen}
+                  options={{
+                    headerShown: false,
+                    tabBarIcon: ({ focused, color, size }) => (
+                        <Icon
+                            name="home"
+                            size={size ? size : 24}
+                            color={focused ? color : "#ffffff"}
+                            focused={focused}
+                            color={color}
+                        />
+                    )
+                  }}/>
                 </>
               )
               : (
                 <>
-                  <Stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}} />
+                  <Tabs.Screen name="Login" component={LoginScreen} options={{headerShown: false}} />
                 </>
               )
             }
             
-          </Stack.Navigator>
+          </Tabs.Navigator>
         </NavigationContainer>
       </NativeBaseProvider>
       

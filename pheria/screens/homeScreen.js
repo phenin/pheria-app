@@ -26,7 +26,7 @@ function HomeScreen({ navigation }) {
   
   return (
     <NativeBaseProvider theme={theme}>
-      <Box flex={1}>
+      <Box flex={1} bg="#000">
         <ScrollView>
           <Box style={{flex: 1}}>
             {
@@ -38,6 +38,7 @@ function HomeScreen({ navigation }) {
             }
           </Box>
         </ScrollView>
+        
       </Box>
     </NativeBaseProvider>
   );

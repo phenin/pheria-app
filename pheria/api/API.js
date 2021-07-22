@@ -5,7 +5,6 @@ _retrieveData = async (key) => {
   
   try {
     const value = await AsyncStorage.getItem(key);
-    console.log('key', value)
     if (value !== null) {
       return value
     }
@@ -41,7 +40,6 @@ axiosInstance.isCancel = axios.isCancel;
 axiosInstance.interceptors.request.use(
   async (config) => {
     const accessToken = await _retrieveData("accessToken");
-    console.log("cc",accessToken)
     if (accessToken) {
       config.headers['Authorization'] = `Bearer ${accessToken}`
     }
@@ -156,7 +154,6 @@ export function customFetch(func, params) {
             })
             .catch(async (error) => {
                 if (error) {
-                    console.error(error)
                     const errorMessage = error.json && await error.json()
 
                     if (

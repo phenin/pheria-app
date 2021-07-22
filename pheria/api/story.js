@@ -26,7 +26,6 @@ export const fetchDetailStory = (params) => {
 }
 
 export const fetchCreateStory = (params) => {
-  console.log(params)
   return new Promise((resolve, reject) => {
     customFetch(create, params)
       .then(data => resolve(data))

@@ -8,7 +8,6 @@ import {
 } from '../../api/user'
 
 _storeData = async (key,value) => {
-  console.log(key,value)
   try {
     await AsyncStorage.setItem(
       key,value
