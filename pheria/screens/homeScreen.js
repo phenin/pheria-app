@@ -1,53 +1,55 @@
 import * as React from 'react';
-import {
-  NativeBaseProvider,
-  Box,
-  extendTheme,
-  ScrollView
-} from 'native-base';
-import Story from '../components/story'
-import { getListStory } from '../store/actions/storyActions'
-import { useSelector, shallowEqual, useDispatch } from 'react-redux'
+import { AnimatedTabBarNavigator } from 'react-native-animated-nav-tab-bar'
+import Icon from 'react-native-vector-icons/Octicons';
+import UserScreen from "./userScreen"
+import ListStoryScreen from "./listStoryScreen"
+
+const Tabs = AnimatedTabBarNavigator();
 
 function HomeScreen({ navigation }) {
 
-  const state = useSelector(stateSelector, shallowEqual)
-  const dispatch = useDispatch()
-
-  React.useEffect(()=>{
-    dispatch(getListStory())
-  },[dispatch, getListStory])
-
-  const theme = extendTheme({
-    components: {
-      
-    },
-  });
-  
   return (
-    <NativeBaseProvider theme={theme}>
-      <Box flex={1} bg="#000" style={{paddingTop:30, paddingBottom: 30}}>
-        <ScrollView>
-          <Box style={{flex: 1}} style={{marginTop:30, marginBottom: 30}}>
-            {
-              state.listStory.map((item, index)=>{
-                return  (
-                  <Story data={item} key={index}/> 
-                )
-              })
-            }
-          </Box>
-        </ScrollView>
-        
-      </Box>
-    </NativeBaseProvider>
-  );
-}
+    <Tabs.Navigator initialRouteName="Home"
+      appearance={{
+        floating: true,
+      }}
+      tabBarOptions={{
+        activeTintColor: "#fff",
+        activeBackgroundColor: "#000",
+        inactiveTintColor: "#000",
 
-function stateSelector(state) {
-  return {
-    listStory: state.story.listStory,
-  }
+      }}
+    >
+      <Tabs.Screen name="Home" component={ListStoryScreen}
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ focused, color, size }) => (
+              <Icon
+                  name="home"
+                  size={size ? size : 24}
+                  color={focused ? color : "#000"}
+                  focused={focused}
+                  color={color}
+              />
+          )
+        }}
+      />
+      <Tabs.Screen name="User" component={UserScreen}
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ focused, color, size }) => (
+              <Icon
+                  name="person"
+                  size={size ? size : 24}
+                  color={focused ? color : "#000"}
+                  focused={focused}
+                  color={color}
+              />
+          )
+        }}
+      />
+    </Tabs.Navigator>
+  );
 }
 
 export default HomeScreen;

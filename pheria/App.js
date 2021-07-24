@@ -6,6 +6,7 @@ import { AnimatedTabBarNavigator } from 'react-native-animated-nav-tab-bar'
 import { Provider } from 'react-redux'
 import { NativeBaseProvider } from 'native-base';
 import Icon from 'react-native-vector-icons/Octicons';
+import { createStackNavigator } from '@react-navigation/stack';
 
 import LoginScreen from "./screens/loginScreen"
 import HomeScreen from "./screens/homeScreen"
@@ -15,6 +16,7 @@ import configureStore from './store/configureStore'
 
 const store = configureStore();
 const Tabs = AnimatedTabBarNavigator();
+const Stack = createStackNavigator();
 
 function App() {
   _retrieveData = async () => {
@@ -32,60 +34,18 @@ function App() {
     <Provider store={store}>
       <NativeBaseProvider >
         <NavigationContainer>
-          <Tabs.Navigator initialRouteName="Home"
-          appearance={{
-            floating: true,
-          }}
-          tabBarOptions={{
-            activeTintColor: "#fff",
-            activeBackgroundColor: "#000",
-            inactiveTintColor: "#000",
-
-          }}>
+          <Stack.Navigator initialRouteName="Home">
             {
               token ? (
                 <>
-                  <Tabs.Screen name="Home" component={HomeScreen}
-                    options={{
-                      headerShown: false,
-                      tabBarIcon: ({ focused, color, size }) => (
-                          <Icon
-                              name="home"
-                              size={size ? size : 24}
-                              color={focused ? color : "#000"}
-                              focused={focused}
-                              color={color}
-                          />
-                      )
-                    }}
-                  />
-                  <Tabs.Screen name="User" component={UserScreen}
-                    options={{
-                      headerShown: false,
-                      tabBarIcon: ({ focused, color, size }) => (
-                          <Icon
-                              name="person"
-                              size={size ? size : 24}
-                              color={focused ? color : "#000"}
-                              focused={focused}
-                              color={color}
-                          />
-                      )
-                    }}
-                  />
+                  <Stack.Screen name="Home" component={HomeScreen} options={{headerShown: false}} />
                 </>
-              )
-              : (
-                <>
-                  <Tabs.Screen name="Login" component={LoginScreen} options={{headerShown: false}} />
-                </>
-              )
+              ):
+              <Stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}} />
             }
-            
-          </Tabs.Navigator>
+          </Stack.Navigator>
         </NavigationContainer>
       </NativeBaseProvider>
-      
     </Provider>
   );
 }
