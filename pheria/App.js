@@ -9,6 +9,8 @@ import Icon from 'react-native-vector-icons/Octicons';
 
 import LoginScreen from "./screens/loginScreen"
 import HomeScreen from "./screens/homeScreen"
+import UserScreen from "./screens/userScreen"
+
 import configureStore from './store/configureStore'
 
 const store = configureStore();
@@ -30,23 +32,47 @@ function App() {
     <Provider store={store}>
       <NativeBaseProvider >
         <NavigationContainer>
-          <Tabs.Navigator initialRouteName="Home">
+          <Tabs.Navigator initialRouteName="Home"
+          appearance={{
+            floating: true,
+          }}
+          tabBarOptions={{
+            activeTintColor: "#fff",
+            activeBackgroundColor: "#000",
+            inactiveTintColor: "#000",
+
+          }}>
             {
               token ? (
                 <>
                   <Tabs.Screen name="Home" component={HomeScreen}
-                  options={{
-                    headerShown: false,
-                    tabBarIcon: ({ focused, color, size }) => (
-                        <Icon
-                            name="home"
-                            size={size ? size : 24}
-                            color={focused ? color : "#ffffff"}
-                            focused={focused}
-                            color={color}
-                        />
-                    )
-                  }}/>
+                    options={{
+                      headerShown: false,
+                      tabBarIcon: ({ focused, color, size }) => (
+                          <Icon
+                              name="home"
+                              size={size ? size : 24}
+                              color={focused ? color : "#000"}
+                              focused={focused}
+                              color={color}
+                          />
+                      )
+                    }}
+                  />
+                  <Tabs.Screen name="User" component={UserScreen}
+                    options={{
+                      headerShown: false,
+                      tabBarIcon: ({ focused, color, size }) => (
+                          <Icon
+                              name="person"
+                              size={size ? size : 24}
+                              color={focused ? color : "#000"}
+                              focused={focused}
+                              color={color}
+                          />
+                      )
+                    }}
+                  />
                 </>
               )
               : (

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {
-  Box,
+  Box, Text, Center
 } from 'native-base';
 import { ImageBackground } from "react-native";
 import {vw, vh} from "../plugins/viewport-unit"
@@ -29,6 +29,9 @@ function Story({data}) {
           borderRadius: 30,
         }}
       >
+        <Center>
+          <Text style={{color: '#fff'}} fontSize="3xl">{data.title}</Text>
+        </Center>
       </ImageBackground>
     </Box>
   );

@@ -5,18 +5,18 @@ import {
   extendTheme,
   ScrollView
 } from 'native-base';
-import Story from '../components/story'
-import { getListStory } from '../store/actions/storyActions'
+// import Story from '../components/story'
+// import { getListStory } from '../store/actions/storyActions'
 import { useSelector, shallowEqual, useDispatch } from 'react-redux'
 
-function HomeScreen({ navigation }) {
+function UserScreen({ navigation }) {
 
   const state = useSelector(stateSelector, shallowEqual)
   const dispatch = useDispatch()
 
-  React.useEffect(()=>{
-    dispatch(getListStory())
-  },[dispatch, getListStory])
+  // React.useEffect(()=>{
+  //   dispatch(getListStory())
+  // },[dispatch, getListStory])
 
   const theme = extendTheme({
     components: {
@@ -26,16 +26,10 @@ function HomeScreen({ navigation }) {
   
   return (
     <NativeBaseProvider theme={theme}>
-      <Box flex={1} bg="#000" style={{paddingTop:30, paddingBottom: 30}}>
+      <Box flex={1} bg="#000" >
         <ScrollView>
-          <Box style={{flex: 1}} style={{marginTop:30, marginBottom: 30}}>
-            {
-              state.listStory.map((item, index)=>{
-                return  (
-                  <Story data={item} key={index}/> 
-                )
-              })
-            }
+          <Box style={{flex: 1}} style={{marginTop:30}}>
+            jf;sà
           </Box>
         </ScrollView>
         
@@ -50,4 +44,4 @@ function stateSelector(state) {
   }
 }
 
-export default HomeScreen;
+export default UserScreen;
