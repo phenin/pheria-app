@@ -9,7 +9,7 @@ import Story from '../components/story'
 import { getListStory } from '../store/actions/storyActions'
 import { useSelector, shallowEqual, useDispatch } from 'react-redux'
 
-function ListStoryScreen() {
+function ListStoryScreen({navigation}) {
 
   const state = useSelector(stateSelector, shallowEqual)
   const dispatch = useDispatch()
@@ -32,7 +32,7 @@ function ListStoryScreen() {
             {
               state.listStory.map((item, index)=>{
                 return  (
-                  <Story data={item} key={index}/> 
+                  <Story data={item} key={index} navigation={navigation}/> 
                 )
               })
             }

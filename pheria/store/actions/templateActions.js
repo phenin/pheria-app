@@ -2,6 +2,7 @@ import * as ActionTypes from '../actionTypes'
 import {
   fetchListTemplate,
 } from '../../api/template'
+import {REACT_APP_API} from "../../constants"
 
 export const getListTemplate = (params) => async (dispatch, getState) => {
   dispatch({
@@ -41,7 +42,7 @@ export const setTemplate = (template) => async (dispatch, getState) => {
   const images =template && template.image.map(image => {
     return {
       ...image,
-      url: image.url ? `${process.env.REACT_APP_API}/${image.url}` : image
+      url: image.url ? `${REACT_APP_API}/${image.url}` : image
     }
   })
   const templateClone = {
