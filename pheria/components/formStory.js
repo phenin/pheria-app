@@ -8,6 +8,7 @@ import {
 } from 'native-base';
 import { useSelector, shallowEqual } from 'react-redux'
 import {vw, vh} from "../plugins/viewport-unit"
+import UploadImage from "./uploadImage"
 
 function FormStory({template, type, imageTemplate}) {
 
@@ -45,6 +46,7 @@ function FormStory({template, type, imageTemplate}) {
             placeholderTextColor: color,
             color: color
           }}/>
+          <UploadImage/>
       </Box>
     </NativeBaseProvider>
   );
