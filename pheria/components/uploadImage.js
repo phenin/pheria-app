@@ -1,73 +1,106 @@
-import * as React from 'react';
+import React, { Component } from "react";
 import {
-  Box, Text, Center
-} from 'native-base';
-import { TouchableOpacity, Image, Button, Platform } from "react-native";
-import {vw, vh} from "../plugins/viewport-unit"
-import { useDispatch } from 'react-redux'
-import { getDetailStory } from '../store/actions/storyActions'
-import { REACT_APP_API } from '../constants'
-import ImagePicker from 'react-native-image-crop-picker';
-import { post } from '../api/API'
+  Platform,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
+import ImagePicker from "react-native-image-crop-picker";
+import axios from "axios"
+export default class UploadImage extends Component {
+  constructor() {
+    super();
+    this.state = {
+      imageUri: null
+    };
+  }
 
-const createFormData = (photo, body = {}) => {
-  const data = new FormData();
-
-  data.append('file', photo);
-
-  return data;
-};
-
-function UploadImage ({data, navigation}) {
-  const dispatch = useDispatch()
-  const [photo, setPhoto] = React.useState(null);
-
-  const handleChoosePhoto = async () => {
-    
-    ImagePicker.openPicker({
-      width: 300,
-      height: 400,
-      cropping: false
-    }).then(image => {
-      setPhoto(image)
-    });
-  };
-
-  const handleUploadPhoto = () => {
-    console.log('ccc', createFormData(photo)._parts)
-    post(`${REACT_APP_API}/api/upload-image`,
-    { headers: {
-      "Content-Type": "multipart/form-data",
-      "Accept": "application/json",
-      "type": "formData"
-    }},
-        createFormData(photo)._parts, 
-      )
+  uploadImage = async () => {
+    // Check selected image is not null
+    if (this.state.imageUri != null) {
+     
+      const selectedImage = this.state.imageUri;
+      console.log("+++++ selected url "+selectedImage);
+      const data = new FormData();
+      data.append("image", {
+        name: selectedImage.filename,
+        type: selectedImage.mime,
+        uri:
+          Platform.OS === "android"
+            ? selectedImage.sourceURL
+            : selectedImage.sourceURL.replace("file://", "")
+      });
+      // Change file upload URL
+      const config = {
+        method: 'post',
+        url: 'https://api.imgur.com/3/image',
+        headers: { 
+          'Authorization': 'Client-ID 574f96546392ad0', 
+          'Accept': 'multipart/form-data',
+          'Content-Type': 'multipart/form-data',
+        },
+        data : data
+      };
+      axios(config)
       .then((response) => {
-        console.log('response ccc', response);
+        console.log(JSON.stringify(response.data));
       })
       .catch((error) => {
         console.log('error ccc', error);
       });
+      // let responseJson = await res.json();
+      // if (responseJson.status.response == "success") {
+      //   Alert.alert("Profile picture updated Successful");
+      // }else{
+      //   Alert.alert("Something went wrong, please try again");
+      // }
+    } else {
+      // Validation Alert
+      Alert.alert("Please Select image first");
+    }
   };
 
-  return (
-    <Box bg="#1d232c" >
-      {photo ? (
-        <>
-          <Image
-            source={{ uri: photo.uri }}
-            style={{ width: 300, height: 300 }}
-          />
-          <Button title="Upload Photo" onPress={handleUploadPhoto} />
-        </>
-      ) :
-      <Button title="Choose Photo" onPress={handleChoosePhoto} />
-      }
-      
-    </Box>
-  );
+  pickImage = () => {
+    console.log("ccc")
+    ImagePicker.openPicker({
+      cropping: false
+    }).then(image => {
+      console.log(image);
+      this.setState({ imageUri: image });
+    });
+  };
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <TouchableOpacity onPress={() => this.pickImage()}>
+          <Text style={styles.welcome}>Select Image</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => this.uploadImage()}>
+          <Text style={styles.welcome}>Upload Image</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 }
 
-
-export default UploadImage;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#F5FCFF"
+  },
+  welcome: {
+    fontSize: 20,
+    textAlign: "center",
+    margin: 10
+  },
+  instructions: {
+    textAlign: "center",
+    color: "#333333",
+    marginBottom: 5
+  }
+});
