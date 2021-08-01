@@ -2,12 +2,13 @@ import * as React from 'react';
 
 import FormStory from "../components/formStory"
 import ListGroupTemplate from "../components/listGroupTemplate"
+import HeaderCreateStory from "../components/headerCreateStory"
 import { setStory } from "../store/actions/storyActions"
 import { useSelector, shallowEqual, useDispatch } from 'react-redux'
-import {vw, vh} from "../plugins/viewport-unit"
+import { vh } from "../plugins/viewport-unit"
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
-function CreateStoryScreen({route}) {
+function CreateStoryScreen({navigation}) {
 
   const state = useSelector(stateSelector, shallowEqual)
   const [backgroundColor, setBackgroundColor] = React.useState('#000')
@@ -18,14 +19,11 @@ function CreateStoryScreen({route}) {
 
   React.useEffect(()=>{
     if( background && background.backgroundColor && background.backgroundColor.length > 2 ) {
-      let listColor = ''
-      background.backgroundColor.forEach(color => {
-        listColor = listColor + "#" + color + ", "
-      })
-      setBackgroundColor(`radial-gradient(${listColor})`)
+      
+      setBackgroundColor(`radial-gradient(${background.backgroundColor[0]}, ${background.backgroundColor[1]})`)
     }
     else if ( background && background.backgroundColor.length === 1 ){
-      setBackgroundColor(`#${background.backgroundColor[0]}`)
+      setBackgroundColor(background.backgroundColor[0])
     }
 
     dispatch(setStory(null))
@@ -33,14 +31,15 @@ function CreateStoryScreen({route}) {
   }, [background, setBackgroundColor, dispatch, setStory])
 
   return (
-    <SafeAreaProvider style={{backgroundColor:backgroundColor}}>
+    <SafeAreaProvider style={{backgroundColor: backgroundColor}}>
         <SafeAreaView style={{
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
           height: 100*vh
         }}>
-          <FormStory />
+          <HeaderCreateStory navigation={navigation} color={background && background.color}/>
+          <FormStory color={background && background.color} />
           <ListGroupTemplate />
         </SafeAreaView>
     </SafeAreaProvider>
@@ -50,7 +49,7 @@ function CreateStoryScreen({route}) {
 
 function stateSelector(state) {
   return {
-    background: state.background.background,
+    background: state.story.background,
   }
 }
 

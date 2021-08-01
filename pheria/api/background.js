@@ -4,7 +4,7 @@ const endpoints = {
   get: '/api/background',
 }
 
-export const getList = (params) => get(endpoints.get+ '/' + params.group)
+export const getList = (params) => get(endpoints.get)
 
 export const fetchListBackground = (params) => {
   return new Promise((resolve, reject) => {

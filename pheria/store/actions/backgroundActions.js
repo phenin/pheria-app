@@ -13,12 +13,12 @@ export const getListBackground = (params) => async (dispatch, getState) => {
   })
 
   try {
-    const data = await fetchListBackground(params)
+    const data = await fetchListBackground()
 
     dispatch({
       type: ActionTypes.GET_LIST_BACKGROUND_SUCCESS,
       payload: {
-        listBackground: data.data,
+        listBackground: data.data.background,
         loading: false,
       }
     })

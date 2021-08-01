@@ -5,6 +5,7 @@ import {
   fetchCreateStory,
   fetchUpdateStory
 } from '../../api/story'
+import { v4 as uuidv4 } from 'uuid';
 
 export const getListStory = (params) => async (dispatch, getState) => {
   dispatch({
@@ -118,6 +119,54 @@ export const setStory = (story) => async (dispatch, getState) => {
     type: ActionTypes.SET_STORY,
     payload: {
       story: story
+    }
+  })
+}
+
+export const addTemplate = (template) => async (dispatch, getState) =>{
+
+  const data = [...getState().story.templates, {
+    template,
+    x: 0,
+    y: 400,
+    uuid: uuidv4()
+  }]
+
+  dispatch({
+    type: ActionTypes.SET_STORY,
+    payload: {
+      templates: data
+    }
+  })
+}
+
+export const getBackground = (background) => async (dispatch, getState) =>{
+  
+  dispatch({
+    type: ActionTypes.SET_STORY,
+    payload: {
+      background: {
+        backgroundColor: background.backgroundColor,
+        color: background.color
+      }
+    }
+  })
+}
+
+export const addContent = () => async (dispatch, getState) =>{
+
+  const data = [...getState().story.contents, {
+    width: 100,
+    height: 8,
+    x: 0,
+    y: 400,
+    uuid: uuidv4()
+  }]
+
+  dispatch({
+    type: ActionTypes.SET_STORY,
+    payload: {
+      contents: data
     }
   })
 }
