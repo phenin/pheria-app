@@ -38,6 +38,7 @@ function HomeScreen({ navigation }) {
       <Tabs.Screen name="CreateStory" component={CreateStoryScreen}
         options={{
           headerShown: false,
+          tabBarVisible: false,
           tabBarIcon: ({ focused, color, size }) => (
               <Icon
                   name="plus"

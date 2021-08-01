@@ -1,7 +1,5 @@
 import * as React from 'react';
 import {
-  NativeBaseProvider,
-  extendTheme,
   Box,
   Input,
   TextArea
@@ -23,32 +21,10 @@ function FormStory({template, type, imageTemplate}) {
     }
 }, [template, setColor])
 
-  const theme = extendTheme({
-    components: {
-      
-    },
-  });
-
   return (
-    <NativeBaseProvider theme={theme}>
-      <Box flex={1} bg="transparent" style={{paddingTop:0, paddingBottom: 30}}>
-        <Input
-          mx={3}
-          my={3}
-          placeholder="Bạn đang nghỉ gì ?"
-          _light={{
-            placeholderTextColor: color,
-            color: color
-          }}
-        />
-        <TextArea mx={3} h={20*vh} placeholder="Nội dung tâm sự" 
-          _light={{
-            placeholderTextColor: color,
-            color: color
-          }}/>
-          <UploadImage/>
-      </Box>
-    </NativeBaseProvider>
+    <Box flex={1} bg="blue" style={{paddingTop:0, paddingBottom: 30}}>
+      <TextArea />
+    </Box>
   );
 }
 

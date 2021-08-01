@@ -5,22 +5,23 @@ import {
   Box,
   ScrollView,
   Button,
-  HStack, Stack,
+  HStack, Stack, Text
 } from 'native-base';
+import { TouchableOpacity } from "react-native"
 import { useSelector, shallowEqual, useDispatch } from 'react-redux'
-import { getListTemplate, setTemplate } from '../store/actions/templateActions'
+import { getListGroupTemplate, setGroupTemplate } from '../store/actions/groupTemplateActions'
 
-function StoryTemplate() {
+function StoryGroupTemplate() {
 
   const state = useSelector(stateSelector, shallowEqual)
   const dispatch = useDispatch()
 
   React.useEffect(()=>{
-    dispatch(getListTemplate({group:'depression'}))
-  },[dispatch, getListTemplate])
+    dispatch(getListGroupTemplate())
+  },[dispatch, getListGroupTemplate])
 
-  const selectTemplate = (value) =>{
-    dispatch(setTemplate(value))
+  const selectGroupTemplate = (value) =>{
+    dispatch(setGroupTemplate(value))
   }
   const theme = extendTheme({
     components: {
@@ -29,22 +30,21 @@ function StoryTemplate() {
   });
 
   return (
-      <Box bg="transparent" 
+      <Box bg="black" 
         style={{padding:10}}>
         <ScrollView horizontal={true}>
           <Stack space={3} alignItems="center">
             <HStack space={3} alignItems="center">
               {
                 state.loading ? <Button isLoading></Button> :
-                state.listTemplate.map((item, index) => {
+                state.listGroupTemplate.map((item, index) => {
                   return (
-                    <Button
+                    <TouchableOpacity
                       key={index}
-                      variant="outline"
-                      onPress={()=>selectTemplate(item)}
+                      onPress={()=>selectGroupTemplate(item)}
                     >
-                      {item.name}
-                    </Button>
+                      <Text>{item.name}</Text>
+                    </TouchableOpacity>
                   )
                 })
               }
@@ -57,9 +57,9 @@ function StoryTemplate() {
 
 function stateSelector(state) {
   return {
-    listTemplate: state.template.listTemplate,
-    loading: state.template.loading
+    listGroupTemplate: state.groupTemplate.listGroupTemplate,
+    loading: state.groupTemplate.loading
   }
 }
 
-export default StoryTemplate;
+export default StoryGroupTemplate;
