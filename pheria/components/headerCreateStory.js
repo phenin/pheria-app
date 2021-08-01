@@ -1,11 +1,11 @@
 import * as React from 'react';
 import {
-  Flex, Heading, Modal, Text
+  Flex, Heading, Modal, Text, Input
 } from 'native-base';
 import { TouchableOpacity } from "react-native"
 import Icon from 'react-native-vector-icons/AntDesign';
 
-import { useSelector, shallowEqual, useDispatch } from 'react-redux'
+import { useSelector, shallowEqual } from 'react-redux'
 
 export default function HeaderCreateStory({navigation, color}) {
 
@@ -42,7 +42,16 @@ export default function HeaderCreateStory({navigation, color}) {
               <Modal.CloseButton />
               <Modal.Header>Thông tin</Modal.Header>
               <Modal.Body>
-
+                <Input
+                  w="100%"
+                  placeholder="Tiêu đề bài viết"
+                  _light={{
+                    placeholderTextColor: "blueGray.400",
+                  }}
+                  _dark={{
+                    placeholderTextColor: "blueGray.50",
+                  }}
+                />
               </Modal.Body>
             </Modal.Content>
           </Modal>

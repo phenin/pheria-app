@@ -170,3 +170,23 @@ export const addContent = () => async (dispatch, getState) =>{
     }
   })
 }
+
+export const updateAreaContent = (item) => async (dispatch, getState) =>{
+
+  const data = getState().story.contents.find(e=>e.uuid === item.uuid)
+
+  const newList = [...getState().story.contents, {
+    width: 100,
+    height: 8,
+    x: 0,
+    y: 400,
+    uuid: uuidv4()
+  }]
+
+  dispatch({
+    type: ActionTypes.SET_STORY,
+    payload: {
+      contents: newList
+    }
+  })
+}
