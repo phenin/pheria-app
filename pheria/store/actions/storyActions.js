@@ -126,9 +126,10 @@ export const setStory = (story) => async (dispatch, getState) => {
 export const addTemplate = (template) => async (dispatch, getState) =>{
 
   const data = [...getState().story.templates, {
-    template,
+    template: template._id,
+    templateData: template,
     x: 0,
-    y: 400,
+    y: 300,
     uuid: uuidv4()
   }]
 
@@ -145,10 +146,11 @@ export const getBackground = (background) => async (dispatch, getState) =>{
   dispatch({
     type: ActionTypes.SET_STORY,
     payload: {
-      background: {
+      backgroundData: {
         backgroundColor: background.backgroundColor,
-        color: background.color
-      }
+        color: background.color,
+      },
+      background: background._id
     }
   })
 }
@@ -156,10 +158,10 @@ export const getBackground = (background) => async (dispatch, getState) =>{
 export const addContent = () => async (dispatch, getState) =>{
 
   const data = [...getState().story.contents, {
-    width: 100,
-    height: 8,
+    width: 50,
+    height: 50,
     x: 0,
-    y: 400,
+    y: 300,
     uuid: uuidv4()
   }]
 
@@ -172,21 +174,79 @@ export const addContent = () => async (dispatch, getState) =>{
 }
 
 export const updateAreaContent = (item) => async (dispatch, getState) =>{
-
-  const data = getState().story.contents.find(e=>e.uuid === item.uuid)
-
-  const newList = [...getState().story.contents, {
-    width: 100,
-    height: 8,
-    x: 0,
-    y: 400,
-    uuid: uuidv4()
-  }]
+  let listContents = getState().story.contents.filter(e=>e.uuid !== item.uuid)
+  listContents.push(item)
 
   dispatch({
     type: ActionTypes.SET_STORY,
     payload: {
-      contents: newList
+      contents: listContents
     }
   })
+}
+
+export const updateTitle = (title) => async (dispatch, getState) =>{
+  dispatch({
+    type: ActionTypes.SET_STORY,
+    payload: {
+      title
+    }
+  })
+}
+
+export const updateImage = (image) => async (dispatch, getState) =>{
+  dispatch({
+    type: ActionTypes.SET_STORY,
+    payload: {
+      image
+    }
+  })
+}
+
+export const changeContent = (value) => async (dispatch, getState) =>{
+  console.log(value)
+
+  let listContents = getState().story.contents.filter(e=>e.uuid !== value.uuid)
+  let content = JSON.parse(JSON.stringify(getState().story.contents.find(e=>e.uuid === value.uuid)))
+  content = {...content, text: value.text}
+  listContents.push(content)
+
+  dispatch({
+    type: ActionTypes.SET_STORY,
+    payload: {
+      contents: listContents
+    }
+  })
+}
+
+export const saveStory = (image) => async (dispatch, getState) =>{
+  console.log(getState().story)
+  dispatch({
+    type: ActionTypes.STORY_START,
+    payload: {
+      loading: true,
+    }
+  })
+  try {
+   
+    await fetchCreateStory(getState().story)    
+
+    dispatch({
+      type: ActionTypes.CREATE_STORY_SUCCESS,
+      payload: {
+        loading: false,
+      }
+    })
+    return true
+    
+  } catch (error) {
+    dispatch({
+        type: ActionTypes.STORY_ERROR,
+        payload: {
+          error: error,
+          loading: false,
+        }
+    })
+    return false
+  }
 }

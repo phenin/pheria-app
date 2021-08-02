@@ -2,26 +2,30 @@ import React, { Component } from "react";
 import {
   Platform,
   StyleSheet,
-  Text,
   View,
   TouchableOpacity,
   Alert,
+  ImageBackground,
+  Text,
 } from "react-native";
+import { Center } from "native-base"
 import ImagePicker from "react-native-image-crop-picker";
 import axios from "axios"
 export default class UploadImage extends Component {
   constructor() {
     super();
     this.state = {
-      imageUri: null
+      image: null,
+      imageUri: require('../images/imagenull.png'),
+      step: 0
     };
   }
 
   uploadImage = async () => {
     // Check selected image is not null
-    if (this.state.imageUri != null) {
+    if (this.state.image != null) {
      
-      const selectedImage = this.state.imageUri;
+      const selectedImage = this.state.image;
       console.log("+++++ selected url "+selectedImage);
       const data = new FormData();
       data.append("image", {
@@ -45,41 +49,49 @@ export default class UploadImage extends Component {
       };
       axios(config)
       .then((response) => {
-        console.log(JSON.stringify(response.data));
+        this.setState({
+          imageUri: {uri: response.data.data.link }
+        })
+        this.props.upload(response.data.data.link)
       })
       .catch((error) => {
         console.log('error ccc', error);
       });
-      // let responseJson = await res.json();
-      // if (responseJson.status.response == "success") {
-      //   Alert.alert("Profile picture updated Successful");
-      // }else{
-      //   Alert.alert("Something went wrong, please try again");
-      // }
     } else {
-      // Validation Alert
       Alert.alert("Please Select image first");
     }
   };
 
   pickImage = () => {
-    console.log("ccc")
     ImagePicker.openPicker({
       cropping: false
     }).then(image => {
-      console.log(image);
-      this.setState({ imageUri: image });
+      this.setState({ image: image, step: 1 });
     });
   };
+
+  clickImage = () =>{
+    if(this.state.step === 0) {
+      this.pickImage()
+    }
+    else {
+      this.uploadImage()
+    }
+  }
 
   render() {
     return (
       <View style={styles.container}>
-        <TouchableOpacity onPress={() => this.pickImage()}>
-          <Text style={styles.welcome}>Select Image</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => this.uploadImage()}>
-          <Text style={styles.welcome}>Upload Image</Text>
+        <TouchableOpacity onPress={() => this.clickImage()}>
+          <ImageBackground source={this.state.imageUri} resizeMode="cover" style={styles.image} >
+              <Center>
+                <Text style={{color:'#ffffff'}}>
+                {
+                  this.state.step === 0 ? "Chọn ảnh" : "Đăng ảnh"
+                }
+                </Text>
+              </Center>
+          </ImageBackground>
         </TouchableOpacity>
       </View>
     );
@@ -93,14 +105,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#F5FCFF"
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: "center",
-    margin: 10
-  },
-  instructions: {
-    textAlign: "center",
-    color: "#333333",
-    marginBottom: 5
+  image: {
+    justifyContent: "center", 
+    width: 200, 
+    height: 200,
+    marginTop: 10
   }
 });

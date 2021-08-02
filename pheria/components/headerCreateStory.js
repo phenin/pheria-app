@@ -1,22 +1,40 @@
 import * as React from 'react';
 import {
-  Flex, Heading, Modal, Text, Input
+  Flex, Heading, Modal, Text, Input, Button, Center
 } from 'native-base';
 import { TouchableOpacity } from "react-native"
-import Icon from 'react-native-vector-icons/AntDesign';
-
-import { useSelector, shallowEqual } from 'react-redux'
+import Icon from 'react-native-vector-icons/AntDesign'
+import UploadImage from './uploadImage'
+import { useSelector, shallowEqual, useDispatch } from 'react-redux'
+import { updateTitle, updateImage, saveStory } from "../store/actions/storyActions"
+import {vw} from "../plugins/viewport-unit"
 
 export default function HeaderCreateStory({navigation, color}) {
 
-  const [dialog, setDialog] = React.useState(false)
-
   const state = useSelector(stateSelector, shallowEqual)
+  const dispatch = useDispatch()
+
+  const [dialog, setDialog] = React.useState(false)
+  const [title, setTitle] = React.useState(state.title)
+
   const openTitleStory = () =>{
     setDialog(true)
   }
   const closeModal = () => {
+    dispatch(updateTitle(title))
     setDialog(false)
+  }
+
+  const upload = (link) =>{
+    dispatch(updateImage(link))
+  }
+
+  const handleChangeInput = (key, event) =>{
+    setTitle(event.nativeEvent.text)
+  }
+
+  const save = () =>{
+    dispatch(saveStory())
   }
   
   return (
@@ -32,14 +50,13 @@ export default function HeaderCreateStory({navigation, color}) {
         <Heading size="md" 
           alignSelf={{base: "center"}}>{state.title || 'Nhập tiêu đề'}</Heading>
       </TouchableOpacity>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => save()}>
         <Text style={{marginLeft: 10, marginRight: 10}}>Lưu</Text>
       </TouchableOpacity>
       {
         dialog && (
           <Modal size="full" isOpen={dialog} onClose={() => closeModal()}>
             <Modal.Content style={{marginBottom: 0, marginTop: "auto"}}>
-              <Modal.CloseButton />
               <Modal.Header>Thông tin</Modal.Header>
               <Modal.Body>
                 <Input
@@ -51,8 +68,16 @@ export default function HeaderCreateStory({navigation, color}) {
                   _dark={{
                     placeholderTextColor: "blueGray.50",
                   }}
+                  onChange={(v)=>handleChangeInput('title', v)}
                 />
+                <UploadImage upload={upload}/>
               </Modal.Body>
+              <Modal.Footer>
+                <Center>
+                  <Button size="sm" variant={"solid"} width={90*vw} 
+                    onPress={()=>closeModal()}>Xác nhận</Button>
+                </Center>
+              </Modal.Footer>
             </Modal.Content>
           </Modal>
         )

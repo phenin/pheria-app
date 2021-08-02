@@ -3,18 +3,21 @@ import { v4 as uuidv4 } from 'uuid';
 
 const initialState = {
     title: "",
-    background: {
+    background: "6106a1c7f72cd32419aea001",
+    backgroundData: {
       backgroundColor: ["#000000"],
       color: "#ffffff"
     },
     contents: [{
-      width: 100,
-      height: 8,
-      x: 0,
+      text: "",
+      width: 50,
+      height: 50,
+      x: 10,
       y: 0,
       uuid: uuidv4()
     }],
     templates: [],
+    image: ""
 }
 
 function reducer(state = initialState, action) {

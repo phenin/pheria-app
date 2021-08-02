@@ -38,7 +38,7 @@ function CreateStoryScreen({navigation}) {
           justifyContent: 'space-between',
           height: 100*vh
         }}>
-          <HeaderCreateStory navigation={navigation} color={background && background.color}/>
+          <HeaderCreateStory navigation={navigation} color={background && background.color} />
           <FormStory color={background && background.color} />
           <ListGroupTemplate />
         </SafeAreaView>
@@ -49,7 +49,7 @@ function CreateStoryScreen({navigation}) {
 
 function stateSelector(state) {
   return {
-    background: state.story.background,
+    background: state.story.backgroundData,
   }
 }
 
