@@ -2,11 +2,11 @@ import * as React from 'react';
 import {
   Box, Image, ScrollView, TextArea, Modal, Input, Flex, Button
 } from 'native-base';
-import {vw, vh} from "../plugins/viewport-unit"
+import {vw, vh} from "../../plugins/viewport-unit"
 import Draggable from 'react-native-draggable';
-import { REACT_APP_API } from '../constants'
+import { REACT_APP_API } from '../../constants'
 import { useSelector, shallowEqual, useDispatch } from 'react-redux'
-import { updateAreaContent, changeContent } from "../store/actions/storyActions"
+import { updateAreaContent, changeContent } from "../../store/actions/storyActions"
 
 function FormStory({color}) {
 

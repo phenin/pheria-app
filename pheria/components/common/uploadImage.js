@@ -17,7 +17,7 @@ export default class UploadImage extends Component {
     super();
     this.state = {
       image: null,
-      imageUri: require('../images/imagenull.png'),
+      imageUri: require('../../images/imagenull.png'),
       step: 0,
       loading: false
     };

@@ -7,10 +7,10 @@ import {
 } from 'native-base';
 import { TouchableOpacity } from "react-native"
 import { useSelector, shallowEqual, useDispatch } from 'react-redux'
-import { getListGroupTemplate, setGroupTemplate } from '../store/actions/groupTemplateActions'
-import { getListTemplate } from '../store/actions/templateActions'
-import { getListBackground } from '../store/actions/backgroundActions'
-import { addContent } from '../store/actions/storyActions'
+import { getListGroupTemplate, setGroupTemplate } from '../../store/actions/groupTemplateActions'
+import { getListTemplate } from '../../store/actions/templateActions'
+import { getListBackground } from '../../store/actions/backgroundActions'
+import { addContent } from '../../store/actions/storyActions'
 import ListTemplateModal from "./listTemplateModal"
 import ListBackgroundModal from "./listBackgroundModal"
 

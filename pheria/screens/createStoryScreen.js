@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-import FormStory from "../components/formStory"
-import ListGroupTemplate from "../components/listGroupTemplate"
-import HeaderCreateStory from "../components/headerCreateStory"
+import FormStory from "../components/story/formStory"
+import ListGroupTemplate from "../components/story/listGroupTemplate"
+import HeaderCreateStory from "../components/story/headerCreateStory"
 import { setStory } from "../store/actions/storyActions"
 import { useSelector, shallowEqual, useDispatch } from 'react-redux'
 import { vh } from "../plugins/viewport-unit"

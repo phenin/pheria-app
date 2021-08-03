@@ -1,41 +1,17 @@
 import * as React from 'react';
 import {
-  NativeBaseProvider,
-  extendTheme,
+  Box
 } from 'native-base';
-import NovelOneBanner from "../components/template/novel-one-banner"
 import { useSelector, shallowEqual } from 'react-redux'
 
 function DetailStoryScreen({route}) {
 
   const state = useSelector(stateSelector, shallowEqual)
-  const type = state.story && state.story.type
-
-  let Component
-  switch (type) {
-    case 'novel-one-banner':
-      Component = NovelOneBanner
-      break;
-    default:
-      break;
-  }
-
-  const theme = extendTheme({
-    components: {
-      
-    },
-  });
 
   return (
-    <NativeBaseProvider theme={theme}>
-      {
-        state.story && 
-        (
-          <Component data={state.story}/>
-        )
-      }
-      
-    </NativeBaseProvider>
+    <Box>
+      abc
+    </Box>
   );
 }
 

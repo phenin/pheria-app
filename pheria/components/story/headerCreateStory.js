@@ -4,10 +4,10 @@ import {
 } from 'native-base';
 import { TouchableOpacity } from "react-native"
 import Icon from 'react-native-vector-icons/AntDesign'
-import UploadImage from './uploadImage'
+import UploadImage from '../common/uploadImage'
 import { useSelector, shallowEqual, useDispatch } from 'react-redux'
-import { updateTitle, updateImage, saveStory } from "../store/actions/storyActions"
-import { vw } from "../plugins/viewport-unit"
+import { updateTitle, updateImage, saveStory } from "../../store/actions/storyActions"
+import { vw } from "../../plugins/viewport-unit"
 
 export default function HeaderCreateStory({navigation, color}) {
 

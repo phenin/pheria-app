@@ -3,11 +3,11 @@ import {
   Modal, Image, Flex, ScrollView, Box
 } from 'native-base';
 import { TouchableOpacity } from "react-native"
-import {vw, vh} from "../plugins/viewport-unit"
+import {vw, vh} from "../../plugins/viewport-unit"
 
 import { useSelector, shallowEqual, useDispatch } from 'react-redux'
-import { addTemplate } from '../store/actions/storyActions'
-import { REACT_APP_API } from '../constants'
+import { addTemplate } from '../../store/actions/storyActions'
+import { REACT_APP_API } from '../../constants'
 
 export default function ListTemplateModal({dialog, closeModal}) {
 

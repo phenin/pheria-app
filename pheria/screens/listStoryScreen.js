@@ -5,7 +5,7 @@ import {
   extendTheme,
   ScrollView
 } from 'native-base';
-import Story from '../components/story'
+import Story from '../components/story/story'
 import { getListStory } from '../store/actions/storyActions'
 import { useSelector, shallowEqual, useDispatch } from 'react-redux'
 

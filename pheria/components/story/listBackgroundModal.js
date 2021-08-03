@@ -3,10 +3,10 @@ import {
   Modal, Text, Flex, ScrollView, Box,Center
 } from 'native-base';
 import { TouchableOpacity } from "react-native"
-import {vw, vh} from "../plugins/viewport-unit"
+import {vw, vh} from "../../plugins/viewport-unit"
 
 import { useSelector, shallowEqual, useDispatch } from 'react-redux'
-import { getBackground } from '../store/actions/storyActions'
+import { getBackground } from '../../store/actions/storyActions'
 
 export default function ListBackgroundModal({dialog, closeModal}) {
 

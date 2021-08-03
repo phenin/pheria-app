@@ -3,14 +3,14 @@ import {
   Box, Text, Center
 } from 'native-base';
 import { TouchableOpacity, ImageBackground } from "react-native";
-import {vw, vh} from "../plugins/viewport-unit"
+import {vw, vh} from "../../plugins/viewport-unit"
 import { useDispatch } from 'react-redux'
-import { getDetailStory } from '../store/actions/storyActions'
+import { getDetailStory } from '../../store/actions/storyActions'
 
 function Story({data, navigation}) {
   const dispatch = useDispatch()
 
-  const image = data.image ? {uri: data.image} : require('../images/imagenull.png')
+  const image = data.image ? {uri: data.image} : require('../../images/imagenull.png')
 
   const getDetail = (_id) => {
     dispatch(getDetailStory({_id}))
