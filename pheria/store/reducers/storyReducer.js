@@ -17,11 +17,14 @@ const initialState = {
       uuid: uuidv4()
     }],
     templates: [],
-    image: ""
+    image: "",
+    loading: false,
+    error: null
 }
 
 function reducer(state = initialState, action) {
     switch (action.type) {
+      case ActionTypes.STORY_START:
       case ActionTypes.GET_DETAIL_STORY_SUCCESS:
       case ActionTypes.SET_STORY:
       case ActionTypes.CREATE_STORY_SUCCESS:

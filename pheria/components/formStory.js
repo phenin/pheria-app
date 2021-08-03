@@ -41,7 +41,7 @@ function FormStory({color}) {
       <ScrollView >
         <Box style={{height: 500*vh}}>
           <Draggable x={0} y={0} disabled>
-            <Box width={100*vw} height={2} bg={color} />
+            <Box width={100*vw} height={1} bg={color} />
           </Draggable>
           {
             state.templates.map((item, index) =>{

@@ -1,5 +1,5 @@
 import * as ActionTypes from '../actionTypes'
-import { AsyncStorage } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   fetchLoginByGG,
   fetchLogin,

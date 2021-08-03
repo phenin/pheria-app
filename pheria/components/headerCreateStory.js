@@ -7,7 +7,7 @@ import Icon from 'react-native-vector-icons/AntDesign'
 import UploadImage from './uploadImage'
 import { useSelector, shallowEqual, useDispatch } from 'react-redux'
 import { updateTitle, updateImage, saveStory } from "../store/actions/storyActions"
-import {vw} from "../plugins/viewport-unit"
+import { vw } from "../plugins/viewport-unit"
 
 export default function HeaderCreateStory({navigation, color}) {
 
@@ -71,13 +71,11 @@ export default function HeaderCreateStory({navigation, color}) {
                   onChange={(v)=>handleChangeInput('title', v)}
                 />
                 <UploadImage upload={upload}/>
-              </Modal.Body>
-              <Modal.Footer>
-                <Center>
-                  <Button size="sm" variant={"solid"} width={90*vw} 
+                <Center style={{marginTop:10}}>
+                  <Button size="sm" variant={"solid"} width={80*vw} 
                     onPress={()=>closeModal()}>Xác nhận</Button>
                 </Center>
-              </Modal.Footer>
+              </Modal.Body>
             </Modal.Content>
           </Modal>
         )

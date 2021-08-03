@@ -7,6 +7,7 @@ import {
   Alert,
   ImageBackground,
   Text,
+  ActivityIndicator
 } from "react-native";
 import { Center } from "native-base"
 import ImagePicker from "react-native-image-crop-picker";
@@ -17,7 +18,8 @@ export default class UploadImage extends Component {
     this.state = {
       image: null,
       imageUri: require('../images/imagenull.png'),
-      step: 0
+      step: 0,
+      loading: false
     };
   }
 
@@ -50,7 +52,8 @@ export default class UploadImage extends Component {
       axios(config)
       .then((response) => {
         this.setState({
-          imageUri: {uri: response.data.data.link }
+          imageUri: {uri: response.data.data.link },
+          loading: false
         })
         this.props.upload(response.data.data.link)
       })
@@ -66,11 +69,12 @@ export default class UploadImage extends Component {
     ImagePicker.openPicker({
       cropping: false
     }).then(image => {
-      this.setState({ image: image, step: 1 });
+      this.setState({ image: image, step: 1, loading: false });
     });
   };
 
   clickImage = () =>{
+    this.setState({ loading: true });
     if(this.state.step === 0) {
       this.pickImage()
     }
@@ -90,6 +94,9 @@ export default class UploadImage extends Component {
                   this.state.step === 0 ? "Chọn ảnh" : "Đăng ảnh"
                 }
                 </Text>
+                {
+                  this.state.loading && <ActivityIndicator />
+                }
               </Center>
           </ImageBackground>
         </TouchableOpacity>
