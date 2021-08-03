@@ -18,6 +18,7 @@ const Stack = createStackNavigator();
 function App() {
   _retrieveData = async () => {
     try {
+      // await AsyncStorage.removeItem('accessToken');
       const value = await AsyncStorage.getItem('accessToken');
       return value
     } catch (error) {
@@ -26,7 +27,6 @@ function App() {
   };
 
   const [token, setToken] = React.useState(_retrieveData())
-
   return (
     <Provider store={store}>
       <NativeBaseProvider >
@@ -42,7 +42,6 @@ function App() {
               (
                 <>
                   <Stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}} />
-                  
                 </>
               )
               

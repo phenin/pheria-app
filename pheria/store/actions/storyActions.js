@@ -55,7 +55,7 @@ export const getDetailStory = (params) => async (dispatch, getState) => {
     dispatch({
       type: ActionTypes.GET_DETAIL_STORY_SUCCESS,
       payload: {
-        story: data.data.story,
+        ...data.data.story,
         loading: false,
       }
     })
@@ -84,7 +84,7 @@ export const createUpdateStory = (params) => async (dispatch, getState) => {
   })
 
   try {
-    // if(params._id){
+    // if(params.uuid){
     //   await fetchUpdateStory(params)
     // }
     // else{
@@ -204,12 +204,13 @@ export const updateImage = (image) => async (dispatch, getState) =>{
 }
 
 export const changeContent = (value) => async (dispatch, getState) =>{
-  console.log(value)
 
-  let listContents = getState().story.contents.filter(e=>e.uuid !== value.uuid)
+  let listContents = JSON.parse(JSON.stringify(getState().story.contents))
+  let index = getState().story.contents.findIndex(e=>e.uuid === value.uuid)
   let content = JSON.parse(JSON.stringify(getState().story.contents.find(e=>e.uuid === value.uuid)))
+
   content = {...content, text: value.text}
-  listContents.push(content)
+  listContents[index] = content
 
   dispatch({
     type: ActionTypes.SET_STORY,
@@ -249,4 +250,35 @@ export const saveStory = (image) => async (dispatch, getState) =>{
     })
     return false
   }
+}
+
+export const changePositionTemplate = (value) => async (dispatch, getState) =>{
+
+  let listTemplates = getState().story.templates.filter(e=>e.uuid !== value.uuid)
+  let template = JSON.parse(JSON.stringify(getState().story.templates.find(e=>e.uuid === value.uuid)))
+  template = {...template, x: value.x, y: value.y}
+  listTemplates.push(template)
+
+  dispatch({
+    type: ActionTypes.SET_STORY,
+    payload: {
+      templates: listTemplates
+    }
+  })
+}
+
+export const changePositionContent = (value) => async (dispatch, getState) =>{
+
+  let listContents = JSON.parse(JSON.stringify(getState().story.contents))
+  let index = getState().story.contents.findIndex(e=>e.uuid === value.uuid)
+  let content = JSON.parse(JSON.stringify(getState().story.contents.find(e=>e.uuid === value.uuid)))
+
+  content = {...content, x: value.x, y: value.y}
+  listContents[index] = content
+  dispatch({
+    type: ActionTypes.SET_STORY,
+    payload: {
+      contents: listContents
+    }
+  })
 }

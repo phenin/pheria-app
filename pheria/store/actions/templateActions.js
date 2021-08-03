@@ -11,7 +11,6 @@ export const getListTemplate = (params) => async (dispatch, getState) => {
       loading: true,
     }
   })
-  console.log(params)
 
   try {
     const data = await fetchListTemplate(params)

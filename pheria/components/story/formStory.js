@@ -6,7 +6,7 @@ import {vw, vh} from "../../plugins/viewport-unit"
 import Draggable from 'react-native-draggable';
 import { REACT_APP_API } from '../../constants'
 import { useSelector, shallowEqual, useDispatch } from 'react-redux'
-import { updateAreaContent, changeContent } from "../../store/actions/storyActions"
+import { updateAreaContent, changeContent, changePositionTemplate, changePositionContent } from "../../store/actions/storyActions"
 
 function FormStory({color}) {
 
@@ -35,6 +35,21 @@ function FormStory({color}) {
       text: event.nativeEvent.text
     }))
   }
+  const moveTemplate = (event, gestureState, bound, id) =>{
+    dispatch(changePositionTemplate({
+      uuid: id,
+      x: gestureState.x0,
+      y: gestureState.y0
+    }))
+  }
+
+  const moveContent = (event, gestureState, bound, id) =>{
+    dispatch(changePositionContent({
+      uuid: id,
+      x: gestureState.x0,
+      y: gestureState.y0
+    }))
+  }
 
   return (
     <Box flex={1} style={{paddingTop:0, paddingBottom: 30}}>
@@ -49,7 +64,8 @@ function FormStory({color}) {
                 <Box key={"templates" + index}>
                   <Draggable x={item.x} y={item.y} 
                     renderSize={item.templateData.width * 2 * vw}
-                    onShortPressRelease={()=>alert('touched!!')}>
+                    onShortPressRelease={()=>alert('touched!!')}
+                    onDragRelease={(event, gestureState, bound)=>moveTemplate(event, gestureState, bound, item.uuid)}>
                     <Image source={{uri: REACT_APP_API + item.templateData.image}}
                       width={item.templateData.width * 2 * vw} height={item.templateData.height * 2 *vh} alt={item.templateData.code} />
                   </Draggable>
@@ -62,7 +78,8 @@ function FormStory({color}) {
               return (
                 <Box key={"content" + index}>
                   <Draggable x={item.x} y={item.y} 
-                    onShortPressRelease={()=>openTitleStory(item)}>
+                    onShortPressRelease={()=>openTitleStory(item)}
+                    onDragRelease={(event, gestureState, bound)=>moveContent(event, gestureState, bound, item.uuid)}>
                       <Box shadow={2} width={item.width * vw } height={item.height * vw} p={5} 
                         style={{borderWidth: 1, borderColor: '#ff00ff', borderRadius: 4}} 
                       >
