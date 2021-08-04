@@ -31,23 +31,23 @@ function FormStory({color}) {
   }
   const handleChangeArea = (id, event) => {
     dispatch(changeContent({
-      uuid: id,
+      _id: id,
       text: event.nativeEvent.text
     }))
   }
   const moveTemplate = (event, gestureState, bound, id) =>{
     dispatch(changePositionTemplate({
-      uuid: id,
-      x: gestureState.x0,
-      y: gestureState.y0
+      _id: id,
+      x: gestureState.dx,
+      y: gestureState.dy
     }))
   }
 
   const moveContent = (event, gestureState, bound, id) =>{
     dispatch(changePositionContent({
-      uuid: id,
-      x: gestureState.x0,
-      y: gestureState.y0
+      _id: id,
+      x: gestureState.dx,
+      y: gestureState.dy
     }))
   }
 
@@ -63,11 +63,11 @@ function FormStory({color}) {
               return (
                 <Box key={"templates" + index}>
                   <Draggable x={item.x} y={item.y} 
-                    renderSize={item.templateData.width * 2 * vw}
+                    renderSize={item.template.width * 2 * vw}
                     onShortPressRelease={()=>alert('touched!!')}
-                    onDragRelease={(event, gestureState, bound)=>moveTemplate(event, gestureState, bound, item.uuid)}>
-                    <Image source={{uri: REACT_APP_API + item.templateData.image}}
-                      width={item.templateData.width * 2 * vw} height={item.templateData.height * 2 *vh} alt={item.templateData.code} />
+                    onDragRelease={(event, gestureState, bound)=>moveTemplate(event, gestureState, bound, item._id)}>
+                    <Image source={{uri: REACT_APP_API + item.template.image}}
+                      width={item.template.width * 2 * vw} height={item.template.height * 2 *vh} alt={item.template.code} />
                   </Draggable>
                 </Box>
               )
@@ -79,7 +79,7 @@ function FormStory({color}) {
                 <Box key={"content" + index}>
                   <Draggable x={item.x} y={item.y} 
                     onShortPressRelease={()=>openTitleStory(item)}
-                    onDragRelease={(event, gestureState, bound)=>moveContent(event, gestureState, bound, item.uuid)}>
+                    onDragRelease={(event, gestureState, bound)=>moveContent(event, gestureState, bound, item._id)}>
                       <Box shadow={2} width={item.width * vw } height={item.height * vw} p={5} 
                         style={{borderWidth: 1, borderColor: '#ff00ff', borderRadius: 4}} 
                       >
@@ -91,7 +91,7 @@ function FormStory({color}) {
                             placeholderTextColor: color,
                             color: color,
                           }}
-                          onChange={(v)=>handleChangeArea(item.uuid, v)}
+                          onChange={(v)=>handleChangeArea(item._id, v)}
                         />
                       </Box>
                   </Draggable>

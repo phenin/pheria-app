@@ -22,16 +22,23 @@ function HomeScreen({ navigation }) {
       }}
     >
       <Tabs.Screen name="Home" component={ListStoryScreen}
+        listeners={{
+          tabPress: (e) => {
+            // Prevent default action
+            console.log('sss')
+            e.preventDefault();
+          },
+        }}
         options={{
           headerShown: false,
           tabBarIcon: ({ focused, color, size }) => (
-              <Icon
-                  name="home"
-                  size={size ? size : 24}
-                  color={focused ? color : "#000"}
-                  focused={focused}
-                  color={color}
-              />
+            <Icon
+              name="home"
+              size={size ? size : 24}
+              color={focused ? color : "#000"}
+              focused={focused}
+              color={color}
+            />
           )
         }}
       />
@@ -40,13 +47,13 @@ function HomeScreen({ navigation }) {
           headerShown: false,
           tabBarVisible: false,
           tabBarIcon: ({ focused, color, size }) => (
-              <Icon
-                  name="plus"
-                  size={size ? size : 24}
-                  color={focused ? color : "#000"}
-                  focused={focused}
-                  color={color}
-              />
+            <Icon
+              name="plus"
+              size={size ? size : 24}
+              color={focused ? color : "#000"}
+              focused={focused}
+              color={color}
+            />
           )
         }}
       />

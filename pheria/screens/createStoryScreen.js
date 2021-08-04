@@ -3,10 +3,10 @@ import * as React from 'react';
 import FormStory from "../components/story/formStory"
 import ListGroupTemplate from "../components/story/listGroupTemplate"
 import HeaderCreateStory from "../components/story/headerCreateStory"
-import { setStory } from "../store/actions/storyActions"
 import { useSelector, shallowEqual, useDispatch } from 'react-redux'
 import { vh } from "../plugins/viewport-unit"
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { resetStory } from "../store/actions/storyActions"
 
 function CreateStoryScreen({navigation}) {
 
@@ -17,7 +17,16 @@ function CreateStoryScreen({navigation}) {
 
   const { background } = state
 
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('tabPress', () => {
+      dispatch(resetStory())
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+
   React.useEffect(()=>{
+
     if( background && background.backgroundColor && background.backgroundColor.length > 2 ) {
       
       setBackgroundColor(`radial-gradient(${background.backgroundColor[0]}, ${background.backgroundColor[1]})`)
@@ -26,9 +35,7 @@ function CreateStoryScreen({navigation}) {
       setBackgroundColor(background.backgroundColor[0])
     }
 
-    dispatch(setStory(null))
-
-  }, [background, setBackgroundColor, dispatch, setStory])
+  }, [background, setBackgroundColor])
 
   return (
     <SafeAreaProvider style={{backgroundColor: backgroundColor}}>
@@ -49,7 +56,7 @@ function CreateStoryScreen({navigation}) {
 
 function stateSelector(state) {
   return {
-    background: state.story.backgroundData,
+    background: state.story.background,
   }
 }
 

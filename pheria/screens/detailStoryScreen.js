@@ -13,18 +13,18 @@ function DetailStoryScreen({route}) {
   const state = useSelector(stateSelector, shallowEqual)
   const [backgroundColor, setBackgroundColor] = React.useState("#000000")
 
-  const {backgroundData, templates, contents } = state
+  const {background, templates, contents } = state
 
   React.useEffect(()=>{
-    if( backgroundData && backgroundData.backgroundColor &&  backgroundData.backgroundColor.length > 2) {
+    if( background && background.backgroundColor &&  background.backgroundColor.length > 2) {
       
-      setBackgroundColor(`radial-gradient(${backgroundData.backgroundColor[0]}, ${backgroundData.backgroundColor[1]})`)
+      setBackgroundColor(`radial-gradient(${background.backgroundColor[0]}, ${background.backgroundColor[1]})`)
     }
-    else if ( backgroundData && backgroundData.backgroundColor.length === 1 ){
-      setBackgroundColor(backgroundData.backgroundColor[0])
+    else if ( background && background.backgroundColor.length === 1 ){
+      setBackgroundColor(background.backgroundColor[0])
     }
 
-  }, [backgroundData, setBackgroundColor])
+  }, [background, setBackgroundColor])
 
   return (
     <SafeAreaProvider style={{backgroundColor: backgroundColor}}>
@@ -38,16 +38,16 @@ function DetailStoryScreen({route}) {
           <ScrollView >
             <Box style={{height: 500*vh}}>
               <Draggable x={0} y={0} disabled>
-                <Box width={100*vw} height={1} bg={backgroundData.color} />
+                <Box width={100*vw} height={1} bg={background.color} />
               </Draggable>
               {
                 templates.map((item, index) =>{
                   return (
                     <Box key={"templates" + index}>
                       <Draggable x={item.x} y={item.y} disabled
-                        renderSize={item.templateData.width * 2 * vw}>
-                        <Image source={{uri: REACT_APP_API + item.templateData.image}}
-                          width={item.templateData.width * 2 * vw} height={item.templateData.height * 2 *vh} alt={item.templateData.code} />
+                        renderSize={item.template.width * 2 * vw}>
+                        <Image source={{uri: REACT_APP_API + item.template.image}}
+                          width={item.template.width * 2 * vw} height={item.template.height * 2 *vh} alt={item.template.code} />
                       </Draggable>
                     </Box>
                   )
@@ -56,8 +56,8 @@ function DetailStoryScreen({route}) {
               {
                 contents.map((item, index) =>{
                   return (
-                    <Box key={"content" + index} disabled>
-                      <Draggable x={item.x} y={item.y} >                          
+                    <Box key={"content" + index} width={(item.width - 10) * vw} height={(item.height - 10) * vw}>
+                      <Draggable x={item.x} y={item.y} disabled>
                         <Text>{item.text}</Text>
                       </Draggable>
                     </Box>
@@ -65,7 +65,7 @@ function DetailStoryScreen({route}) {
                 })
               }
               <Draggable x={0} y={500*vh} disabled>
-                <Box width={100*vw} height={2} bg={backgroundData.color} />
+                <Box width={100*vw} height={2} bg={background.color} />
               </Draggable>
             </Box>
           </ScrollView>
@@ -77,7 +77,7 @@ function DetailStoryScreen({route}) {
 
 function stateSelector(state) {
   return {
-    backgroundData: state.story.backgroundData,
+    background: state.story.background,
     templates: state.story.templates,
     contents: state.story.contents,
   }

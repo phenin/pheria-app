@@ -6,7 +6,7 @@ import { TouchableOpacity } from "react-native"
 import Icon from 'react-native-vector-icons/AntDesign'
 import UploadImage from '../common/uploadImage'
 import { useSelector, shallowEqual, useDispatch } from 'react-redux'
-import { updateTitle, updateImage, saveStory } from "../../store/actions/storyActions"
+import { updateTitle, updateImage, createStory, getListStory } from "../../store/actions/storyActions"
 import { vw } from "../../plugins/viewport-unit"
 
 export default function HeaderCreateStory({navigation, color}) {
@@ -33,8 +33,15 @@ export default function HeaderCreateStory({navigation, color}) {
     setTitle(event.nativeEvent.text)
   }
 
-  const save = () =>{
-    dispatch(saveStory())
+  const save = async () =>{
+    const result = await dispatch(createStory())
+    if (result) {
+      dispatch(getListStory())
+      navigation.goBack()
+    }
+    else{
+      alert('Lỗi rồi bạn ây')
+    }
   }
   
   return (
