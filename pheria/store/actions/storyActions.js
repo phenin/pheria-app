@@ -3,7 +3,8 @@ import {
   fetchListStory,
   fetchDetailStory,
   fetchCreateStory,
-  fetchUpdateStory
+  fetchHeartStory,
+  fetchUnHeartStory
 } from '../../api/story'
 import {
   v4 as uuidv4
@@ -345,4 +346,19 @@ export const changePositionContent = (value) => async (dispatch, getState) => {
       contents: listContents
     }
   })
+}
+
+export const heartStory = (id, status) => async (dispatch, getState) => {
+  try {
+    if(status){
+      await fetchHeartStory(id)
+    }
+    else{
+      await fetchUnHeartStory(id)
+    }
+    
+  }
+  catch(err){
+    console.log(err)
+  }
 }

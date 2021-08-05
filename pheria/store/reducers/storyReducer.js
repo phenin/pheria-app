@@ -4,6 +4,7 @@ import {
 } from 'uuid';
 
 const initialState = {
+  _id: null,
   title: "",
   background: {
     backgroundColor: ["#000000"],

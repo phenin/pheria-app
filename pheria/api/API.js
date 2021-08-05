@@ -127,6 +127,15 @@ export function put(uri, data = {}, config = {}) {
   return axiosInstance.put(uri, data, config)
 }
 
+export function patch(uri, data = {}, config = {}) {
+  config = {
+    ...defaultConfig,
+    ...config,
+  };
+
+  return axiosInstance.patch(uri, data, config)
+}
+
 /*
  * Wraps axios and provides
  * more convenient DELETE method
