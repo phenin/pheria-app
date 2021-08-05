@@ -2,7 +2,7 @@ import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 _retrieveData = async (key) => {
-  
+
   try {
     const value = await AsyncStorage.getItem(key);
     if (value !== null) {
@@ -14,10 +14,10 @@ _retrieveData = async (key) => {
   }
 };
 
-_storeData = async (key,value) => {
+_storeData = async (key, value) => {
   try {
     await AsyncStorage.setItem(
-      key,value
+      key, value
     );
   } catch (error) {
     // Error saving data
@@ -39,15 +39,15 @@ axiosInstance.isCancel = axios.isCancel;
 
 axiosInstance.interceptors.request.use(
   async (config) => {
-    const accessToken = await _retrieveData("accessToken");
-    if (accessToken) {
-      config.headers['Authorization'] = `Bearer ${accessToken}`
+      const accessToken = await _retrieveData("accessToken");
+      if (accessToken) {
+        config.headers['Authorization'] = `Bearer ${accessToken}`
+      }
+      return config;
+    },
+    (error) => {
+      Promise.reject(error);
     }
-    return config;
-  },
-  (error) => {
-    Promise.reject(error);
-  }
 );
 
 axiosInstance.interceptors.response.use(
@@ -65,14 +65,16 @@ axiosInstance.interceptors.response.use(
       originalRequest._retry = true;
 
       return axios
-        .post(`${process.env.REACT_APP_API}/api/user/refresh`, { refreshToken: refreshToken })
+        .post(`${process.env.REACT_APP_API}/api/user/refresh`, {
+          refreshToken: refreshToken
+        })
         .then((res) => {
           if (res.status === 200) {
             _storeData("accessToken", res.data.accessToken);
             _storeData("refreshToken", res.data.refreshToken);
 
             originalRequest.headers['Authorization'] = `Bearer ${res.data.accessToken}`
- 
+
             return axios(originalRequest);
           }
         });
@@ -142,32 +144,29 @@ export function remove(uri, params = {}, config = {}) {
 }
 
 export function customFetch(func, params) {
-    return new Promise((resolve, reject) => {
-        func(params)
-            .then(data => {
-                if (data) {
-                    return resolve(data)
-                }
-                else {
-                    reject('LoadingdataError')
-                }
-            })
-            .catch(async (error) => {
-                if (error) {
-                    const errorMessage = error.json && await error.json()
+  return new Promise((resolve, reject) => {
+    func(params)
+      .then(data => {
+        if (data) {
+          return resolve(data)
+        } else {
+          reject('LoadingdataError')
+        }
+      })
+      .catch(async (error) => {
+        if (error) {
+          const errorMessage = error.json && await error.json()
 
-                    if (
-                      !error.ok
-                      && (
-                        error.status === 401
-                        || (error.status === 404 && errorMessage && errorMessage.title === 'Token not found')
-                      )
-                    ) {
-                        return reject('TokenExpire')
-                    }
-                    else return reject('LoadingdataError')
-                }
-                else return reject('LoadingdataError')
-            })
-    })
+          if (
+            !error.ok &&
+            (
+              error.status === 401 ||
+              (error.status === 404 && errorMessage && errorMessage.title === 'Token not found')
+            )
+          ) {
+            return reject('TokenExpire')
+          } else return reject('LoadingdataError')
+        } else return reject('LoadingdataError')
+      })
+  })
 }

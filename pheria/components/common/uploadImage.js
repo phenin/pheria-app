@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, {Component} from 'react';
 import {
   Platform,
   StyleSheet,
@@ -7,11 +7,11 @@ import {
   Alert,
   ImageBackground,
   Text,
-  ActivityIndicator
-} from "react-native";
-import { Center } from "native-base"
-import ImagePicker from "react-native-image-crop-picker";
-import axios from "axios"
+  ActivityIndicator,
+} from 'react-native';
+import {Center} from 'native-base';
+import ImagePicker from 'react-native-image-crop-picker';
+import axios from 'axios';
 export default class UploadImage extends Component {
   constructor() {
     super();
@@ -19,85 +19,82 @@ export default class UploadImage extends Component {
       image: null,
       imageUri: require('../../images/imagenull.png'),
       step: 0,
-      loading: false
+      loading: false,
     };
   }
 
   uploadImage = async () => {
     // Check selected image is not null
     if (this.state.image != null) {
-     
       const selectedImage = this.state.image;
-      console.log("+++++ selected url "+selectedImage);
+      console.log('+++++ selected url ' + selectedImage);
       const data = new FormData();
-      data.append("image", {
+      data.append('image', {
         name: selectedImage.filename,
         type: selectedImage.mime,
         uri:
-          Platform.OS === "android"
+          Platform.OS === 'android'
             ? selectedImage.sourceURL
-            : selectedImage.sourceURL.replace("file://", "")
+            : selectedImage.sourceURL.replace('file://', ''),
       });
       // Change file upload URL
       const config = {
         method: 'post',
         url: 'https://api.imgur.com/3/image',
-        headers: { 
-          'Authorization': 'Client-ID 574f96546392ad0', 
-          'Accept': 'multipart/form-data',
+        headers: {
+          Authorization: 'Client-ID 574f96546392ad0',
+          Accept: 'multipart/form-data',
           'Content-Type': 'multipart/form-data',
         },
-        data : data
+        data: data,
       };
       axios(config)
-      .then((response) => {
-        this.setState({
-          imageUri: {uri: response.data.data.link },
-          loading: false
+        .then(response => {
+          this.setState({
+            imageUri: {uri: response.data.data.link},
+            loading: false,
+          });
+          this.props.upload(response.data.data.link);
         })
-        this.props.upload(response.data.data.link)
-      })
-      .catch((error) => {
-        console.log('error ccc', error);
-      });
+        .catch(error => {
+          console.log('error ccc', error);
+        });
     } else {
-      Alert.alert("Please Select image first");
+      Alert.alert('Please Select image first');
     }
   };
 
   pickImage = () => {
     ImagePicker.openPicker({
-      cropping: false
+      cropping: false,
     }).then(image => {
-      this.setState({ image: image, step: 1, loading: false });
+      this.setState({image: image, step: 1, loading: false});
     });
   };
 
-  clickImage = () =>{
-    this.setState({ loading: true });
-    if(this.state.step === 0) {
-      this.pickImage()
+  clickImage = () => {
+    this.setState({loading: true});
+    if (this.state.step === 0) {
+      this.pickImage();
+    } else {
+      this.uploadImage();
     }
-    else {
-      this.uploadImage()
-    }
-  }
+  };
 
   render() {
     return (
       <View style={styles.container}>
         <TouchableOpacity onPress={() => this.clickImage()}>
-          <ImageBackground source={this.state.imageUri} resizeMode="cover" style={styles.image} >
-              <Center>
-                <Text style={{color:'#ffffff'}}>
-                {
-                  this.state.step === 0 ? "Chọn ảnh" : "Đăng ảnh"
-                }
-                </Text>
-                {
-                  this.state.loading && <ActivityIndicator />
-                }
-              </Center>
+          <ImageBackground
+            source={this.state.imageUri}
+            resizeMode="cover"
+            style={styles.image}>
+            <Center>
+              <Text style={{color: '#ffffff'}}>
+                {this.state.step === 0 ? 'Chọn ảnh' : 'Đăng ảnh'}
+              </Text>
+              {this.state.loading && <ActivityIndicator />}
+            </Center>
           </ImageBackground>
         </TouchableOpacity>
       </View>
@@ -108,14 +105,14 @@ export default class UploadImage extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#F5FCFF"
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5FCFF',
   },
   image: {
-    justifyContent: "center", 
-    width: 200, 
+    justifyContent: 'center',
+    width: 200,
     height: 200,
-    marginTop: 10
-  }
+    marginTop: 10,
+  },
 });

@@ -2,7 +2,9 @@ import * as ActionTypes from '../actionTypes'
 import {
   fetchListGroupTemplate,
 } from '../../api/groupTemplate'
-import {REACT_APP_API} from "../../constants"
+import {
+  REACT_APP_API
+} from "../../constants"
 
 export const getListGroupTemplate = (params) => async (dispatch, getState) => {
   dispatch({
@@ -23,14 +25,14 @@ export const getListGroupTemplate = (params) => async (dispatch, getState) => {
       }
     })
     return true
-    
+
   } catch (error) {
     dispatch({
-        type: ActionTypes.GROUPTEMPLATE_ERROR,
-        payload: {
-          error: error,
-          loading: false,
-        }
+      type: ActionTypes.GROUPTEMPLATE_ERROR,
+      payload: {
+        error: error,
+        loading: false,
+      }
     })
     return false
   }
@@ -38,7 +40,7 @@ export const getListGroupTemplate = (params) => async (dispatch, getState) => {
 }
 
 export const setGroupTemplate = (groupTemplate) => async (dispatch, getState) => {
-  
+
   dispatch({
     type: ActionTypes.SET_GROUPTEMPLATE,
     payload: {

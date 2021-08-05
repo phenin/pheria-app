@@ -1,4 +1,7 @@
-import { get, customFetch } from './API'
+import {
+  get,
+  customFetch
+} from './API'
 
 const endpoints = {
   get: '/api/background',

@@ -7,10 +7,10 @@ import {
   fetchUser
 } from '../../api/user'
 
-_storeData = async (key,value) => {
+_storeData = async (key, value) => {
   try {
     await AsyncStorage.setItem(
-      key,value
+      key, value
     );
   } catch (error) {
     // Error saving data
@@ -38,15 +38,15 @@ export const loginByGG = (params) => async (dispatch, getState) => {
         loading: false,
       }
     })
-    
+
   } catch (error) {
-      dispatch({
-          type: ActionTypes.USER_ERROR,
-          payload: {
-            error: error,
-            dataLoading: false,
-          }
-      })
+    dispatch({
+      type: ActionTypes.USER_ERROR,
+      payload: {
+        error: error,
+        dataLoading: false,
+      }
+    })
   }
 
 }
@@ -72,15 +72,15 @@ export const login = (params) => async (dispatch, getState) => {
         loading: false,
       }
     })
-    
+
   } catch (error) {
-      dispatch({
-          type: ActionTypes.USER_ERROR,
-          payload: {
-            error: error,
-            dataLoading: false,
-          }
-      })
+    dispatch({
+      type: ActionTypes.USER_ERROR,
+      payload: {
+        error: error,
+        dataLoading: false,
+      }
+    })
   }
 
 }
@@ -94,7 +94,7 @@ export const signUp = (params) => async (dispatch, getState) => {
   })
 
   try {
-    
+
     const data = await fetchSignUp(params)
 
     _storeData('accessToken', data.data.token.accessToken)
@@ -107,13 +107,13 @@ export const signUp = (params) => async (dispatch, getState) => {
       }
     })
   } catch (error) {
-      dispatch({
-          type: ActionTypes.USER_ERROR,
-          payload: {
-            error: error,
-            dataLoading: false,
-          }
-      })
+    dispatch({
+      type: ActionTypes.USER_ERROR,
+      payload: {
+        error: error,
+        dataLoading: false,
+      }
+    })
   }
 
 }
@@ -127,7 +127,7 @@ export const getUser = (params) => async (dispatch, getState) => {
   })
 
   try {
-    
+
     const data = await fetchUser(params)
     dispatch({
       type: ActionTypes.GET_USER_SUCCESS,
@@ -137,13 +137,13 @@ export const getUser = (params) => async (dispatch, getState) => {
       }
     })
   } catch (error) {
-      dispatch({
-          type: ActionTypes.USER_ERROR,
-          payload: {
-            error: error,
-            dataLoading: false,
-          }
-      })
+    dispatch({
+      type: ActionTypes.USER_ERROR,
+      payload: {
+        error: error,
+        dataLoading: false,
+      }
+    })
   }
 
 }

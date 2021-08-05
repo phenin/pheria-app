@@ -2,7 +2,9 @@ import * as ActionTypes from '../actionTypes'
 import {
   fetchListTemplate,
 } from '../../api/template'
-import {REACT_APP_API} from "../../constants"
+import {
+  REACT_APP_API
+} from "../../constants"
 
 export const getListTemplate = (params) => async (dispatch, getState) => {
   dispatch({
@@ -23,14 +25,14 @@ export const getListTemplate = (params) => async (dispatch, getState) => {
       }
     })
     return true
-    
+
   } catch (error) {
     dispatch({
-        type: ActionTypes.TEMPLATE_ERROR,
-        payload: {
-          error: error,
-          loading: false,
-        }
+      type: ActionTypes.TEMPLATE_ERROR,
+      payload: {
+        error: error,
+        loading: false,
+      }
     })
     return false
   }
@@ -38,8 +40,8 @@ export const getListTemplate = (params) => async (dispatch, getState) => {
 }
 
 export const setTemplate = (template) => async (dispatch, getState) => {
-  
-  const images =template && template.image.map(image => {
+
+  const images = template && template.image.map(image => {
     return {
       ...image,
       url: image.url ? `${REACT_APP_API}/${image.url}` : image

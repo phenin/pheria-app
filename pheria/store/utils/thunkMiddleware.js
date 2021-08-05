@@ -1,6 +1,10 @@
 // Archived: use with self-config store (not redux store)
 function createThunkMiddleware(extraArgument) {
-  return ({ dispatch, getState, updateImmediatelyState }) => (action) => {
+  return ({
+    dispatch,
+    getState,
+    updateImmediatelyState
+  }) => (action) => {
     if (typeof action === 'function') {
       return action(dispatch, getState, extraArgument);
     }

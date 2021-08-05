@@ -14,8 +14,10 @@ function reducer(state = initialState, action) {
         case ActionTypes.LOGIN_SUCCESS:
         case ActionTypes.SIGNUP_SUCCESS:
         case ActionTypes.GET_USER_SUCCESS:
-            return {...state, ...action.payload};
-            
+            return {
+                ...state, ...action.payload
+            };
+
         default:
             return state;
     }

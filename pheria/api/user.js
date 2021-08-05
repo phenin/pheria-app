@@ -1,4 +1,8 @@
-import { get, post, customFetch } from './API'
+import {
+  get,
+  post,
+  customFetch
+} from './API'
 
 const endpoints = {
   login: '/api/user/login',
@@ -7,9 +11,15 @@ const endpoints = {
   get_user: '/api/user/profile/'
 }
 
-export const login = (params) => post(endpoints.login, params, { token_required : false })
-export const loginbygg = (params) => post(endpoints.loginbygg, params, { token_required : false })
-export const signUp = (params) => post(endpoints.sign_up, params, { token_required : false })
+export const login = (params) => post(endpoints.login, params, {
+  token_required: false
+})
+export const loginbygg = (params) => post(endpoints.loginbygg, params, {
+  token_required: false
+})
+export const signUp = (params) => post(endpoints.sign_up, params, {
+  token_required: false
+})
 export const getUser = (params) => get(endpoints.get_user + params)
 
 export const fetchLoginByGG = (params) => {

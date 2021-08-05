@@ -1,4 +1,9 @@
-import { get, post, put, customFetch } from './API'
+import {
+  get,
+  post,
+  put,
+  customFetch
+} from './API'
 
 const endpoints = {
   get: '/api/story',
@@ -44,4 +49,3 @@ export const fetchUpdateStory = (params) => {
       .catch(error => reject(error))
   })
 }
-

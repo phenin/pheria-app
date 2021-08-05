@@ -13,8 +13,10 @@ function reducer(state = initialState, action) {
         case ActionTypes.BACKGROUND_START:
         case ActionTypes.GET_LIST_BACKGROUND_SUCCESS:
         case ActionTypes.SET_BACKGROUND:
-            return {...state, ...action.payload};
-            
+            return {
+                ...state, ...action.payload
+            };
+
         default:
             return state;
     }

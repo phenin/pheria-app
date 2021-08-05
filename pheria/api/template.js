@@ -1,10 +1,13 @@
-import { get, customFetch } from './API'
+import {
+  get,
+  customFetch
+} from './API'
 
 const endpoints = {
   get: '/api/template/group',
 }
 
-export const getList = (params) => get(endpoints.get+ '/' + params.group)
+export const getList = (params) => get(endpoints.get + '/' + params.group)
 
 export const fetchListTemplate = (params) => {
   return new Promise((resolve, reject) => {

@@ -2,11 +2,14 @@
 
 import React from 'react-native'
 const Dimensions = React.Dimensions
-const {width, height} = Dimensions.get('window');
+const {
+  width,
+  height
+} = Dimensions.get('window');
 
 var units = {
-  vw: width/100
-, vh: height/100
+  vw: width / 100,
+  vh: height / 100
 };
 
 units.vmin = Math.min(units.vw, units.vh);

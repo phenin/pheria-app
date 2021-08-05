@@ -2,7 +2,9 @@ import * as ActionTypes from '../actionTypes'
 import {
   fetchListBackground,
 } from '../../api/background'
-import {REACT_APP_API} from "../../constants"
+import {
+  REACT_APP_API
+} from "../../constants"
 
 export const getListBackground = (params) => async (dispatch, getState) => {
   dispatch({
@@ -23,7 +25,7 @@ export const getListBackground = (params) => async (dispatch, getState) => {
       }
     })
     return true
-    
+
   } catch (error) {
     dispatch({
       type: ActionTypes.BACKGROUND_ERROR,
@@ -38,8 +40,8 @@ export const getListBackground = (params) => async (dispatch, getState) => {
 }
 
 export const setBackground = (background) => async (dispatch, getState) => {
-  
-  const images =background && background.image.map(image => {
+
+  const images = background && background.image.map(image => {
     return {
       ...image,
       url: image.url ? `${REACT_APP_API}/${image.url}` : image

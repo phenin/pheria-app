@@ -12,10 +12,11 @@ function reducer(state = initialState, action) {
         case ActionTypes.GROUPTEMPLATE_ERROR:
         case ActionTypes.GROUPTEMPLATE_START:
         case ActionTypes.SET_GROUPTEMPLATE:
-            return {...state, ...action.payload};
+            return {
+                ...state, ...action.payload
+            };
         case ActionTypes.GET_LIST_GROUPTEMPLATE_SUCCESS:
-            let listGroupTemplate = [
-                {
+            let listGroupTemplate = [{
                     _id: 'background',
                     name: 'Background'
                 },
@@ -25,7 +26,9 @@ function reducer(state = initialState, action) {
                 },
                 ...action.payload.listGroupTemplate
             ]
-            return {...state, listGroupTemplate, loading: action.payload.loading};
+            return {
+                ...state, listGroupTemplate, loading: action.payload.loading
+            };
         default:
             return state;
     }
