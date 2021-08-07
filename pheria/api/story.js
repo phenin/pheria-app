@@ -7,15 +7,17 @@ import {
 } from './API'
 
 const endpoints = {
-  get: '/api/story',
+  story: '/api/story',
+  comment: '/api/comment',
 }
 
-export const getList = () => get(endpoints.get)
-export const getDetail = (params) => get(`${endpoints.get}/${params._id}`)
-export const create = (params) => post(endpoints.get, params)
-export const update = (params) => put(`${endpoints.get}/${params._id}`, params)
-export const heart = (id) => patch(`${endpoints.get}/${id}/heart`)
-export const unHeart = (id) => patch(`${endpoints.get}/${id}/unheart`)
+export const getList = () => get(endpoints.story)
+export const getDetail = (params) => get(`${endpoints.story}/${params._id}`)
+export const create = (params) => post(endpoints.story, params)
+export const update = (params) => put(`${endpoints.story}/${params._id}`, params)
+export const heart = (id) => patch(`${endpoints.story}/${id}/heart`)
+export const unHeart = (id) => patch(`${endpoints.story}/${id}/unheart`)
+export const listComment = (params) => get(`${endpoints.comment}/${params._id}`)
 
 export const fetchListStory = () => {
   return new Promise((resolve, reject) => {
@@ -64,6 +66,14 @@ export const fetchHeartStory = (id) => {
 export const fetchUnHeartStory = (params) => {
   return new Promise((resolve, reject) => {
     customFetch(unHeart, params)
+      .then(data => resolve(data))
+      .catch(error => reject(error))
+  })
+}
+
+export const fetchListComment = (params) => {
+  return new Promise((resolve, reject) => {
+    customFetch(listComment, params)
       .then(data => resolve(data))
       .catch(error => reject(error))
   })

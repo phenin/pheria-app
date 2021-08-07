@@ -4,12 +4,12 @@ import {
   fetchDetailStory,
   fetchCreateStory,
   fetchHeartStory,
-  fetchUnHeartStory
+  fetchUnHeartStory,
+  fetchListComment
 } from '../../api/story'
 import {
   v4 as uuidv4
 } from 'uuid';
-import { flex } from 'styled-system';
 
 export const getListStory = (params) => async (dispatch, getState) => {
   dispatch({
@@ -376,6 +376,22 @@ export const heartStory = (id, status) => async (dispatch, getState) => {
         }
       })
     }
+  }
+  catch(err){
+    console.log(err)
+  }
+}
+
+export const getListCommentStory = (id) => async (dispatch, getState) => {
+  try {
+    const data = await fetchListComment(id)
+    
+    dispatch({
+      type: ActionTypes.SET_STORY,
+      payload: {
+        comments: data.data.comments,
+      }
+    })
   }
   catch(err){
     console.log(err)

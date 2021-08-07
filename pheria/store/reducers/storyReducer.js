@@ -37,15 +37,16 @@ function reducer(state = initialState, action) {
     case ActionTypes.DELETE_STORY_SUCCESS:
     case ActionTypes.ADD_TEMPLATE:
     case ActionTypes.SET_STORY:
+      console.log(action.payload)
       return {
         ...state, ...action.payload
       }
-      case ActionTypes.RESET_STORY:
-        return {
-          ...action.payload, loading: false, error: null
-        }
-        default:
-          return state;
+    case ActionTypes.RESET_STORY:
+      return {
+        ...action.payload, loading: false, error: null
+      }
+    default:
+      return state;
   }
 }
 

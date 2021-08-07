@@ -7,8 +7,9 @@ import Draggable from 'react-native-draggable';
 import {REACT_APP_API} from '../constants';
 import Icon from 'react-native-vector-icons/AntDesign';
 import DoubleTap from '../components/common/doubleTap';
-import {heartStory} from '../store/actions/storyActions';
+import {heartStory, getListCommentStory} from '../store/actions/storyActions';
 import ActionStory from '../components/story/actionStory';
+import ListCommentModal from '../components/story/commentModal';
 
 import {
   StyleSheet,
@@ -21,6 +22,7 @@ function DetailStoryScreen({navigation}) {
   const {background, templates, contents} = state;
   const dispatch = useDispatch()
   const animatedValue = React.useRef(new Animated.Value(0)).current;
+  const [dialog, setDialog] = React.useState(false);
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -40,6 +42,12 @@ function DetailStoryScreen({navigation}) {
     });
   }, [navigation, state]);
 
+  const {id} = state
+
+  React.useEffect(() => {
+    dispatch(getListCommentStory({_id: id}));
+  },[dispatch, getListCommentStory, id])
+
   React.useEffect(() => {
     if (
       background &&
@@ -55,7 +63,6 @@ function DetailStoryScreen({navigation}) {
   }, [background, setBackgroundColor]);
 
   const heart = (id) =>{
-    console.log("vào")
     dispatch(heartStory(id, true))
 
     Animated.sequence([
@@ -63,6 +70,14 @@ function DetailStoryScreen({navigation}) {
       Animated.spring(animatedValue, { toValue: 0 }),
     ]).start();
   }
+
+  const openModal = () => {
+    setDialog(true);
+  };
+
+  const closeModal = () => {
+    setDialog(false);
+  };
 
   renderOverlay = () => {
     const imageStyles = [
@@ -104,7 +119,6 @@ function DetailStoryScreen({navigation}) {
           <ScrollView>
             <DoubleTap onDoubleTap={()=>heart(state.id)}>
               <Box style={{height: 500 * vh}}>
-
                 <Draggable x={0} y={0} disabled>
                   <Box width={100 * vw} height={1} bg={background.color} />
                 </Draggable>
@@ -145,8 +159,13 @@ function DetailStoryScreen({navigation}) {
             </DoubleTap>
           </ScrollView>
           {this.renderOverlay()}
-          <ActionStory showHeart={(id)=>heart(id)}/>
+          <ActionStory showHeart={(id)=>heart(id)} openComment={openModal}/>
         </Box>
+        {
+          dialog && (
+            <ListCommentModal dialog={dialog} closeModal={closeModal} />
+          )
+        }
       </SafeAreaView>
     </SafeAreaProvider>
   );

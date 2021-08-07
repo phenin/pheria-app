@@ -6,7 +6,7 @@ import {vh} from '../../plugins/viewport-unit';
 import Icon from 'react-native-vector-icons/AntDesign';
 import {heartStory} from '../../store/actions/storyActions';
 
-export default function ActionStory({showHeart}) {
+export default function ActionStory({showHeart, openComment}) {
   const state = useSelector(stateSelector, shallowEqual);
   const dispatch = useDispatch();
 
@@ -19,33 +19,37 @@ export default function ActionStory({showHeart}) {
   const unHeart = () => {
     dispatch(heartStory(id, false))
   }
-  console.log(hearts)
 
   return (
-    <Center style={styles.overlay} >
-      {
-        liked ?
+    <>
+      <Center style={styles.overlay} >
+        {
+          liked ?
+          <Icon
+            name="heart"
+            size={24}
+            color={'#ed4956'}
+            onPress={()=>unHeart()}
+          /> : 
+          <Icon
+            name="hearto"
+            size={24}
+            color={'#fff'}
+            onPress={()=>heart()}
+          />
+        }
+        <Text style={{color: color, margin: 10}} >{hearts.length}</Text>
         <Icon
-          name="heart"
-          size={24}
-          color={'#ed4956'}
-          onPress={()=>unHeart()}
-        /> : 
-        <Icon
-          name="hearto"
+          name="message1"
           size={24}
           color={'#fff'}
-          onPress={()=>heart()}
+          onPress={()=>openComment()}
         />
-      }
-      <Text style={{color: color, margin: 10}} >{hearts.length}</Text>
-      <Icon
-        name="message1"
-        size={24}
-        color={'#fff'}
-      />
-      <Text style={{color: color, margin: 10}}>{comments.length}</Text>
-    </Center>
+        <Text style={{color: color, margin: 10}}>{comments.length}</Text>
+        
+      </Center>
+      
+      </>
   );
 }
 
