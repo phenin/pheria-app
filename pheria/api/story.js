@@ -54,7 +54,6 @@ export const fetchUpdateStory = (params) => {
 }
 
 export const fetchHeartStory = (id) => {
-  console.log("heart", id)
   return new Promise((resolve, reject) => {
     customFetch(heart, id)
       .then(data => resolve(data))

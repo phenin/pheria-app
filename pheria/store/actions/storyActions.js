@@ -9,6 +9,7 @@ import {
 import {
   v4 as uuidv4
 } from 'uuid';
+import { flex } from 'styled-system';
 
 export const getListStory = (params) => async (dispatch, getState) => {
   dispatch({
@@ -60,6 +61,7 @@ export const getDetailStory = (params) => async (dispatch, getState) => {
       payload: {
         ...data.data.story,
         loading: false,
+        liked: data.data.liked
       }
     })
     return true
@@ -352,13 +354,32 @@ export const heartStory = (id, status) => async (dispatch, getState) => {
   try {
     if(status){
       await fetchHeartStory(id)
+      const hearts = JSON.parse(JSON.stringify(getState().story.hearts))
+      hearts.push(id)
+      dispatch({
+        type: ActionTypes.SET_STORY,
+        payload: {
+          hearts: hearts,
+          liked: true
+        }
+      })
+
     }
     else{
       await fetchUnHeartStory(id)
+      const hearts = getState().story.hearts.filter(e => e !== id)
+      dispatch({
+        type: ActionTypes.SET_STORY,
+        payload: {
+          hearts: hearts,
+          liked: false
+        }
+      })
     }
-    
   }
   catch(err){
     console.log(err)
   }
+
+
 }

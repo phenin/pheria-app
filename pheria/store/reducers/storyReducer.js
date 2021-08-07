@@ -20,6 +20,10 @@ const initialState = {
   }],
   templates: [],
   image: "",
+  views: [],
+  hearts: [],
+  comments: [],
+  liked: false,
   loading: false,
   error: null
 }

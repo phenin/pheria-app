@@ -8,6 +8,8 @@ import {REACT_APP_API} from '../constants';
 import Icon from 'react-native-vector-icons/AntDesign';
 import DoubleTap from '../components/common/doubleTap';
 import {heartStory} from '../store/actions/storyActions';
+import ActionStory from '../components/story/actionStory';
+
 import {
   StyleSheet,
   View,
@@ -36,7 +38,7 @@ function DetailStoryScreen({navigation}) {
         />
       ),
     });
-  }, [navigation]);
+  }, [navigation, state]);
 
   React.useEffect(() => {
     if (
@@ -53,6 +55,7 @@ function DetailStoryScreen({navigation}) {
   }, [background, setBackgroundColor]);
 
   const heart = (id) =>{
+    console.log("vào")
     dispatch(heartStory(id, true))
 
     Animated.sequence([
@@ -130,7 +133,7 @@ function DetailStoryScreen({navigation}) {
                       width={(item.width - 10) * vw}
                       height={(item.height - 10) * vw}>
                       <Draggable x={item.x} y={item.y} disabled>
-                        <Text>{item.text}</Text>
+                        <Text style={{color: background && background.color}}>{item.text}</Text>
                       </Draggable>
                     </Box>
                   );
@@ -138,12 +141,11 @@ function DetailStoryScreen({navigation}) {
                 <Draggable x={0} y={500 * vh} disabled>
                   <Box width={100 * vw} height={2} bg={background.color} />
                 </Draggable>
-                {this.renderOverlay()}
               </Box>
-              
             </DoubleTap>
-            
           </ScrollView>
+          {this.renderOverlay()}
+          <ActionStory showHeart={(id)=>heart(id)}/>
         </Box>
       </SafeAreaView>
     </SafeAreaProvider>
@@ -171,7 +173,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     top: 40 * vh,
-    bottom: 0,
   },
   overlayHeart: {
     tintColor: '#ed4956',

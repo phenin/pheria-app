@@ -37,7 +37,6 @@ function HomeScreen({navigation}) {
               size={size ? size : 24}
               color={focused ? color : '#000'}
               focused={focused}
-              color={color}
             />
           ),
         }}
@@ -54,7 +53,6 @@ function HomeScreen({navigation}) {
               size={size ? size : 24}
               color={focused ? color : '#000'}
               focused={focused}
-              color={color}
             />
           ),
         }}
@@ -70,7 +68,6 @@ function HomeScreen({navigation}) {
               size={size ? size : 24}
               color={focused ? color : '#000'}
               focused={focused}
-              color={color}
             />
           ),
         }}
