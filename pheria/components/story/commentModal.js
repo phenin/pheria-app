@@ -75,7 +75,7 @@ export default function ListCommentModal({dialog, closeModal}) {
         <Flex direction={'row'} justifyContent={'flex-start'}>
           {
             item.author && item.author.picture ? (
-              <Image source={{uri: item.author.picture}} alt="avatar"/>
+              <Image width={24} height={24} source={{uri: item.author.picture}} alt="avatar"/>
             ) : (
               <Icon
                 name="user-circle"
@@ -107,7 +107,7 @@ export default function ListCommentModal({dialog, closeModal}) {
                     <Flex direction={'row'} justifyContent={'flex-start'}>
                       {
                         item.author && item.author.picture ? (
-                          <Image source={{uri: item.author.picture}} alt="avatar"/>
+                          <Image width={24} height={24} source={{uri: item.author.picture}} alt="avatar"/>
                         ) : (
                           <Icon
                             name="user-circle"
