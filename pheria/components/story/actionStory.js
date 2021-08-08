@@ -2,7 +2,7 @@ import * as React from 'react';
 import {Center, Text} from 'native-base';
 import {useSelector, shallowEqual, useDispatch} from 'react-redux';
 import {StyleSheet} from 'react-native';
-import {vh} from '../../plugins/viewport-unit';
+import {vh, vw} from '../../plugins/viewport-unit';
 import Icon from 'react-native-vector-icons/AntDesign';
 import {heartStory} from '../../store/actions/storyActions';
 
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 0,
     top: 40 * vh,
-    width: 30,
+    width: 20 * vw,
     alignContent: 'center',
     justifyContent: 'center'
   },

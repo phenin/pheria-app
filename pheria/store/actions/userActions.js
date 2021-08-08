@@ -118,7 +118,7 @@ export const signUp = (params) => async (dispatch, getState) => {
 
 }
 
-export const getUser = (params) => async (dispatch, getState) => {
+export const getUser = () => async (dispatch, getState) => {
   dispatch({
     type: ActionTypes.USER_START,
     payload: {
@@ -128,7 +128,8 @@ export const getUser = (params) => async (dispatch, getState) => {
 
   try {
 
-    const data = await fetchUser(params)
+    const data = await fetchUser()
+
     dispatch({
       type: ActionTypes.GET_USER_SUCCESS,
       payload: {

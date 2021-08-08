@@ -18,6 +18,8 @@ export const update = (params) => put(`${endpoints.story}/${params._id}`, params
 export const heart = (id) => patch(`${endpoints.story}/${id}/heart`)
 export const unHeart = (id) => patch(`${endpoints.story}/${id}/unheart`)
 export const listComment = (params) => get(`${endpoints.comment}/${params._id}`)
+export const comment = (params) => post(`${endpoints.comment}`, params)
+export const replyComment = (params) => put(`${endpoints.comment}/${params.replyId}/reply`, params)
 
 export const fetchListStory = () => {
   return new Promise((resolve, reject) => {
@@ -74,6 +76,22 @@ export const fetchUnHeartStory = (params) => {
 export const fetchListComment = (params) => {
   return new Promise((resolve, reject) => {
     customFetch(listComment, params)
+      .then(data => resolve(data))
+      .catch(error => reject(error))
+  })
+}
+
+export const fetchComment = (params) => {
+  return new Promise((resolve, reject) => {
+    customFetch(comment, params)
+      .then(data => resolve(data))
+      .catch(error => reject(error))
+  })
+}
+
+export const fetchReplyComment = (params) => {
+  return new Promise((resolve, reject) => {
+    customFetch(replyComment, params)
       .then(data => resolve(data))
       .catch(error => reject(error))
   })

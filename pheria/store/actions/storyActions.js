@@ -5,7 +5,9 @@ import {
   fetchCreateStory,
   fetchHeartStory,
   fetchUnHeartStory,
-  fetchListComment
+  fetchListComment,
+  fetchComment,
+  fetchReplyComment
 } from '../../api/story'
 import {
   v4 as uuidv4
@@ -396,6 +398,54 @@ export const getListCommentStory = (id) => async (dispatch, getState) => {
   catch(err){
     console.log(err)
   }
+}
 
+export const commentStory = (params) => async (dispatch, getState) => {
+  try {
+    await fetchComment(params)
+
+    let comments = JSON.parse(JSON.stringify(getState().story.comments))
+    params.author = getState().user.user
+    params.replies = []
+    comments.push(params)
+    
+    dispatch({
+      type: ActionTypes.SET_STORY,
+      payload: {
+        comments: comments,
+      }
+    })
+
+    return true
+  }
+  catch(err){
+    console.log(err)
+    return false
+  }
+
+}
+
+export const replyCommentStory = (params) => async (dispatch, getState) => {
+  try {
+    await fetchReplyComment(params)
+
+    let comments = JSON.parse(JSON.stringify(getState().story.comments))
+    let index = getState().story.comments.findIndex(e=>e._id === params.replyId)
+    params.author = getState().user.user
+    comments[index].replies.push(params) 
+
+    dispatch({
+      type: ActionTypes.SET_STORY,
+      payload: {
+        comments: comments,
+      }
+    })
+
+    return true
+  }
+  catch(err){
+    console.log(err)
+    return false
+  }
 
 }

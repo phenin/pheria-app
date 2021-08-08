@@ -37,7 +37,6 @@ function reducer(state = initialState, action) {
     case ActionTypes.DELETE_STORY_SUCCESS:
     case ActionTypes.ADD_TEMPLATE:
     case ActionTypes.SET_STORY:
-      console.log(action.payload)
       return {
         ...state, ...action.payload
       }

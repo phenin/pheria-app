@@ -4,10 +4,18 @@ import Icon from 'react-native-vector-icons/Octicons';
 import UserScreen from './userScreen';
 import ListStoryScreen from './listStoryScreen';
 import CreateStoryScreen from './createStoryScreen';
+import {getUser} from '../store/actions/userActions'
+import {useDispatch} from 'react-redux';
 
 const Tabs = AnimatedTabBarNavigator();
 
 function HomeScreen({navigation}) {
+  const dispatch = useDispatch();
+
+  React.useEffect(()=>{
+    dispatch(getUser())
+  },[])
+
   return (
     <Tabs.Navigator
       initialRouteName="Home"
@@ -24,8 +32,6 @@ function HomeScreen({navigation}) {
         component={ListStoryScreen}
         listeners={{
           tabPress: e => {
-            // Prevent default action
-            console.log('sss');
             e.preventDefault();
           },
         }}
