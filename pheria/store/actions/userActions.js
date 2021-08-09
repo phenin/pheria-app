@@ -4,7 +4,9 @@ import {
   fetchLoginByGG,
   fetchLogin,
   fetchSignUp,
-  fetchUser
+  fetchUser,
+  fetchUserListStory,
+  fetchMyListStory
 } from '../../api/user'
 
 _storeData = async (key, value) => {
@@ -134,6 +136,68 @@ export const getUser = () => async (dispatch, getState) => {
       type: ActionTypes.GET_USER_SUCCESS,
       payload: {
         user: data.data,
+        loading: false,
+      }
+    })
+  } catch (error) {
+    dispatch({
+      type: ActionTypes.USER_ERROR,
+      payload: {
+        error: error,
+        dataLoading: false,
+      }
+    })
+  }
+
+}
+
+export const getUserListStory = (id) => async (dispatch, getState) => {
+  dispatch({
+    type: ActionTypes.USER_START,
+    payload: {
+      loading: true,
+    }
+  })
+
+  try {
+    const data = await fetchUserListStory(id)
+
+    dispatch({
+      type: ActionTypes.GET_USER_LIST_STORY_SUCCESS,
+      payload: {
+        listStory: data.data.story,
+        loading: false,
+      }
+    })
+  } catch (error) {
+    dispatch({
+      type: ActionTypes.USER_ERROR,
+      payload: {
+        error: error,
+        dataLoading: false,
+      }
+    })
+  }
+
+}
+
+export const getMyListStory = () => async (dispatch, getState) => {
+  console.log('loc')
+  dispatch({
+    type: ActionTypes.USER_START,
+    payload: {
+      loading: true,
+    }
+  })
+
+  try {
+    const data = await fetchMyListStory()
+    console.log(data.data)
+
+    dispatch({
+      type: ActionTypes.GET_USER_LIST_STORY_SUCCESS,
+      payload: {
+        listStory: data.data.story,
         loading: false,
       }
     })

@@ -4,7 +4,9 @@ const initialState = {
     token: null,
     user: null,
     loading: false,
-    error: null
+    error: null,
+    listStory: [],
+    otherUser: null
 }
 
 function reducer(state = initialState, action) {
@@ -14,6 +16,7 @@ function reducer(state = initialState, action) {
         case ActionTypes.LOGIN_SUCCESS:
         case ActionTypes.SIGNUP_SUCCESS:
         case ActionTypes.GET_USER_SUCCESS:
+        case ActionTypes.GET_USER_LIST_STORY_SUCCESS:
             return {
                 ...state, ...action.payload
             };
