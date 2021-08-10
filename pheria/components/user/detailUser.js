@@ -45,9 +45,9 @@ export default function ActionStory({user}) {
         {
           state.listStory.map((item, index)=>{
             return (
-              <Flex direction={'row'} alignItems={'center'} justifyContent={'space-around'} style={{marginBottom: 10}}>
+              <Flex direction={'row'} alignItems={'center'} justifyContent={'space-around'} style={{marginBottom: 10}} key={index}>
                 {
-                  item.image ? <Image width={10*vw} height={10*vw} source={{uri: item.image}} alt="image-story" />
+                  item.image ? <Image borderRadius={100} width={10*vw} height={10*vw} source={{uri: item.image}} alt="image-story" />
                   : <Icon name="image" size={10*vw} color={'#fff'}/>
                 }
                 
@@ -56,8 +56,6 @@ export default function ActionStory({user}) {
                 <Icon style={styles.mx1} name="eye" size={3*vw} color={'#fff'}/>
                 <Text style={styles.mx1}>{item.hearts.length}</Text>
                 <Icon style={styles.mx1} name="heart" size={3*vw} color={'#fff'}/>
-                <Text style={styles.mx1}>{item.comments.length}</Text>
-                <Icon style={styles.mx1} name="comment" size={3*vw} color={'#fff'}/>
               </Flex>
             )
           })

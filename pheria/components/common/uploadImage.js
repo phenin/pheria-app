@@ -27,7 +27,6 @@ export default class UploadImage extends Component {
     // Check selected image is not null
     if (this.state.image != null) {
       const selectedImage = this.state.image;
-      console.log('+++++ selected url ' + selectedImage);
       const data = new FormData();
       data.append('image', {
         name: selectedImage.filename,

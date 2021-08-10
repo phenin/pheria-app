@@ -1,6 +1,7 @@
 import {
   get,
   post,
+  put,
   customFetch
 } from './API'
 
@@ -9,6 +10,7 @@ const endpoints = {
   loginbygg: '/api/user/login-by-google',
   sign_up: '/api/user/sign-up',
   get_user: '/api/user/profile',
+  update_user: '/api/user/update-user/',
   get_users_list_story: '/api/story/get-users-list-story/',
   get_my_list_story: '/api/story/get-my-list-story/mylist'
 }
@@ -25,6 +27,7 @@ export const signUp = (params) => post(endpoints.sign_up, params, {
 export const getUser = () => get(endpoints.get_user)
 export const getUserListStory = (id) => get(endpoints.get_users_list_story + id)
 export const getMyListStory = () => get(endpoints.get_my_list_story )
+export const updateUser = (params) => put(endpoints.update_user + params._id, params)
 
 export const fetchLoginByGG = (params) => {
   return new Promise((resolve, reject) => {
@@ -74,3 +77,13 @@ export const fetchMyListStory = () =>{
       .catch(error => reject(error))
   })
 }
+
+export const fetchUpdateUser = (params) =>{
+  return new Promise((resolve, reject) => {
+    customFetch(updateUser, params)
+      .then(data => resolve(data))
+      .catch(error => { console.log(error)
+        reject(error)})
+  })
+}
+

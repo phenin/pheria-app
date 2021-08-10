@@ -17,6 +17,7 @@ function reducer(state = initialState, action) {
         case ActionTypes.SIGNUP_SUCCESS:
         case ActionTypes.GET_USER_SUCCESS:
         case ActionTypes.GET_USER_LIST_STORY_SUCCESS:
+        case ActionTypes.UDATE_USER_SUCCESS:
             return {
                 ...state, ...action.payload
             };

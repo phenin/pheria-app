@@ -6,7 +6,8 @@ import {
   fetchSignUp,
   fetchUser,
   fetchUserListStory,
-  fetchMyListStory
+  fetchMyListStory,
+  fetchUpdateUser
 } from '../../api/user'
 
 _storeData = async (key, value) => {
@@ -181,8 +182,38 @@ export const getUserListStory = (id) => async (dispatch, getState) => {
 
 }
 
+export const updateUserProfile = (params) => async (dispatch, getState) => {
+  dispatch({
+    type: ActionTypes.USER_START,
+    payload: {
+      loading: true,
+    }
+  })
+
+  try {
+    const data = await fetchUpdateUser(params)
+    dispatch({
+      type: ActionTypes.UDATE_USER_SUCCESS,
+      payload: {
+        user: data.data,
+        loading: false,
+      }
+    })
+    return true
+  } catch (error) {
+    dispatch({
+      type: ActionTypes.USER_ERROR,
+      payload: {
+        error: error,
+        dataLoading: false,
+      }
+    })
+    return false
+  }
+
+}
+
 export const getMyListStory = () => async (dispatch, getState) => {
-  console.log('loc')
   dispatch({
     type: ActionTypes.USER_START,
     payload: {
@@ -192,7 +223,6 @@ export const getMyListStory = () => async (dispatch, getState) => {
 
   try {
     const data = await fetchMyListStory()
-    console.log(data.data)
 
     dispatch({
       type: ActionTypes.GET_USER_LIST_STORY_SUCCESS,

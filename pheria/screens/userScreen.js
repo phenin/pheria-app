@@ -20,7 +20,7 @@ export default function UserScreen({navigation}) {
           height: 100 * vh,
         }}>
           <DetailUser user={user} />
-          <Button style={styles.my3}>Chỉnh sửa thông tin cá nhân</Button>
+          <Button style={styles.my3} onPress={() => navigation.navigate('UpdateProfile')}>Chỉnh sửa thông tin cá nhân</Button>
           <Button colorScheme="danger" style={styles.my3}>Đăng xuất</Button>
       </SafeAreaView>
     </SafeAreaProvider>

@@ -9,6 +9,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import LoginScreen from './screens/loginScreen';
 import HomeScreen from './screens/homeScreen';
 import DetailStoryScreen from './screens/detailStoryScreen';
+import UpdateProfileScreen from './screens/updateProfileScreen';
 
 import configureStore from './store/configureStore';
 
@@ -42,6 +43,10 @@ function App() {
                 <Stack.Screen
                   name="DetailStory"
                   component={DetailStoryScreen}
+                />
+                <Stack.Screen
+                  name="UpdateProfile"
+                  component={UpdateProfileScreen}
                 />
               </>
             ) : (
