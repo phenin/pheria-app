@@ -5,11 +5,17 @@ import {vh} from '../plugins/viewport-unit';
 import DetailUser from '../components/user/detailUser'
 import {Button} from 'native-base'
 import {StyleSheet} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function UserScreen({navigation}) {
   const state = useSelector(stateSelector, shallowEqual);
 
   const {user} = state
+
+  const signOut = async () =>{
+    await AsyncStorage.removeItem('accessToken');
+    navigation.navigate('Login');
+  }
 
   return (
     <SafeAreaProvider style={{backgroundColor: "#000"}}>
@@ -21,7 +27,7 @@ export default function UserScreen({navigation}) {
         }}>
           <DetailUser user={user} />
           <Button style={styles.my3} onPress={() => navigation.navigate('UpdateProfile')}>Chỉnh sửa thông tin cá nhân</Button>
-          <Button colorScheme="danger" style={styles.my3}>Đăng xuất</Button>
+          <Button colorScheme="danger" style={styles.my3} onPress={()=>signOut()}>Đăng xuất</Button>
       </SafeAreaView>
     </SafeAreaProvider>
   );

@@ -9,6 +9,14 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import {updateUserProfile} from '../store/actions/userActions'
 
 export default function UserScreen({navigation}) {
+
+  React.useEffect(() => {
+    const token = _retrieveData()
+    if(!token) {
+      navigation.navigate('Login');
+    }
+  }, [navigation]);
+  
   const [dialog, setDialog] = React.useState(false)
   const state = useSelector(stateSelector, shallowEqual);
   const dispatch = useDispatch();

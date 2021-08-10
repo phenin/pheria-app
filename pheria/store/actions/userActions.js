@@ -76,6 +76,8 @@ export const login = (params) => async (dispatch, getState) => {
       }
     })
 
+    return true
+
   } catch (error) {
     dispatch({
       type: ActionTypes.USER_ERROR,
@@ -84,6 +86,7 @@ export const login = (params) => async (dispatch, getState) => {
         dataLoading: false,
       }
     })
+    return false
   }
 
 }

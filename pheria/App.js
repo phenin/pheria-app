@@ -17,47 +17,29 @@ const store = configureStore();
 const Stack = createStackNavigator();
 
 function App() {
-  _retrieveData = async () => {
-    try {
-      // await AsyncStorage.removeItem('accessToken');
-      const value = await AsyncStorage.getItem('accessToken');
-      return value;
-    } catch (error) {
-      return null;
-    }
-  };
-
-  const [token, setToken] = React.useState(_retrieveData());
   return (
     <Provider store={store}>
       <NativeBaseProvider>
         <NavigationContainer>
           <Stack.Navigator initialRouteName="Home">
-            {token ? (
-              <>
-                <Stack.Screen
-                  name="Home"
-                  component={HomeScreen}
-                  options={{headerShown: false}}
-                />
-                <Stack.Screen
-                  name="DetailStory"
-                  component={DetailStoryScreen}
-                />
-                <Stack.Screen
-                  name="UpdateProfile"
-                  component={UpdateProfileScreen}
-                />
-              </>
-            ) : (
-              <>
-                <Stack.Screen
-                  name="Login"
-                  component={LoginScreen}
-                  options={{headerShown: false}}
-                />
-              </>
-            )}
+              <Stack.Screen
+                name="Home"
+                component={HomeScreen}
+                options={{headerShown: false}}
+              />
+              <Stack.Screen
+                name="DetailStory"
+                component={DetailStoryScreen}
+              />
+              <Stack.Screen
+                name="UpdateProfile"
+                component={UpdateProfileScreen}
+              />
+              <Stack.Screen
+                name="Login"
+                component={LoginScreen}
+                options={{headerShown: false}}
+              />
           </Stack.Navigator>
         </NavigationContainer>
       </NativeBaseProvider>

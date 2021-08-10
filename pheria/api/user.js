@@ -42,7 +42,8 @@ export const fetchLogin = (params) => {
   return new Promise((resolve, reject) => {
     customFetch(login, params)
       .then(data => resolve(data))
-      .catch(error => reject(error))
+      .catch(error => {console.log('error', error)
+        reject(error)})
   })
 }
 
