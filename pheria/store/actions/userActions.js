@@ -41,6 +41,7 @@ export const loginByGG = (params) => async (dispatch, getState) => {
         loading: false,
       }
     })
+    return true
 
   } catch (error) {
     dispatch({
@@ -50,6 +51,7 @@ export const loginByGG = (params) => async (dispatch, getState) => {
         dataLoading: false,
       }
     })
+    return false
   }
 
 }

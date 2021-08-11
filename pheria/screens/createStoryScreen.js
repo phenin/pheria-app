@@ -7,23 +7,12 @@ import {useSelector, shallowEqual, useDispatch} from 'react-redux';
 import {vh} from '../plugins/viewport-unit';
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 import {resetStory} from '../store/actions/storyActions';
-import {_retrieveData} from '../plugins/utils';
 
 function CreateStoryScreen({navigation}) {
 
-  React.useEffect(() => {
-    const token = _retrieveData()
-    if(!token) {
-      navigation.navigate('Login');
-    }
-  }, [navigation]);
-
   const state = useSelector(stateSelector, shallowEqual);
   const [backgroundColor, setBackgroundColor] = React.useState('#000');
-
   const dispatch = useDispatch();
-
-
   const {background} = state;
 
   React.useEffect(() => {

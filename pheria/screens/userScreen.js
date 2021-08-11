@@ -8,13 +8,12 @@ import {StyleSheet} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function UserScreen({navigation}) {
+
   const state = useSelector(stateSelector, shallowEqual);
-
   const {user} = state
-
   const signOut = async () =>{
     await AsyncStorage.removeItem('accessToken');
-    navigation.navigate('Login');
+    navigation.navigate('Auth');
   }
 
   return (

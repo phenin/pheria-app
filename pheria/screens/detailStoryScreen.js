@@ -17,13 +17,6 @@ import {
   Animated,
 } from 'react-native';
 function DetailStoryScreen({navigation}) {
-
-  React.useEffect(() => {
-    const token = _retrieveData()
-    if(!token) {
-      navigation.navigate('Login');
-    }
-  }, [navigation]);
   
   const state = useSelector(stateSelector, shallowEqual);
   const [backgroundColor, setBackgroundColor] = React.useState('#000000');
