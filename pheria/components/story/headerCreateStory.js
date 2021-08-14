@@ -70,6 +70,7 @@ export default function HeaderCreateStory({navigation, color}) {
               <Input
                 w="100%"
                 placeholder="Tiêu đề bài viết"
+                defaultValue={state.title}
                 _light={{
                   placeholderTextColor: 'blueGray.400',
                 }}
@@ -99,5 +100,6 @@ export default function HeaderCreateStory({navigation, color}) {
 function stateSelector(state) {
   return {
     title: state.story.title,
+    _id: state.story._id,
   };
 }

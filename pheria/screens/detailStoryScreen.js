@@ -37,7 +37,9 @@ function DetailStoryScreen({navigation}) {
           name="ellipsis1"
           size={24}
           style={{marginLeft: 10, marginRight: 10}}
-          onPress={() => navigation.goBack()}
+          onPress={() => {
+            navigation.navigate('CreateStory',)
+          }}
         />
       ),
     });
@@ -145,10 +147,13 @@ function DetailStoryScreen({navigation}) {
                   return (
                     <Box
                       key={'content' + index}
-                      width={(item.width - 10) * vw}
-                      height={(item.height - 10) * vw}>
+                      width={item.width * vw}
+                      height={item.height * vw}
+                      style={{flexWrap: 'wrap'}}>
                       <Draggable x={item.x} y={item.y} disabled>
-                        <Text style={{color: background && background.color}}>{item.text}</Text>
+                        <Text width={item.width * vw}
+                          height={item.height * vw} 
+                          style={{color: background && background.color, flexWrap: 'wrap'}}>{item.text}</Text>
                       </Draggable>
                     </Box>
                   );

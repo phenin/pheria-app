@@ -8,13 +8,13 @@ import {
   Input,
   Flex,
   Button,
+  Text
 } from 'native-base';
 import {vw, vh} from '../../plugins/viewport-unit';
 import Draggable from 'react-native-draggable';
 import {REACT_APP_API} from '../../constants';
 import {useSelector, shallowEqual, useDispatch} from 'react-redux';
 import {
-  updateAreaContent,
   changeContent,
   changePositionTemplate,
   changePositionContent,
@@ -31,7 +31,7 @@ function FormStory({color}) {
     setDialog(true);
   };
   const updateContent = () => {
-    dispatch(updateAreaContent(area));
+    dispatch(changeContent(area));
     closeModal();
   };
   const handleChangeInput = (key, event) => {
@@ -39,14 +39,6 @@ function FormStory({color}) {
   };
   const closeModal = () => {
     setDialog(false);
-  };
-  const handleChangeArea = (id, event) => {
-    dispatch(
-      changeContent({
-        _id: id,
-        text: event.nativeEvent.text,
-      }),
-    );
   };
   const moveTemplate = (event, gestureState, bound, id) => {
     dispatch(
@@ -62,8 +54,8 @@ function FormStory({color}) {
     dispatch(
       changePositionContent({
         _id: id,
-        x: gestureState.dx - 10,
-        y: gestureState.dy - 10,
+        x: event.nativeEvent.locationX,
+        y: event.nativeEvent.locationY,
       }),
     );
   };
@@ -81,6 +73,7 @@ function FormStory({color}) {
                 <Draggable
                   x={item.x}
                   y={item.y}
+                  minX={0} minY={0}
                   renderSize={item.template.width * 2 * vw}
                   onDragRelease={(event, gestureState, bound) =>
                     moveTemplate(event, gestureState, bound, item._id)
@@ -101,6 +94,7 @@ function FormStory({color}) {
                 <Draggable
                   x={item.x}
                   y={item.y}
+                  minX={0} minY={0}
                   onShortPressRelease={() => openTitleStory(item)}
                   onDragRelease={(event, gestureState, bound) =>
                     moveContent(event, gestureState, bound, item._id)
@@ -109,23 +103,12 @@ function FormStory({color}) {
                     shadow={2}
                     width={item.width * vw}
                     height={item.height * vw}
-                    p={5}
                     style={{
                       borderWidth: 1,
                       borderColor: '#ff00ff',
                       borderRadius: 4,
                     }}>
-                    <TextArea
-                      placeholder="Nhập nội dung"
-                      style={{height: (item.height - 10) * vw}}
-                      width={(item.width - 10) * vw}
-                      h={item.height * vw}
-                      _light={{
-                        placeholderTextColor: color,
-                        color: color,
-                      }}
-                      onChange={v => handleChangeArea(item._id, v)}
-                    />
+                    <Text style={{color: color}}>{item.text}</Text>
                   </Box>
                 </Draggable>
               </Box>
@@ -146,28 +129,21 @@ function FormStory({color}) {
                 <Input
                   w={40 * vw}
                   placeholder="Chiều dài %"
-                  value={area.width}
-                  _light={{
-                    placeholderTextColor: 'blueGray.400',
-                  }}
-                  _dark={{
-                    placeholderTextColor: 'blueGray.50',
-                  }}
+                  defaultValue={area.width.toString()}
                   onChange={v => handleChangeInput('width', v)}
                 />
                 <Input
                   w={40 * vw}
                   placeholder="Chiều cao %"
-                  value={area.height}
-                  _light={{
-                    placeholderTextColor: 'blueGray.400',
-                  }}
-                  _dark={{
-                    placeholderTextColor: 'blueGray.50',
-                  }}
+                  defaultValue={area.height.toString()}
                   onChange={v => handleChangeInput('height', v)}
                 />
               </Flex>
+              <TextArea
+                placeholder="Nhập nội dung"
+                defaultValue={area.text}
+                onChange={v => handleChangeInput('text', v)}
+                />
               <Button style={{marginTop: 10}} onPress={() => updateContent()}>
                 Lưu
               </Button>

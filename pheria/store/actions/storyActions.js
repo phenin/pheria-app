@@ -3,6 +3,7 @@ import {
   fetchListStory,
   fetchDetailStory,
   fetchCreateStory,
+  fetchUpdateStory,
   fetchHeartStory,
   fetchUnHeartStory,
   fetchListComment,
@@ -135,7 +136,7 @@ export const resetStory = () => async (dispatch, getState) => {
         width: 50,
         height: 50,
         x: 20,
-        y: 0,
+        y: 10,
         _id: uuidv4()
       }],
       templates: [],
@@ -203,18 +204,6 @@ export const addContent = () => async (dispatch, getState) => {
   })
 }
 
-export const updateAreaContent = (item) => async (dispatch, getState) => {
-  let listContents = getState().story.contents.filter(e => e._id !== item._id)
-  listContents.push(item)
-
-  dispatch({
-    type: ActionTypes.SET_STORY,
-    payload: {
-      contents: listContents
-    }
-  })
-}
-
 export const updateTitle = (title) => async (dispatch, getState) => {
   dispatch({
     type: ActionTypes.SET_STORY,
@@ -241,7 +230,9 @@ export const changeContent = (value) => async (dispatch, getState) => {
 
   content = {
     ...content,
-    text: value.text
+    text: value.text,
+    width: value.width,
+    height: value.height
   }
   listContents[index] = content
 
@@ -290,8 +281,12 @@ export const createStory = () => async (dispatch, getState) => {
     }
   })
   try {
-
-    await fetchCreateStory(story)
+    if(story._id){
+      await fetchUpdateStory(story)
+    }
+    else{
+      await fetchCreateStory(story)
+    }
 
     dispatch({
       type: ActionTypes.CREATE_STORY_SUCCESS,
@@ -340,8 +335,8 @@ export const changePositionContent = (value) => async (dispatch, getState) => {
 
   content = {
     ...content,
-    x: content.x + value.x,
-    y: content.y + value.y
+    x: value.x,
+    y: value.y
   }
   listContents[index] = content
   dispatch({
