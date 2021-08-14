@@ -14,6 +14,7 @@ target 'pheria' do
 
   pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
   pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-async-storage/async-storage'
+  pod 'Firebase/Analytics'
   
   target 'pheriaTests' do
     inherit! :complete
