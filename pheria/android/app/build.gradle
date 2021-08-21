@@ -1,5 +1,4 @@
 apply plugin: "com.android.application"
-apply plugin: 'com.google.gms.google-services' // <- Add this line
 
 import com.android.build.OutputFile
 
@@ -83,6 +82,7 @@ project.ext.react = [
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
+apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
 
 /**
  * Set this to true to create two separate APKs instead of one:
@@ -216,6 +216,8 @@ dependencies {
         implementation jscFlavor
     }
     implementation project(':@react-native-async-storage')
+    compile project(':react-native-vector-icons')
+
 }
 
 // Run this once to be able to run the application with BUCK

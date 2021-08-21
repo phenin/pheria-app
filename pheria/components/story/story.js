@@ -28,7 +28,6 @@ function Story({data, navigation}) {
         marginTop: 4 * vw,
         marginBottom: 4 * vw,
         borderRadius: 30,
-        heigh: 40 * vh,
       }}>
       <TouchableOpacity onPress={() => getDetail(data._id)}>
         <ImageBackground
