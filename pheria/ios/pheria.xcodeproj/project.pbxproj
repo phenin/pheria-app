@@ -14,7 +14,6 @@
 		3F191AFED9B2AC1627C32597 /* libPods-pheria-pheriaTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DC9B256E7A9C172528534016 /* libPods-pheria-pheriaTests.a */; };
 		5F17ED6522F87B571F235D01 /* libPods-pheria.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AC69848520B96D43F07C2C19 /* libPods-pheria.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		D545467626C818F8004776ED /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D545467526C818F8004776ED /* GoogleService-Info.plist */; };
 		D547411E26A4281300782190 /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = D547411D26A4281300782190 /* Fonts */; };
 /* End PBXBuildFile section */
 
@@ -43,7 +42,6 @@
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = pheria/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		AC69848520B96D43F07C2C19 /* libPods-pheria.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-pheria.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B2E913671BCC530E97476EC4 /* Pods-pheria.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-pheria.release.xcconfig"; path = "Target Support Files/Pods-pheria/Pods-pheria.release.xcconfig"; sourceTree = "<group>"; };
-		D545467526C818F8004776ED /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		D547411D26A4281300782190 /* Fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Fonts; path = "../node_modules/react-native-vector-icons/Fonts"; sourceTree = "<group>"; };
 		DC9B256E7A9C172528534016 /* libPods-pheria-pheriaTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-pheria-pheriaTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -121,7 +119,6 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				D545467526C818F8004776ED /* GoogleService-Info.plist */,
 				13B07FAE1A68108700A75B9A /* pheria */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* pheriaTests */,
@@ -189,7 +186,7 @@
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				698B4A7CD4D27C7053A1019E /* [CP] Embed Pods Frameworks */,
-				8455FC45C667CF399FA43B3E /* [CP] Copy Pods Resources */,
+				9DCD8A0DFBA0DDC4B3A16987 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -249,7 +246,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D547411E26A4281300782190 /* Fonts in Resources */,
-				D545467626C818F8004776ED /* GoogleService-Info.plist in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 			);
@@ -289,7 +285,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-pheria/Pods-pheria-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		8455FC45C667CF399FA43B3E /* [CP] Copy Pods Resources */ = {
+		9DCD8A0DFBA0DDC4B3A16987 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
