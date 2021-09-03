@@ -123,7 +123,7 @@ function FormStory({color}) {
         <Modal size="full" isOpen={dialog} onClose={() => closeModal()}>
           <Modal.Content style={{marginBottom: 0, marginTop: 'auto'}}>
             <Modal.CloseButton />
-            <Modal.Header>Chỉnh diện tích khung chữ</Modal.Header>
+            <Modal.Header>Nội dung</Modal.Header>
             <Modal.Body>
               <Flex direction={'row'} justifyContent="space-between">
                 <Input
