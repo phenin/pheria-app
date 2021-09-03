@@ -12,14 +12,14 @@ const DATES = [...Array(32).keys()].splice(1, 31);
 const YEARS = [...Array(2021).keys()].splice(1900, 121);
 
 const DatePicker = (props) => {
-    const dateRef = useRef<ScrollView>(null)
-    const monthRef = useRef<ScrollView>(null)
-    const yearRef = useRef<ScrollView>(null)
-    const [activeDateIndex, setActiveDateIndex] = useState<number>(
+    const dateRef = useRef(null)
+    const monthRef = useRef(null)
+    const yearRef = useRef(null)
+    const [activeDateIndex, setActiveDateIndex] = useState(
         props.defaultDate ? DATES.indexOf(props.defaultDate) : 1)
-    const [activeMonthIndex, setActiveMonthIndex] = useState<number>(
+    const [activeMonthIndex, setActiveMonthIndex] = useState(
         props.defaultMonth ? MONTH_ALIAS.indexOf(props.defaultMonth) : 1)
-    const [activeYearIndex, setActiveYearIndex] = useState<number>(
+    const [activeYearIndex, setActiveYearIndex] = useState(
         props.defaultYear ? YEARS.indexOf(props.defaultYear) : 1)
     const { _onScrollDate,
         _onScrollMonth,

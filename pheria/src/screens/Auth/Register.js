@@ -4,7 +4,6 @@ import {
     TouchableOpacity, Image, TextInput,
     KeyboardAvoidingView,
     Animated,
-    ScrollView,
     SafeAreaView
 } from 'react-native'
 import { SCREEN_HEIGHT, SCREEN_WIDTH, STATUS_BAR_HEIGHT } from '../../constants'
@@ -12,65 +11,29 @@ import { Formik } from 'formik'
 import * as yup from 'yup'
 import { Easing } from 'react-native'
 import { navigation } from '../../navigations/rootNavigation'
-import DatePicker, { MONTH_ALIAS } from '../../components/DatePicker'
-import { Alert } from 'react-native'
 
 const Register = () => {
     const _loadingDeg = new Animated.Value(0)
     const _loadingOpacity = new Animated.Value(0)
     const [email, setEmail] = useState('')
     const [phone, setPhone] = useState('')
-    const [fullname, setFullname] = useState('')
-    const [password, setPassword] = useState('')
-    const [savePassword, setSavePassword] = useState(true)
-    const [birthday, setBirthday] = useState({
-        date: 1,
-        month: 1,
-        year: 2020
-    })
     const [step, setStep] = useState(1)
-    const [validating, setValidating] = useState(false)
     const [currentTab, setCurrentTab] = useState(1)
     const _onToggleTab = (type) => setCurrentTab(type)
-    const _onPressNextStep = () => {
-    }
+    
     const _onValidatedStep1 = (values) => {
         setStep(step + 1)
         setEmail(values.email)
         setPhone(values.phone)
     }
     const _onValidatedStep2 = (values) => {
-        setStep(step + 1)
-        setFullname(values.fullname)
-        setPassword(values.password)
-        setSavePassword(values.savePassword)
-    }
-    const _onValidatedStep3 = (values) => {
-        const selectedDate = new Date(`${MONTH_ALIAS[values.month]} ${values.date}, ${values.year}`)
-        if (selectedDate.getDate() != values.date
-            || selectedDate.getFullYear() != values.year
-            || selectedDate.getMonth() != values.month) {
-            Alert.alert('Error', 'Invalid birthday!')
-            return;
+        const params = {
+            phone,
+            email,
+            fullname: values.fullname,
+            password: values.password,
         }
-        if (Math.floor(((new Date).getTime() - (selectedDate.getTime())) / (1000 * 60 * 60 * 24 * 365)) > 5) {
-            /**
-             * HANDLER CREATE HERE
-             */
-            const params = {
-                date: values.date,
-                month: values.month,
-                year: values.year,
-                phone,
-                email,
-                fullname,
-                password,
-                savePassword
-            }
-            navigation.navigate('Welcome', params)
-        } else {
-            Alert.alert('Error')
-        }
+        navigation.navigate('Welcome', params)
     }
     const _startLoadingAnimation = (times) => {
         _loadingDeg.setValue(0)
@@ -98,14 +61,9 @@ const Register = () => {
     }, [['phone', 'email']])
     const SchemaStep2 = yup.object().shape({
         fullname: yup.string().matches(/[a-zA-Z]+/).required(),
-        password: yup.string().min(7, 'Password must be more than 6 character').required(),
-        savePassword: yup.boolean().required()
+        password: yup.string().min(6, 'Mật khẩu cần ít nhất 6 ký tự').required(),
     })
-    const SchemaStep3 = yup.object().shape({
-        date: yup.number().min(1).max(31).required(),
-        month: yup.string().min(0).max(11).required(),
-        year: yup.number().min(1900).max(2020).required()
-    })
+    
     return (
         <SafeAreaView style={styles.container}>
             <KeyboardAvoidingView behavior="height" style={{
@@ -141,8 +99,8 @@ const Register = () => {
                                             }}>
                                             <Text style={{
                                                 ...styles.tabTitle,
-                                                color: currentTab === 1 ? '#000' : "#666"
-                                            }}>PHONE</Text>
+                                                color: currentTab === 1 ? '#fff' : "#666"
+                                            }}>Số điện thoại</Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity
                                             activeOpacity={0.8}
@@ -152,8 +110,8 @@ const Register = () => {
                                             }}>
                                             <Text style={{
                                                 ...styles.tabTitle,
-                                                color: currentTab === 2 ? '#000' : "#666"
-                                            }}>EMAIL</Text>
+                                                color: currentTab === 2 ? '#fff' : "#666"
+                                            }}>Địa chỉ email</Text>
                                         </TouchableOpacity>
                                         <View style={{
                                             ...styles.activeTypeLine,
@@ -182,7 +140,7 @@ const Register = () => {
                                                         formikProps.setFieldTouched('phone', false, false)
                                                     }}
                                                     autoFocus={true}
-                                                    placeholder="Phone"
+                                                    placeholder="Số điện thoại"
                                                     keyboardType="number-pad"
                                                     returnKeyType="done"
                                                     style={styles.inputPhone}
@@ -198,7 +156,7 @@ const Register = () => {
                                             {formikProps.touched.phone
                                                 && formikProps.errors.phone &&
                                                 <Text style={styles.errorText}>
-                                                    Please input a valid phone number.
+                                                    Vui lòng nhập đúng số điện thoại.
                                             </Text>
                                             }
                                         </View>)}
@@ -215,7 +173,7 @@ const Register = () => {
                                                         formikProps.setFieldTouched('email', false, false)
                                                     }}
                                                     autoFocus={true}
-                                                    placeholder="Email"
+                                                    placeholder="Địa chỉ Email"
                                                     keyboardType="email-address"
                                                     returnKeyType="done"
                                                     style={styles.input}
@@ -234,7 +192,7 @@ const Register = () => {
                                             {formikProps.touched.email
                                                 && formikProps.errors.email &&
                                                 <Text style={styles.errorText}>
-                                                    Please input a valid email.
+                                                    Vui lòng nhập đúng địa chỉ email.
                                             </Text>
                                             }
                                         </View>)}
@@ -248,7 +206,7 @@ const Register = () => {
                                                 opacity: Animated.subtract(1, _loadingOpacity),
                                                 fontWeight: '600',
                                                 color: '#fff'
-                                            }}>Next</Animated.Text>
+                                            }}>Tiếp theo</Animated.Text>
                                             <Animated.Image
                                                 style={{
                                                     ...styles.loadingIcon,
@@ -285,15 +243,15 @@ const Register = () => {
                         initialValues={{
                             fullname: '',
                             password: '',
-                            savePassword: true
                         }}
                     >
                         {(formikProps) => (
                             <View style={styles.step2Wrapper}>
                                 <View style={styles.step2Title}>
                                     <Text style={{
-                                        fontWeight: 'bold'
-                                    }}>NAME AND PASSWORD</Text>
+                                        fontWeight: 'bold',
+                                        color: '#fff'
+                                    }}>Tên và mật khẩu</Text>
                                 </View>
                                 <View style={styles.step2FormWrapper}>
                                     <View style={styles.formGroupWrapper}>
@@ -312,7 +270,7 @@ const Register = () => {
                                                     formikProps.setErrors({ fullname: undefined })
                                                 }}
                                                 autoFocus={true}
-                                                placeholder="Full name"
+                                                placeholder="Tên hiển thị"
                                                 keyboardType="default"
                                                 returnKeyType="done"
                                                 style={styles.input}
@@ -331,7 +289,7 @@ const Register = () => {
                                         {formikProps.touched.fullname
                                             && formikProps.errors.fullname &&
                                             <Text style={styles.errorText}>
-                                                Please input your full name.
+                                                Vui lòng nhập tên hiển thị.
                                             </Text>
                                         }
                                     </View>
@@ -350,7 +308,7 @@ const Register = () => {
                                                     formikProps.setErrors({ fullname: undefined })
                                                 }}
                                                 secureTextEntry={true}
-                                                placeholder="Password"
+                                                placeholder="Mật khẩu"
                                                 keyboardType="default"
                                                 returnKeyType="done"
                                                 style={styles.input}
@@ -369,33 +327,10 @@ const Register = () => {
                                         {formikProps.touched.password
                                             && formikProps.errors.password &&
                                             <Text style={styles.errorText}>
-                                                Password must be more than 6 characters.
+                                                Mật khẩu cần ít nhất 6 ký tự nhé!!!
                                             </Text>
                                         }
-                                        <TouchableOpacity
-                                            style={styles.savePassword}
-                                            activeOpacity={1}
-                                            onPress={() => {
-                                                formikProps.
-                                                    setFieldValue('savePassword',
-                                                        !formikProps.values.savePassword)
-                                            }} >
-                                            <View style={{
-                                                ...styles.checkbox,
-                                                backgroundColor: formikProps.values.savePassword
-                                                    ? '#318bfb' : '#fff',
-                                                borderColor: formikProps.values.savePassword
-                                                    ? '#318bfb' : '#ddd',
-                                            }}>
-                                                <Text style={{
-                                                    color: '#fff',
-                                                    fontWeight: '600',
-                                                }}>✓</Text>
-                                            </View>
-                                            <Text style={{
-                                                color: '#666',
-                                            }}>Save password</Text>
-                                        </TouchableOpacity>
+                                        
                                     </View>
                                     <TouchableOpacity
                                         onPress={() => {
@@ -407,7 +342,7 @@ const Register = () => {
                                             opacity: Animated.subtract(1, _loadingOpacity),
                                             fontWeight: '600',
                                             color: '#fff'
-                                        }}>Continue Without Syncing Contacts</Animated.Text>
+                                        }}>Tiếp tục</Animated.Text>
                                         <Animated.Image
                                             style={{
                                                 ...styles.loadingIcon,
@@ -429,133 +364,11 @@ const Register = () => {
                                             } />
 
                                     </TouchableOpacity>
-                                    <TouchableOpacity>
-                                        <Text style={{
-                                            fontWeight: '600',
-                                            color: '#318bfb'
-                                        }}>
-                                            Continue Without Syncing Contacts
-                                        </Text>
-                                    </TouchableOpacity>
+                                    
                                 </View>
                             </View>
                         )}
                     </Formik>
-                )}
-                {step === 3 && (
-                    <ScrollView
-                        bounces={false}
-                        style={styles.step3ScrollView}>
-                        <Formik
-                            validateOnBlur={false}
-                            validateOnChange={false}
-                            onSubmit={_onValidatedStep3}
-                            validationSchema={SchemaStep3}
-                            initialValues={birthday}
-                        >
-                            {(formikProps) => (
-                                <View style={styles.step3Wrapper}>
-                                    <View>
-                                        <Image style={styles.birthdayIcon}
-                                            source={require('../../assets/images/rocket.png')} />
-                                    </View>
-                                    <Text style={{
-                                        marginVertical: 15,
-                                        fontWeight: '500',
-                                        fontSize: 18
-                                    }}>ADD BIRTHDAY</Text>
-                                    <View style={{
-                                        width: SCREEN_WIDTH * 0.7,
-                                        marginBottom: 15,
-                                    }}>
-                                        <Text style={{
-                                            textAlign: 'center'
-                                        }}>
-                                            This won't be part of your public profile.
-                                            Why do I need to provide my birthday?
-                                        </Text>
-                                    </View>
-                                    <View style={styles.birthdayInputWrapper}>
-                                        <View style={styles.birthdayInput}>
-                                            <Text>
-                                                {MONTH_ALIAS[formikProps.values.month]} {formikProps.values.date}, {formikProps.values.year} </Text>
-                                            <View style={styles.currentYear}>
-                                                <Text style={{
-                                                    color: isEnoughAge(formikProps) ? "#000" : 'red'
-                                                }}>{getAges(formikProps)} Years Old</Text>
-                                            </View>
-                                        </View>
-                                        {!isEnoughAge(formikProps) && (
-                                            <Text style={{
-                                                color: '#666',
-                                                marginVertical: 2.5
-                                            }}>You need to input your birthday.</Text>
-                                        )}
-
-                                        <View style={{ alignItems: 'center' }}>
-                                            <Text style={{
-                                                marginVertical: 10,
-                                                textAlign: 'center',
-                                                color: '#666'
-                                            }}>Use your own birthday, even if this account is for a bussiness, a pet or something else.</Text>
-                                        </View>
-                                    </View>
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            _startLoadingAnimation(1)
-                                            formikProps.handleSubmit()
-                                        }}
-                                        activeOpacity={0.8}
-                                        style={{
-                                            ...styles.btnNextStep,
-                                            width: SCREEN_WIDTH * 0.9
-                                        }}>
-                                        <Animated.Text style={{
-                                            opacity: Animated.subtract(1, _loadingOpacity),
-                                            fontWeight: '600',
-                                            color: '#fff'
-                                        }}>Next</Animated.Text>
-                                        <Animated.Image
-                                            style={{
-                                                ...styles.loadingIcon,
-                                                position: 'absolute',
-                                                opacity: _loadingOpacity,
-                                                transform: [
-                                                    {
-                                                        rotate: _loadingDeg
-                                                            .interpolate({
-                                                                inputRange: [0, 100],
-                                                                outputRange: ['0deg',
-                                                                    '36000deg']
-                                                            })
-                                                    }
-                                                ]
-                                            }}
-                                            source={
-                                                require('../../assets/icons/loading.png')
-                                            } />
-
-                                    </TouchableOpacity>
-                                    <DatePicker
-                                        defaultDate={1}
-                                        defaultMonth="Jan"
-                                        defaultYear={2020}
-                                        onDateChange={(date) => {
-                                            formikProps.handleChange('date')(`${date}`)
-                                        }}
-                                        onMonthIndexChange={(index) => {
-                                            formikProps.handleChange('month')(`${index}`)
-                                        }}
-                                        onYearChange={(year) => {
-                                            formikProps.handleChange('year')(`${year}`)
-                                        }}
-                                    />
-
-                                </View>
-
-                            )}
-                        </Formik>
-                    </ScrollView>
                 )}
             </KeyboardAvoidingView>
             {
@@ -564,12 +377,10 @@ const Register = () => {
                     <Text style={{
                         color: '#666',
                         fontSize: 12
-                    }}>Your contacts will be periodically synced and stored on Instagram
-                        servers to help you and others find friends, and to help us provide a better service.
-                        To remove contact, go to Settings and disconnect.
+                    }}>Tên hiển thị cần tránh để tên thật để đảm bảo bạn được ẩn danh trên app
                         <Text style={{
                             color: '#000'
-                        }}> Learn More</Text>
+                        }}> Tìm hiểu thêm</Text>
                     </Text>
                 </View>
             }
@@ -586,8 +397,8 @@ const Register = () => {
                         <Text style={{
                             fontWeight: '500',
                             color: '#333'
-                        }}>Already have account?
-                            </Text> Login.</Text>
+                        }}>Bạn đã có tài khoản?
+                            </Text> Đăng nhập.</Text>
                 </TouchableOpacity>
             }
         </SafeAreaView >
@@ -598,7 +409,7 @@ export default React.memo(Register)
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#fff',
+        backgroundColor: '#000',
         width: SCREEN_WIDTH,
         height: SCREEN_HEIGHT
     },
@@ -704,7 +515,7 @@ const styles = StyleSheet.create({
     btnNextStep: {
         width: '100%',
         height: 46,
-        backgroundColor: '#318bfb',
+        backgroundColor: '#1b6563cc',
         justifyContent: 'center',
         alignItems: 'center',
         marginVertical: 20,
@@ -726,11 +537,6 @@ const styles = StyleSheet.create({
     formGroupWrapper: {
         marginVertical: 7.5,
         width: '100%'
-    },
-    savePassword: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginTop: 10,
     },
     checkbox: {
         marginRight: 10,
@@ -794,11 +600,3 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     }
 })
-function getAges(formikProps) {
-    return Math.floor(((new Date).getTime() - (new Date(`${MONTH_ALIAS[formikProps.values.month]} ${formikProps.values.date}, ${formikProps.values.year}`).getTime())) / (1000 * 60 * 60 * 24 * 365))
-}
-
-function isEnoughAge(formikProps) {
-    return Math.floor(((new Date).getTime() - (new Date(`${MONTH_ALIAS[formikProps.values.month]} ${formikProps.values.date}, ${formikProps.values.year}`).getTime())) / (1000 * 60 * 60 * 24 * 365)) > 5
-}
-

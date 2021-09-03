@@ -9,7 +9,7 @@ const ForgotPassword = ({ navigation }) => {
     const [sendingReset, setSendingReset] = useState(false)
     const [sentReset, setSentReset] = useState(false)
     const [usernameError, setUsernameError] = useState(false)
-    const [username, setUsername] = useState<string>('')
+    const [username, setUsername] = useState('')
     const _loadingDeg = new Animated.Value(0)
     const _loadingDeg2 = new Animated.Value(0)
     const { _loadingDegAnimation2, _loadingDegAnimation } =
@@ -21,7 +21,7 @@ const ForgotPassword = ({ navigation }) => {
     return (
         <SafeAreaView style={styles.container}>
             <View>
-                <NavigationBar title={sentReset ? 'Access Account' : 'Login Help'}
+                <NavigationBar title={sentReset ? 'Access Account' : 'Quên mật khẩu'}
                     callback={() => navigation.goBack()}
                 />
             </View>
@@ -72,12 +72,12 @@ const ForgotPassword = ({ navigation }) => {
                         <Text style={{
                             fontSize: 24,
                             textAlign: 'center'
-                        }}>Find Your Account</Text>
+                        }}>Tìm tài khoản</Text>
                         <Text style={{
                             marginVertical: 20,
                             color: '#666',
                             textAlign: 'center'
-                        }}>Enter your Instagram username or the email or phone number linked to account.</Text>
+                        }}>Nhập địa chỉ email đã đăng ký để lấy lại mật khẩu</Text>
                     </View>
                     <View style={styles.formWrapper}>
                         <View style={{
@@ -88,7 +88,7 @@ const ForgotPassword = ({ navigation }) => {
                                 value={username}
                                 onChangeText={(e) => setUsername(e)}
                                 autoFocus={true}
-                                placeholder="Username, email or phone"
+                                placeholder="Nhập địa chỉ email đã đăng ký"
                                 autoCapitalize="none"
                                 style={styles.input} />
                         </View>
@@ -99,7 +99,7 @@ const ForgotPassword = ({ navigation }) => {
                             {!loading && <Text style={{
                                 fontWeight: '600',
                                 color: '#fff'
-                            }}>Next</Text>}
+                            }}>Tiếp theo</Text>}
                             {loading && <Animated.Image
                                 onLayout={_loadingDegAnimation}
                                 style={{
@@ -126,20 +126,20 @@ const ForgotPassword = ({ navigation }) => {
                                 }}>OR</Text>
                             </View>
                         </View>
-                        <TouchableOpacity style={styles.btnLoginWithFacebook}>
-                            <Icon name="facebook" color="#318bfb" size={20} />
+                        <TouchableOpacity style={styles.btnLoginWithGoogle}>
+                            <Icon name="google" color="#1b6563cc" size={20} />
                             <Text style={{
-                                color: '#318bfb',
+                                color: '#1b6563cc',
                                 fontWeight: 'bold'
-                            }}>Login with Facebook</Text>
+                            }}>Đăng nhập bằng Google</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
             }
             <TouchableOpacity activeOpacity={1} style={styles.bottomHelp}>
                 <Text style={{
-                    color: '#318bfb'
-                }}>Need more help?</Text>
+                    color: '#1b6563cc'
+                }}>Tìm hiểu thêm</Text>
             </TouchableOpacity>
         </SafeAreaView>
     )
@@ -148,7 +148,7 @@ const ForgotPassword = ({ navigation }) => {
 export default ForgotPassword
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#fff',
+        backgroundColor: '#000',
     },
     centerContainer: {
         justifyContent: 'center',
@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
         height: 44,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#318bfb',
+        backgroundColor: '#1b6563cc',
         borderRadius: 5
     },
     inputWrapper: {
@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         backgroundColor: '#fff',
     },
-    btnLoginWithFacebook: {
+    btnLoginWithGoogle: {
         marginTop: 10,
         flexDirection: 'row',
         alignItems: 'center',

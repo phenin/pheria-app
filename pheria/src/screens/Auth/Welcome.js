@@ -1,29 +1,26 @@
-import { RouteProp } from '@react-navigation/native'
-import { StackNavigationProp } from '@react-navigation/stack'
 import React, { useEffect, useRef, useState } from 'react'
-import { Alert, AlertButton, Animated, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Animated, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { useDispatch } from 'react-redux'
 // import { RegisterRequest } from '../../actions/userActions'
 import { SCREEN_HEIGHT, SCREEN_WIDTH, STATUS_BAR_HEIGHT } from '../../constants'
-import { commonParamList } from '../../navigations/RootTab'
-import { RegisterFormValuesStep1, RegisterFormValuesStep2, RegisterFormValuesStep3 } from './Register'
 
 const Welcome = ({ navigation, route }) => {
     const dispatch = useDispatch()
     // const user = useSelector(state => state.user.user)
     const [usernameError, setUsernameError] = useState(false)
     const [chagingUsername, setChagingUsername] = useState(false)
-    const [username, setUsername] = useState(route.params.email.split('@')[0])
+    const [username, setUsername] = useState(route.params.fullname)
     const _loadingDeg = new Animated.Value(0)
     const [loading, setLoading] = useState(false)
     const typingTimeoutRef = useRef()
-    useEffect(() => {
-        const usr = route.params.email.split('@')[0]
-        checkExistUsername(usr, setUsernameError, setChagingUsername)
-        return () => {
-            if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current)
-        }
-    }, [])
+    // useEffect(() => {
+    //     console.log(route)
+    //     const usr = route.params.email.split('@')[0]
+    //     checkExistUsername(usr, setUsernameError, setChagingUsername)
+    //     return () => {
+    //         if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current)
+    //     }
+    // }, [])
     // useEffect(() => {
     //     if (user.logined) {
     //         navigation.navigate('HomeTab')
@@ -81,7 +78,7 @@ const Welcome = ({ navigation, route }) => {
                     }} source={require('../../assets/icons/waiting.png')} />
                     <Text style={{
                         fontWeight: '500'
-                    }}>Registering...</Text>
+                    }}>Đăng ký...</Text>
                 </View>
             </View>
             }
@@ -90,7 +87,7 @@ const Welcome = ({ navigation, route }) => {
                     <Text style={{
                         fontWeight: '600',
                         textAlign: 'center'
-                    }}>{chagingUsername ? 'CHANGE USERNAME' : 'WELCOME TO INSTAGRAM,'} </Text>
+                    }}>{chagingUsername ? 'Đổi tên hiển thị' : 'Chào mừng đến với pheria'} </Text>
                     {!chagingUsername && <Text style={{
                         fontWeight: '600',
                         textAlign: 'center'
@@ -142,7 +139,7 @@ const Welcome = ({ navigation, route }) => {
                     <Text style={{
                         fontWeight: '600',
                         color: '#fff'
-                    }}>Next</Text>
+                    }}>Tiếp theo</Text>
                 </TouchableOpacity>
                 {!chagingUsername && <TouchableOpacity
                     onPress={_onClickChangeUsername}
@@ -150,7 +147,7 @@ const Welcome = ({ navigation, route }) => {
                     <Text style={{
                         fontWeight: '600',
                         color: '#318bfb'
-                    }}>Change username</Text>
+                    }}>Đổi tên hiển thị</Text>
                 </TouchableOpacity>}
 
             </View>
@@ -159,10 +156,10 @@ const Welcome = ({ navigation, route }) => {
                     fontSize: 12,
                     fontWeight: '500',
                     color: '#666'
-                }}>By clicking Next, you agree to our <Text style={{
+                }}>Nhấn tiếp tục, bạn sẽ đồng ý với <Text style={{
                     color: '#000',
                 }}>
-                        Terms, Data Policy and Cookies Policy</Text></Text>
+                    Chính sách của chúng tôi</Text></Text>
             </View>
         </SafeAreaView>
     )

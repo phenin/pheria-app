@@ -57,12 +57,7 @@ const Login = () => {
                 </View>
             </View>
             }
-            <View style={styles.languageChooser}>
-                <TouchableOpacity style={styles.btnCurLanguage}>
-                    <Text style={styles.curLanguage}>Tieng Viet (Viet Nam)</Text>
-                    <Icon name="chevron-down" size={20} color="#333" />
-                </TouchableOpacity>
-            </View>
+            
             <View style={styles.centerContainer}>
                 <View style={styles.logoWrapper}>
                     <Image
@@ -72,14 +67,14 @@ const Login = () => {
                 </View>
                 <View style={styles.loginForm}>
                     <View style={styles.textInputWrapper}>
-                        <TextInput autoCapitalize="none" value={username} onChangeText={_onChangeUsername} placeholder="Username, email or phone number"
-                            style={styles.input} />
+                        <TextInput autoCapitalize="none" value={username} onChangeText={_onChangeUsername} placeholder="Tên đăng nhập, địa chỉ email"
+                            style={styles.input} placeholderTextColor="#fff"  />
                     </View>
                     <View style={styles.textInputWrapper}>
                         <TextInput value={password}
                             onChangeText={_onChangePassword}
                             secureTextEntry={hidePassword}
-                            placeholder="Password" style={styles.input} />
+                            placeholder="Mật khẩu" style={styles.input} placeholderTextColor="#fff" />
                         <TouchableOpacity
                             style={styles.hidePasswordIcon}
                             onPress={_onPressToggleHidePassword}
@@ -116,28 +111,29 @@ const Login = () => {
                         <Text style={{
                             textAlign: 'center',
                             fontSize: 12,
-                            fontWeight: '600'
+                            fontWeight: '600',
+                            color: '#fff'
                         }}>
                             <Text style={{
                                 fontWeight: '500',
-                                color: '#333'
-                            }}>Did your forget your login information?
-                            </Text> Get helping to login.</Text>
+                                color: '#fff'
+                            }}>Bạn có quên tài khoản của mình không? 
+                            </Text></Text>
                     </TouchableOpacity>
                     <View style={styles.divideLine}>
                         <View style={styles.ORtextWrapper}>
                             <Text style={{
-                                color: '#333',
+                                color: '#fff',
                                 fontWeight: '600'
                             }}>OR</Text>
                         </View>
                     </View>
-                    <TouchableOpacity style={styles.btnLoginWithFacebook}>
-                        <Icon name="facebook" color="#318bfb" size={20} />
+                    <TouchableOpacity style={styles.btnLoginWithGoogle}>
+                        <Icon name="google" color="#1b6563cc" size={20} />
                         <Text style={{
-                            color: '#318bfb',
+                            color: '#1b6563cc',
                             fontWeight: 'bold'
-                        }}>Login with Facebook</Text>
+                        }}>Đăng nhập bằng Google</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -148,13 +144,14 @@ const Login = () => {
                 <Text style={{
                     textAlign: 'center',
                     fontSize: 12,
-                    fontWeight: '600'
+                    fontWeight: '600',
+                    color: '#fff'
                 }}>
                     <Text style={{
                         fontWeight: '500',
-                        color: '#333'
-                    }}>Don't have account?
-                            </Text> Register now.</Text>
+                        color: '#fff'
+                    }}>Bạn chưa có tài khoản?
+                            </Text > Đăng ký ngay.</Text>
             </TouchableOpacity>
         </SafeAreaView >
     )
@@ -163,13 +160,8 @@ const Login = () => {
 export default Login
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#fff',
+        backgroundColor: '#000',
         height: SCREEN_HEIGHT
-    },
-    languageChooser: {
-        height: 40,
-        justifyContent: 'center',
-        alignItems: 'center'
     },
     btnCurLanguage: {
         flexDirection: 'row',
@@ -215,14 +207,15 @@ const styles = StyleSheet.create({
     input: {
         width: '100%',
         height: '100%',
-        paddingHorizontal: 15
+        paddingHorizontal: 15,
+        color: '#fff'
     },
     btnLogin: {
         marginTop: 7.5,
         width: '100%',
         height: 44,
         borderRadius: 5,
-        backgroundColor: '#318bfb',
+        backgroundColor: '#1b6563cc',
         justifyContent: 'center',
         alignItems: 'center'
     },
@@ -253,9 +246,9 @@ const styles = StyleSheet.create({
         left: (SCREEN_WIDTH * 0.9 - 40) / 2,
         position: 'absolute',
         paddingHorizontal: 10,
-        backgroundColor: '#fff',
+        backgroundColor: '#000',
     },
-    btnLoginWithFacebook: {
+    btnLoginWithGoogle: {
         marginTop: 10,
         flexDirection: 'row',
         alignItems: 'center',
@@ -280,7 +273,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         padding: 15,
         borderRadius: 5,
-        backgroundColor: '#fff',
+        backgroundColor: '#000',
         alignItems: 'center'
     },
 })

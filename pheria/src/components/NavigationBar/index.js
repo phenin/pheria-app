@@ -11,11 +11,12 @@ const NavigationBar = ({ callback, title }) => {
             <TouchableOpacity
                 onPress={_onCallBack}
                 style={styles.btnBack}>
-                <Icon name="arrow-left" size={20} />
+                <Icon name="arrow-left" style={{color: '#fff'}} size={20} />
             </TouchableOpacity>
             <Text style={{
                 fontSize: 16,
-                fontWeight: '600'
+                fontWeight: '600',
+                color: '#fff'
             }}>{title}</Text>
         </View>
     )
@@ -25,7 +26,7 @@ export default NavigationBar
 
 const styles = StyleSheet.create({
     navigationBar: {
-        backgroundColor: '#fff',
+        backgroundColor: '#000',
         flexDirection: 'row',
         height: 44,
         width: '100%',
