@@ -1,10 +1,9 @@
 import { RouteProp } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
-import { firestore } from 'firebase'
 import React, { useEffect, useRef, useState } from 'react'
 import { Alert, AlertButton, Animated, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { useDispatch } from 'react-redux'
-import { RegisterRequest } from '../../actions/userActions'
+// import { RegisterRequest } from '../../actions/userActions'
 import { SCREEN_HEIGHT, SCREEN_WIDTH, STATUS_BAR_HEIGHT } from '../../constants'
 import { commonParamList } from '../../navigations/RootTab'
 import { RegisterFormValuesStep1, RegisterFormValuesStep2, RegisterFormValuesStep3 } from './Register'
@@ -53,10 +52,10 @@ const Welcome = ({ navigation, route }) => {
     const _onRegister = async () => {
         if (usernameError) return;
         setLoading(true)
-        await dispatch(RegisterRequest({
-            ...route.params,
-            username,
-        }))
+        // await dispatch(RegisterRequest({
+        //     ...route.params,
+        //     username,
+        // }))
         setLoading(false)
 
     }
@@ -241,26 +240,6 @@ const styles = StyleSheet.create({
 function checkExistUsername(usr, setUsernameError, setChagingUsername) {
     const pattern = /^[a-zA-Z0-9._]{4,}$/g
     if (!pattern.test(usr)) return setUsernameError(true)
-    firestore().collection('users')
-        .where('username', '==', usr.trim())
-        .get()
-        .then(snap => {
-            if (snap.size > 0) {
-                setUsernameError(true)
-                if (setChagingUsername) {
-                    const buttonGroup = [
-                        {
-                            text: 'Choose another username',
-                            onPress: () => setChagingUsername(true)
-                        }
-                    ]
-                    Alert.alert('Username has been already used',
-                        'Try to use another username', buttonGroup
-                    )
-                }
-            }
-            else
-                setUsernameError(false)
-        }).catch(e => e)
+    
 }
 

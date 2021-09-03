@@ -4,7 +4,7 @@ import {
 } from 'react-redux'
 import userReducer from './userReducer'
 
-const rootReducer = combineReducers<AppState>({
+const rootReducer = combineReducers({
   user: userReducer,
 })
 export const useSelector = useReduxSelector

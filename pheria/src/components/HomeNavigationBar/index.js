@@ -5,7 +5,7 @@ import { SCREEN_WIDTH } from '../../constants'
 import { navigation } from '../../navigations/rootNavigation'
 import { useSelector } from '../../reducers'
 import { store } from '../../store'
-import { seenTypes } from '../../reducers/messageReducer'
+// import { seenTypes } from '../../reducers/messageReducer'
 
 const index = () => {
     const myUsername = store.getState().user.user.userInfo?.username || ''
@@ -15,8 +15,8 @@ const index = () => {
     extraMessageList.map(extraMsg => {
         if (extraMsg.messageList.length === 0) return;
         const isMyMessage = extraMsg.messageList[0].userId === myUsername
-        const unRead = !isMyMessage && extraMsg.messageList[0].seen === seenTypes.NOTSEEN
-        if (unRead) unReadCount++
+        // const unRead = !isMyMessage && extraMsg.messageList[0].seen === seenTypes.NOTSEEN
+        // if (unRead) unReadCount++
     })
 
     return (

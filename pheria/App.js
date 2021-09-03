@@ -4,8 +4,7 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import RootStackNavigation from './src/navigations';
 import { persistor, store } from './src/store';
-
-const store = configureStore();
+import { useAsyncStorage } from '@react-native-async-storage/async-storage';
 
 function App() {
 

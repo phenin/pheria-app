@@ -7,8 +7,8 @@ import {
     TouchableOpacity
 } from 'react-native'
 import { useDispatch } from 'react-redux'
-import { FetchPostListRequest, LoadMorePostListRequest } from '../../actions/postActions'
-import { FetchStoryListRequest } from '../../actions/storyActions'
+// import { FetchPostListRequest, LoadMorePostListRequest } from '../../actions/postActions'
+// import { FetchStoryListRequest } from '../../actions/storyActions'
 import HomeNavigationBar from '../../components/HomeNavigationBar'
 import { SCREEN_HEIGHT, STATUS_BAR_HEIGHT } from '../../constants'
 import { useSelector } from '../../reducers'
@@ -43,7 +43,7 @@ const index = () => {
         ) {
             (async () => {
                 setLoadingMore(true)
-                await dispatch(LoadMorePostListRequest())
+                // await dispatch(LoadMorePostListRequest())
                 setLoadingMore(false)
             })()
         }
@@ -52,8 +52,8 @@ const index = () => {
     useEffect(() => {
         (async () => {
             setRefreshing(true)
-            await dispatch(FetchStoryListRequest())
-            await dispatch(FetchPostListRequest())
+            // await dispatch(FetchStoryListRequest())
+            // await dispatch(FetchPostListRequest())
             setRefreshing(false)
         })()
     }, [user])
@@ -65,8 +65,8 @@ const index = () => {
     }, [])
     const _onRefresh = async () => {
         setRefreshing(true)
-        await dispatch(FetchStoryListRequest())
-        await dispatch(FetchPostListRequest())
+        // await dispatch(FetchStoryListRequest())
+        // await dispatch(FetchPostListRequest())
         setRefreshing(false)
     }
     const _showCommentInput = React.useCallback((id, prefix) => {

@@ -12,9 +12,9 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		3F191AFED9B2AC1627C32597 /* libPods-pheria-pheriaTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DC9B256E7A9C172528534016 /* libPods-pheria-pheriaTests.a */; };
-		5F17ED6522F87B571F235D01 /* libPods-pheria.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AC69848520B96D43F07C2C19 /* libPods-pheria.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		D547411E26A4281300782190 /* Fonts in Resources */ = {isa = PBXBuildFile; fileRef = D547411D26A4281300782190 /* Fonts */; };
+		D5C26F4626E2497E00576BA6 /* libRNCAsyncStorage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D5C26F4526E2497E00576BA6 /* libRNCAsyncStorage.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,6 +43,12 @@
 		AC69848520B96D43F07C2C19 /* libPods-pheria.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-pheria.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B2E913671BCC530E97476EC4 /* Pods-pheria.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-pheria.release.xcconfig"; path = "Target Support Files/Pods-pheria/Pods-pheria.release.xcconfig"; sourceTree = "<group>"; };
 		D547411D26A4281300782190 /* Fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Fonts; path = "../node_modules/react-native-vector-icons/Fonts"; sourceTree = "<group>"; };
+		D57438C126E22A8A000E7CC2 /* libRNCAsyncStorage.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libRNCAsyncStorage.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		D57438C626E22AFE000E7CC2 /* libRNCAsyncStorage.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libRNCAsyncStorage.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		D57438CA26E22B8C000E7CC2 /* libRNCAsyncStorage.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libRNCAsyncStorage.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		D57438D826E236C3000E7CC2 /* libRNCAsyncStorage.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libRNCAsyncStorage.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		D57438DB26E2392F000E7CC2 /* libRNCAsyncStorage.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libRNCAsyncStorage.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		D5C26F4526E2497E00576BA6 /* libRNCAsyncStorage.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libRNCAsyncStorage.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC9B256E7A9C172528534016 /* libPods-pheria-pheriaTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-pheria-pheriaTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		FC6203C68A7333181C14EF83 /* Pods-pheria-pheriaTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-pheria-pheriaTests.release.xcconfig"; path = "Target Support Files/Pods-pheria-pheriaTests/Pods-pheria-pheriaTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -61,7 +67,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5F17ED6522F87B571F235D01 /* libPods-pheria.a in Frameworks */,
+				D5C26F4626E2497E00576BA6 /* libRNCAsyncStorage.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -102,6 +108,12 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D5C26F4526E2497E00576BA6 /* libRNCAsyncStorage.a */,
+				D57438DB26E2392F000E7CC2 /* libRNCAsyncStorage.a */,
+				D57438D826E236C3000E7CC2 /* libRNCAsyncStorage.a */,
+				D57438CA26E22B8C000E7CC2 /* libRNCAsyncStorage.a */,
+				D57438C626E22AFE000E7CC2 /* libRNCAsyncStorage.a */,
+				D57438C126E22A8A000E7CC2 /* libRNCAsyncStorage.a */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				AC69848520B96D43F07C2C19 /* libPods-pheria.a */,
 				DC9B256E7A9C172528534016 /* libPods-pheria-pheriaTests.a */,
@@ -439,6 +451,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = pheriaTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -463,6 +476,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = pheriaTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -489,6 +503,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_BITCODE = NO;
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = pheria/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -514,6 +529,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = pheria/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
