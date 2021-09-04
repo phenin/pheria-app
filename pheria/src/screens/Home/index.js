@@ -12,9 +12,12 @@ import { useDispatch } from 'react-redux'
 import HomeNavigationBar from '../../components/HomeNavigationBar'
 import { SCREEN_HEIGHT, STATUS_BAR_HEIGHT } from '../../constants'
 import { useSelector } from '../../reducers'
+import StoryList from '../../components/StoryList/'
+
 const index = () => {
     const dispatch = useDispatch()
     const user = useSelector(state => state.user.user)
+    const storyList = useSelector(state => state.storyList)
     const _loadingDeg = new Animated.Value(0)
     const _scrollRef = useRef(null)
     const [loadingMore, setLoadingMore] = useState(false)
@@ -113,6 +116,32 @@ const index = () => {
                     onScroll={_onScroll}
                     showsVerticalScrollIndicator={false}
                 >
+                    <PostList showCommentInput={_showCommentInput} data={storyList} />
+                    <View style={{
+                        ...styles.loadingIcon,
+                        opacity: loadingMore ? 1 : 0
+                    }}>
+                        {loadingMore && <>
+                            <Animated.Image
+                                onLayout={_startAnimateLoading}
+                                style={{
+                                    width: 30,
+                                    height: 30,
+                                    transform: [
+                                        {
+                                            rotate: _loadingDeg.interpolate({
+                                                inputRange: [0, 1],
+                                                outputRange: ['0deg', '360deg']
+                                            })
+                                        }
+                                    ]
+                                }}
+                                source={require('../../assets/icons/waiting.png')} />
+                            <Text style={{
+                                fontWeight: '500',
+                                marginLeft: 5
+                            }}>Loading more...</Text></>}
+                    </View>
                     
                 </ScrollView>
                 

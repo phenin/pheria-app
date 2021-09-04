@@ -9,15 +9,15 @@ import { store } from '../../store'
 
 const index = () => {
     const myUsername = store.getState().user.user.userInfo?.username || ''
-    const extraMessageList = useSelector(state => state.messages)
+    // const extraMessageList = useSelector(state => state.messages)
 
     let unReadCount = 0
-    extraMessageList.map(extraMsg => {
-        if (extraMsg.messageList.length === 0) return;
-        const isMyMessage = extraMsg.messageList[0].userId === myUsername
-        // const unRead = !isMyMessage && extraMsg.messageList[0].seen === seenTypes.NOTSEEN
-        // if (unRead) unReadCount++
-    })
+    // extraMessageList.map(extraMsg => {
+    //     if (extraMsg.messageList.length === 0) return;
+    //     const isMyMessage = extraMsg.messageList[0].userId === myUsername
+    //     // const unRead = !isMyMessage && extraMsg.messageList[0].seen === seenTypes.NOTSEEN
+    //     // if (unRead) unReadCount++
+    // })
 
     return (
         <TouchableOpacity

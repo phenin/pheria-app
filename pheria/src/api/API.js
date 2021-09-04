@@ -1,28 +1,5 @@
 import axios from "axios";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
-_retrieveData = async (key) => {
-
-  try {
-    const value = await AsyncStorage.getItem(key);
-    if (value !== null) {
-      return value
-    }
-  } catch (error) {
-    // Error retrieving data
-    return null
-  }
-};
-
-_storeData = async (key, value) => {
-  try {
-    await AsyncStorage.setItem(
-      key, value
-    );
-  } catch (error) {
-    // Error saving data
-  }
-};
+import { getToken, setToken } from "../utils/util"
 
 const defaultConfig = {
   token_required: true,
@@ -39,7 +16,7 @@ axiosInstance.isCancel = axios.isCancel;
 
 axiosInstance.interceptors.request.use(
   async (config) => {
-      const accessToken = await _retrieveData("accessToken");
+      const accessToken = await getToken("accessToken");
       if (accessToken) {
         config.headers['Authorization'] = `Bearer ${accessToken}`
       }
@@ -56,7 +33,7 @@ axiosInstance.interceptors.response.use(
   },
   function (error) {
     const originalRequest = error.config;
-    let refreshToken = _retrieveData("refreshToken");
+    let refreshToken = getToken("refreshToken");
     if (
       refreshToken &&
       error.response.status === 401 &&
@@ -70,8 +47,8 @@ axiosInstance.interceptors.response.use(
         })
         .then((res) => {
           if (res.status === 200) {
-            _storeData("accessToken", res.data.accessToken);
-            _storeData("refreshToken", res.data.refreshToken);
+            setToken("accessToken", res.data.accessToken);
+            setToken("refreshToken", res.data.refreshToken);
 
             originalRequest.headers['Authorization'] = `Bearer ${res.data.accessToken}`
 

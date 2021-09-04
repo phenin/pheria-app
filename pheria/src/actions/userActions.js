@@ -1,8 +1,40 @@
 import { userActionTypes } from '../reducers/userReducer';
+import {
+    fetchLoginByGG,
+    fetchLogin,
+    fetchSignUp,
+    fetchUser,
+    fetchUserListStory,
+    fetchMyListStory,
+    fetchUpdateUser
+}  from '../api/user'
+import { getToken, setToken } from "../utils/util"
 
-export const LoginRequest = (user) => {
+export const LoginRequest = (params) => {
     return (dispatch) => {
-        return 
+        fetchLogin(params).then(rs => {
+            console.log(rs.data)
+            if(rs.data){
+                setToken("accessToken", rs.data.token.accessToken);
+                setToken("refreshToken", rs.data.token.refreshToken);
+                fetchUser().then(res => {
+                    const user = {
+                        logined: true,
+                        token: rs.data.token.accessToken,
+                        userInfo: res.data
+                    }
+                    dispatch(LoginSuccess({user}))
+                })
+                .catch(e =>{
+                    dispatch(LoginFailure())
+                })
+            }
+            else dispatch(LoginFailure())
+            
+        })
+        .catch(e =>{
+            dispatch(LoginFailure())
+        })
     }
 }
 export const LoginFailure = () => {
@@ -38,9 +70,8 @@ export const LogoutRequest = () => {
 }
 export const RegisterRequest = (userData) => {
     return (dispatch => {
-        return 
             
-    }
+    })
 }
 export const RegisterFailure = (e) => {
     return {

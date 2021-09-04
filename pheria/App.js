@@ -1,24 +1,30 @@
 import 'react-native-gesture-handler';
 import React, { useEffect, useRef } from 'react';
+import { AppState } from 'react-native';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import RootStackNavigation from './src/navigations';
 import { persistor, store } from './src/store';
-import { useAsyncStorage } from '@react-native-async-storage/async-storage';
 
 function App() {
 
-  const [token, setToken] = React.useState(null);
-
-  const { getItem } = useAsyncStorage('accessToken');
-
-  const readItemFromStorage = async () => {
-    const item = await getItem();
-    setToken(item);
-  };
-
+  const myUsername = store.getState().user.user?.userInfo?.name
+  
+  const ref = useRef({
+		itv: setInterval(() => { }, 3000)
+	})
   useEffect(() => {
-    readItemFromStorage();
+    if (myUsername) {
+			ref.current.itv = setInterval(() => {
+				if (AppState.currentState === 'active') {
+					// database().ref(`/online/${convertToFirebaseDatabasePathName(myUsername)}`)
+					// 	.update({
+					// 		last_online: new Date().getTime(),
+					// 		status: 1
+					// 	})
+				}
+			}, 60000)
+		}
   }, []);
 
   return (

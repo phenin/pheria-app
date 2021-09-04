@@ -11,15 +11,13 @@ import { useDispatch } from 'react-redux'
 import { useSelector } from '../../reducers'
 const Direct = () => {
     const dispatch = useDispatch()
-    const messages = useSelector(state => state.messages).filter(x => x.messageList.length > 0)
+    // const messages = useSelector(state => state.messages).filter(x => x.messageList.length > 0)
     const myUsername = store.getState().user.user.userInfo?.username
     const focused = useIsFocused()
     const [query, setQuery] = useState('')
     const [searching, setSearching] = useState(false)
     const [resultList, setResultList] = useState([])
-    const ref = useRef<{
-        queryTimeout: NodeJS.Timeout
-    }>({
+    const ref = useRef({
         queryTimeout: setTimeout(() => { }, 0)
     })
     //Effect
@@ -115,7 +113,7 @@ const Direct = () => {
                     <Text style={styles.mockSearchInput}>Search</Text>
                 </TouchableOpacity>
                 <View>
-                    <FlatList
+                    {/* <FlatList
                         style={{
                             height: '100%',
                             marginVertical: 10
@@ -125,7 +123,7 @@ const Direct = () => {
                             <UserMessageItem {...{ item, index }} />
                         }
                         keyExtractor={(item, index) => `${index}`}
-                    />
+                    /> */}
                 </View>
             </View>
         </SafeAreaView>

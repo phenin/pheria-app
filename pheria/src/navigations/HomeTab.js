@@ -26,7 +26,7 @@ const HomeTab = () => {
         showLabel: false,
     }
     const navigationOptions = {
-
+        headerShown: false,
     }
     return (
         <Tab.Navigator tabBar={TabBarComponent} tabBarOptions={tabBarOptions} screenOptions={navigationOptions}>

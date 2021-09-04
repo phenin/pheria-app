@@ -3,7 +3,7 @@ import { Animated, Image, SafeAreaView, StyleSheet, Text, TextInput, TouchableOp
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useDispatch } from 'react-redux'
 import { ThunkDispatch } from 'redux-thunk'
-// import { LoginRequest } from '../../actions/userActions'
+import { LoginRequest } from '../../actions/userActions'
 import { SCREEN_HEIGHT, SCREEN_WIDTH, STATUS_BAR_HEIGHT } from '../../constants'
 import { navigation } from '../../navigations/rootNavigation'
 import { userAction } from '../../reducers/userReducer'
@@ -309,7 +309,7 @@ function getEventHandlers(
             email: email,
             password,
         }
-        // await dispatch(LoginRequest(loginData))
+        await dispatch(LoginRequest(loginData))
         setLoading(false)
     }
     return {
