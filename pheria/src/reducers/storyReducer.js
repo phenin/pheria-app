@@ -38,8 +38,8 @@ const reducer = (state = defaultState, action) => {
             return state
         case storyActionTypes.LOAD_MORE_STORY_LIST_SUCCESS:
             action = action
-            const newPostList = state.concat(action.payload)
-            state = [...newPostList]
+            const newStoryList = state.concat(action.payload)
+            state = [...newStoryList]
             return state
         case storyActionTypes.LOAD_MORE_STORY_LIST_FAILURE:
             action = action
@@ -72,10 +72,10 @@ const reducer = (state = defaultState, action) => {
             return state
         case storyActionTypes.UPDATE_STORY_SUCCESS:
             action = action
-            const updatedPost = action.payload
+            const updatedStory = action.payload
             const storyList = state.map(story => {
-                if (story.uid === updatedPost.uid) {
-                    return { ...updatedPost }
+                if (story.uid === updatedStory.uid) {
+                    return { ...updatedStory }
                 }
                 return story
             })

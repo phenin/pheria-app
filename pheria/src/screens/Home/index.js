@@ -7,8 +7,7 @@ import {
     TouchableOpacity
 } from 'react-native'
 import { useDispatch } from 'react-redux'
-// import { FetchPostListRequest, LoadMorePostListRequest } from '../../actions/postActions'
-// import { FetchStoryListRequest } from '../../actions/storyActions'
+import { FetchStoryListRequest, LoadMoreStoryListRequest } from '../../actions/storyActions'
 import HomeNavigationBar from '../../components/HomeNavigationBar'
 import { SCREEN_HEIGHT, STATUS_BAR_HEIGHT } from '../../constants'
 import { useSelector } from '../../reducers'
@@ -46,7 +45,7 @@ const index = () => {
         ) {
             (async () => {
                 setLoadingMore(true)
-                // await dispatch(LoadMorePostListRequest())
+                // await dispatch(LoadMoreStoryListRequest())
                 setLoadingMore(false)
             })()
         }
@@ -55,8 +54,7 @@ const index = () => {
     useEffect(() => {
         (async () => {
             setRefreshing(true)
-            // await dispatch(FetchStoryListRequest())
-            // await dispatch(FetchPostListRequest())
+            await dispatch(FetchStoryListRequest())
             setRefreshing(false)
         })()
     }, [user])
@@ -64,12 +62,11 @@ const index = () => {
         Keyboard.addListener('keyboardDidHide', () => {
             setShowCommentInput(false)
         })
-        // dispatch(FetchPostListRequest())
+        dispatch(FetchStoryListRequest())
     }, [])
     const _onRefresh = async () => {
         setRefreshing(true)
-        // await dispatch(FetchStoryListRequest())
-        // await dispatch(FetchPostListRequest())
+        await dispatch(FetchStoryListRequest())
         setRefreshing(false)
     }
     const _showCommentInput = React.useCallback((id, prefix) => {
@@ -116,7 +113,7 @@ const index = () => {
                     onScroll={_onScroll}
                     showsVerticalScrollIndicator={false}
                 >
-                    <PostList showCommentInput={_showCommentInput} data={storyList} />
+                    <StoryList showCommentInput={_showCommentInput} data={storyList} />
                     <View style={{
                         ...styles.loadingIcon,
                         opacity: loadingMore ? 1 : 0

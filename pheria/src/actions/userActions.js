@@ -13,7 +13,6 @@ import { getToken, setToken } from "../utils/util"
 export const LoginRequest = (params) => {
     return (dispatch) => {
         fetchLogin(params).then(rs => {
-            console.log(rs.data)
             if(rs.data){
                 setToken("accessToken", rs.data.token.accessToken);
                 setToken("refreshToken", rs.data.token.refreshToken);

@@ -1,79 +1,49 @@
-import React, { useEffect, useState } from 'react'
-import { Animated, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import FastImage from 'react-native-fast-image'
+import React from 'react'
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { default as Icon, default as Icons } from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useDispatch } from 'react-redux'
 import { ToggleLikeStoryRequest } from '../../actions/storyActions'
-import { ToggleBookMarkRequest } from '../../actions/userActions'
 import { navigate, navigation } from '../../navigations/rootNavigation'
 import { useSelector } from '../../reducers'
 import { store } from '../../store'
-import { timestampToString } from '../../utils'
-import CirclePagination from '../CirclePagination'
+import { timestampToString } from '../../utils/util'
 import PhotoShower from './PhotoShower'
 
-const StoryItem = ({ setStory, item, showCommentInput }) => {
+const StoryItem = ({ setStory, item }) => {
     const dispatch = useDispatch()
-    const myUsername = store.getState().user.user.userInfo?.username
-    const [currentPage, setCurrentPage] = useState(1)
-    const bookmarks = useSelector(state => state.user.bookmarks)?.find(x => x.name === 'All Stories')?.bookmarks || []
-    const [content, setContent] = useState([])
+    const myUsername = store.getState().user.user.userInfo?.name
     const user = useSelector(state => state.user.user)
-    const _animBookmarkNotification = React.useMemo(() => new Animated.Value(0), [])
-    const isLiked = item.likes && item.likes?.indexOf(user.userInfo?.username || '') > -1
-    const _onChangePageHandler = (page) => {
-        setCurrentPage(page)
-    }
-    useEffect(() => {
-        setContent(createFilterContent(item.content || ''))
-    }, [item])
+    const isLiked = item.hearts && item.hearts?.indexOf(user.userInfo?._id || '') > -1
+    const isViewed = item.views && item.views?.indexOf(user.userInfo?._id || '') > -1
+
     const _toggleLikeStory = () => {
-        dispatch(ToggleLikeStoryRequest(item.uid || 0, item, setStory))
+        dispatch(ToggleLikeStoryRequest(item._id || 0, isLiked))
     }
-    let diffTime = timestampToString(item.create_at?.toMillis() || 0, true)
+    let diffTime = timestampToString(item.datecreate || 0, true)
     const _onViewAllComments = () => {
-        navigation.navigate('Comment', {
-            storyId: item.uid,
-            ...(setStory ? { storyData: { ...item } } : {})
-        })
+        // navigation.navigate('Comment', {
+        //     storyId: item._id,
+        //     ...(setStory ? { storyData: { ...item } } : {})
+        // })
     }
-    const _onToggleBookmark = () => {
-        const isBookmarked = !!bookmarks.find(x => x.storyId === item.uid)
-        if (!isBookmarked) {
-            Animated.sequence([
-                Animated.timing(_animBookmarkNotification, {
-                    toValue: -44,
-                    duration: 500,
-                    useNativeDriver: true
-                }),
-                Animated.delay(3000)
-                ,
-                Animated.timing(_animBookmarkNotification, {
-                    toValue: 0,
-                    duration: 500,
-                    useNativeDriver: true
-                }),
-            ]).start()
-        }
-        dispatch(ToggleBookMarkRequest(item.uid,
-            (item.source || [{ uri: '' }])[0].uri))
-    }
-    const isBookmarked = !!bookmarks.find(x => x.storyId === item.uid)
+    
     return (
         <View style={styles.container}>
             <View style={styles.storyHeader}>
                 <TouchableOpacity
-                    onPress={() => myUsername === item.ownUser?.username ?
+                    onPress={() => myUsername === item.author?.name ?
                         navigate('AccountIndex')
                         : navigate('ProfileX', {
-                            username: item.ownUser?.username
+                            name: item.author?.name
                         })}
                     style={styles.infoWrapper}>
-                    <FastImage style={styles.avatar}
-                        source={{ uri: item.ownUser?.avatarURL }} />
+                    <Image style={styles.avatar}
+                        source={item.author?.picture? { uri: item.author?.picture }:require('../../assets/icons/account.png') }
+                         />
                     <Text style={{
-                        fontWeight: '600'
-                    }}>{item.ownUser?.username}</Text>
+                        fontWeight: '600',
+                        color: '#fff'
+                    }}>{item.author?.name}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() =>
                     navigation.push('StoryOptions', {
@@ -84,47 +54,19 @@ const StoryItem = ({ setStory, item, showCommentInput }) => {
                 </TouchableOpacity>
             </View>
             <View style={styles.body}>
-                <PhotoShower onChangePage={_onChangePageHandler} sources={item.source || []} />
-                <Animated.View style={{
-                    ...styles.bookmarkAddionNotification,
-                    transform: [{
-                        translateY: _animBookmarkNotification
-                    }]
-                }}>
-                    <View style={{
-                        flexDirection: 'row',
-                        alignItems: 'center'
-                    }}>
-                        <FastImage
-                            source={{
-                                uri: (item.source || [])[0].uri
-                            }}
-                            style={styles.bookmarkPreviewImage}
-                        />
-                        <Text style={{
-                            fontSize: 16,
-                            fontWeight: '600',
-                            marginHorizontal: 10
-                        }}>Saved</Text>
-                    </View>
-                    <TouchableOpacity
-                        onPress={() => {
-                            navigate('Saved')
-                        }}
-                        style={styles.btnGoToSaved}>
-                        <Text style={{
-                            fontSize: 16,
-                            fontWeight: '500',
-                            color: "#318bfb"
-                        }}>
-                            See All
-                        </Text>
-                    </TouchableOpacity>
-                </Animated.View>
+                <PhotoShower sources={[{uri:item.image}] || []} />
+            </View>
+            <View style={styles.titleStory}>
+                <Text style={{
+                        fontSize: 20,
+                        fontWeight: '700',
+                        color: '#fff'
+                    }}>{item.title}</Text>
             </View>
             <View style={styles.reactionsWrapper}>
                 <View style={styles.reactions}>
                     <View style={styles.lReactions}>
+                        
                         <TouchableOpacity
                             onPress={_toggleLikeStory}
                         >
@@ -132,117 +74,44 @@ const StoryItem = ({ setStory, item, showCommentInput }) => {
                                 ? "heart" : "heart-outline"}
                                 size={24}
                                 color={
-                                    isLiked ? 'red' : '#000'
+                                    isLiked ? 'red' : '#fff'
                                 } />
                         </TouchableOpacity>
                         <TouchableOpacity onPress={_onViewAllComments}>
-                            <Icon name="comment-outline" size={22} />
+                            <Icon name="comment-outline" color={'#fff'} size={22} />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => navigate('ShareToDirect', {
-                            item: { ...item }
-                        })}>
-                            <Image
-                                style={{
-                                    height: 20,
-                                    width: 20
-                                }}
-                                source={require('../../assets/icons/send.png')} />
+                        <TouchableOpacity>
+                            <Icons name="eye"
+                                size={24}
+                                color={
+                                    isViewed ? '#fff' : '#ddd'
+                                } />
                         </TouchableOpacity>
                     </View>
-                    {item.source && item.source.length > 1 && <CirclePagination
-                        maxPage={item.source?.length || 0}
-                        currentPage={currentPage}
-                    />}
-                    <TouchableOpacity
-                        activeOpacity={0.7}
-                        onPress={_onToggleBookmark}
-                    >
-                        <Image
-                            style={{
-                                height: 24,
-                                width: 24
-                            }}
-                            source={
-                                isBookmarked ? require('../../assets/icons/bookmarked.png')
-                                    : require('../../assets/icons/bookmark.png')} />
-                    </TouchableOpacity>
                 </View>
-                {item.likes && item.likes.length !== 0 && <Text style={{
-                    fontWeight: "bold",
-                    marginVertical: 5,
-                }}>{item.likes.length >= 1000 ?
-                    (Math.round(item.likes.length / 1000) + 'k')
-                    : item.likes.length} {item.likes.length < 2 ? 'like' : 'likes'}</Text>}
-
                 <View style={{
-                    flexWrap: 'wrap',
                     flexDirection: 'row',
-                    alignItems: 'center'
+                    alignItems: 'center',
+                    marginVertical: 5
                 }}>
-                    <Text style={{
-                        fontWeight: "600",
-                        marginVertical: 5,
-                    }}>{item.ownUser?.username} </Text>
-                    {content.map(Jsx => Jsx)}
-                </View>
-                {item.comments && item.comments.length > 0 &&
-                    <>
-                        <View>
-                            <Text style={{
-                                fontWeight: "600",
-                                marginVertical: 5,
-                            }}>{item.comments[0].userId} <Text style={{
-                                fontWeight: '400'
-                            }}>
-                                    {item.comments[0].content}
-                                </Text></Text>
-                        </View>
-                        <TouchableOpacity
-                            onPress={_onViewAllComments}
-                            style={styles.btnViewCmt}>
-                            <Text style={{
-                                color: "#666",
-                            }}>
-                                View all {item.comments.length} comments
-                            </Text>
-                        </TouchableOpacity>
-                    </>
-                }
+                    {item.views && item.views.length !== 0 && <Text style={{
+                        fontWeight: "bold",
+                        marginRight: 10,
+                        color: '#fff'
+                    }}>{item.views.length >= 1000 ?
+                        (Math.round(item.views.length / 1000) + 'k')
+                        : item.views.length} Lượt xem</Text>}
 
-                <TouchableOpacity
-                    onPress={() => {
-                        if (showCommentInput) showCommentInput(item.uid || 0)
-                    }}
-                    activeOpacity={1}
-                    style={styles.commentInputWrapper}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <FastImage source={{ uri: user.userInfo?.avatarURL, priority: FastImage.priority.high }}
-                            style={styles.commentAvatar} />
-                        <Text style={{
-                            color: "#666",
-                            marginHorizontal: 10
-                        }}>Add a comment...</Text>
-                    </View>
-                    <View style={styles.commentIconsWrapper}>
-                        <TouchableOpacity onPress={() => {
-                            if (showCommentInput) showCommentInput(item.uid || 0, '❤')
-                        }}>
-                            <Text style={{
-                                fontSize: 10
-                            }}>❤</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => {
-                            if (showCommentInput) showCommentInput(item.uid || 0, '🙌')
-                        }}>
-                            <Text style={{
-                                fontSize: 10
-                            }}>🙌</Text>
-                        </TouchableOpacity>
-                        <Icons
-                            name="plus-circle-outline"
-                            color="#666" />
-                    </View>
-                </TouchableOpacity>
+                    {item.hearts && item.hearts.length !== 0 && <Text style={{
+                        fontWeight: "bold",
+                        marginRight: 10,
+                        color: '#fff'
+                    }}>{item.hearts.length >= 1000 ?
+                        (Math.round(item.hearts.length / 1000) + 'k')
+                        : item.hearts.length} Lượt thích</Text>}
+                </View>
+                
+
                 <View style={{
                     flexDirection: 'row',
                     alignItems: 'center',
@@ -252,17 +121,6 @@ const StoryItem = ({ setStory, item, showCommentInput }) => {
                         fontSize: 12,
                         color: '#666'
                     }}>{diffTime}</Text>
-                    <Text style={{
-                        fontSize: 12,
-                        color: '#666'
-                    }}> • </Text>
-                    <TouchableOpacity>
-                        <Text style={{
-                            fontSize: 12,
-                            color: '#318bfb',
-                            fontWeight: '500'
-                        }}>See Translation</Text>
-                    </TouchableOpacity>
                 </View>
             </View>
         </View >
@@ -273,6 +131,7 @@ export default React.memo(StoryItem)
 
 const styles = StyleSheet.create({
     container: {
+        backgroundColor: '#000'
     },
     storyHeader: {
         flexDirection: 'row',
@@ -281,8 +140,6 @@ const styles = StyleSheet.create({
         padding: 10,
         borderTopColor: '#ddd',
         borderTopWidth: 0.5,
-        borderBottomColor: '#ddd',
-        borderBottomWidth: 0.5,
     },
     infoWrapper: {
         flexDirection: 'row',
@@ -291,37 +148,16 @@ const styles = StyleSheet.create({
     body: {
         overflow: 'hidden'
     },
-    bookmarkAddionNotification: {
-        position: 'absolute',
-        backgroundColor: "#fff",
-        paddingHorizontal: 15,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        height: 44,
-        width: '100%',
-        borderBottomColor: '#ddd',
-        borderBottomWidth: 1,
-        bottom: -44,
-        left: 0
-    },
-    btnGoToSaved: {
-        height: 44,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    bookmarkPreviewImage: {
-        height: 30,
-        width: 30,
-        borderRadius: 5
-    },
     avatar: {
-        borderColor: '#ddd',
+        borderColor: '#fff',
         borderWidth: 0.3,
         height: 36,
         width: 36,
         borderRadius: 36,
         marginRight: 10,
+    },
+    titleStory: {
+        padding: 10,
     },
     reactionsWrapper: {
         padding: 10
@@ -337,63 +173,5 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center'
     },
-    btnViewCmt: {
-        marginVertical: 5
-    },
-    commentInputWrapper: {
-        height: 24,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        marginVertical: 5
-    },
-    commentIconsWrapper: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        width: 14.3 * 3 + 15
-    },
-    commentAvatar: {
-        width: 24,
-        height: 24,
-        borderRadius: 24
-    },
+    
 })
-export function createFilterContent(content) {
-    const myUsername = store.getState().user.user.userInfo?.username || ''
-    const matchedGroups = []
-    content?.replace(/@[a-zA-Z0-9._]{4,}|\#\w+/g,
-        (match, index) => {
-            matchedGroups.push({ match, index })
-            return match
-        })
-    let splitedContent = (content?.split('') || [])
-        .map((c, i) => <Text key={i}>{c}</Text>)
-    let i = 0
-    matchedGroups.map((match) => {
-        splitedContent.splice(match.index - i + 1, match.match.length - 1)
-        splitedContent[match.index - i] =
-            <TouchableOpacity onPress={() => {
-                const targetName = match.match.slice(-(match.match.length - 1))
-                if (match.match[0] === '@') {
-                    if (myUsername !== targetName) {
-                        navigate('ProfileX', {
-                            username: targetName
-                        })
-                    } else navigate('Account')
-                } else if (match.match[0] === '#') {
-                    navigate('Hashtag', {
-                        hashtag: match.match
-                    })
-                }
-            }
-            } key={`${match.match}${match.index}`}>
-                <Text style={{
-                    color: '#318bfb',
-                    fontWeight: '500'
-                }}>{match.match}</Text>
-            </TouchableOpacity>
-        i += match.match.length - 1
-    })
-    return splitedContent
-}

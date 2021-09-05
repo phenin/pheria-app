@@ -3,15 +3,15 @@ import { StyleSheet, View } from 'react-native'
 import StoryItem from './StoryItem'
 
 const index = ({ data, showCommentInput }) => {
-
+    console.log(data)
     useEffect(() => {
     }, [])
     return (
         <View style={styles.container}>
-            {data.map((post, index) => (
+            {data.map((story, index) => (
                 <StoryItem
                     showCommentInput={showCommentInput}
-                    key={index} item={post} />
+                    key={index} item={story} />
             ))}
         </View>
     )
