@@ -21,12 +21,12 @@ const index = ({ storyId, onReply }) => {
     useEffect(() => {
         (async () => {
             setRefreshing(true)
-            // await dispatch(FetchCommentListRequest(storyId))
+            await dispatch(FetchCommentListRequest(storyId))
             setRefreshing(false)
         })()
 
         return () => {
-            // dispatch(ResetCommentList())
+            dispatch(ResetCommentList())
         }
     }, [])
     useEffect(() => {
@@ -37,7 +37,7 @@ const index = ({ storyId, onReply }) => {
     const _onRefresh = async () => {
         if (!refreshing) {
             setRefreshing(true)
-            // await dispatch(FetchCommentListRequest(storyId))
+            await dispatch(FetchCommentListRequest(storyId))
             setRefreshing(false)
         }
     }
@@ -99,7 +99,7 @@ const index = ({ storyId, onReply }) => {
             }}
             refreshing={refreshing}
             onRefresh={_onRefresh}
-            ListHeaderComponent={() => <PostContentItem item={comment.post} />}
+            ListHeaderComponent={() => <PostContentItem item={comment.story} />}
             ListFooterComponent={() => <FooterComponent loading={loadingMore} />}
             renderItem={({ item, index }) =>
                 <CommentItem storyId={storyId}

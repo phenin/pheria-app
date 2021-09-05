@@ -1,14 +1,14 @@
 import React from 'react'
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 import { ExtraPost } from '../../reducers/postReducer'
-import { timestampToString } from '../../utils'
+import { timestampToString } from '../../utils/util'
 
 const CommentItem = ({ item }) => {
     return (
         <View style={styles.container}>
             <Image
                 style={styles.avatar}
-                source={{ uri: item.ownUser?.avatarURL }} />
+                source={{ uri: item?.author?.picture }} />
             <View style={{
                 marginLeft: 10
             }}>
@@ -18,16 +18,16 @@ const CommentItem = ({ item }) => {
                 }}>
                     <TouchableOpacity>
                         <Text style={{ fontWeight: 'bold' }}>
-                            {item.ownUser?.username || '-NaN-'} </Text>
+                            {item?.author?.name || '-NaN-'} </Text>
                     </TouchableOpacity>
-                    <Text>{item.content}</Text>
+                    <Text>{item?.title}</Text>
                 </View>
                 <View style={{
                     flexDirection: 'row',
                 }}>
                     <Text style={{
                         color: '#666'
-                    }}>{timestampToString(item.create_at?.toMillis() || 0)}</Text>
+                    }}>{timestampToString(item?.datecreate || 0)}</Text>
                 </View>
             </View>
         </View>

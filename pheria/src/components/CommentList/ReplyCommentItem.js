@@ -4,22 +4,25 @@ import { ExtraComment } from '../../reducers/commentReducer'
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { SCREEN_WIDTH } from '../../constants'
 import { useSelector } from '../../reducers'
-import { timestampToString } from '../../utils'
+import { timestampToString } from '../../utils/util'
 import { useDispatch } from 'react-redux'
 import { ToggleLikeReplyRequest } from '../../actions/commentActions'
 
 const ReplyCommentItem = ({ storyId, item, commentId, onReply }) => {
     const dispatch = useDispatch()
     const user = useSelector(state => state.user.user)
-    const isLiked = item.likes?.indexOf(user.userInfo?.username || '') !== undefined
-        && item.likes?.indexOf(user.userInfo?.username || '') > -1
+    const isLiked = item.likes?.indexOf(user.userInfo?._id || '') !== undefined
+        && item.likes?.indexOf(user.userInfo?._id || '') > -1
     const _onToggleLikeReply = () => {
-        if (item?.uid) {
-            // dispatch(ToggleLikeReplyRequest(item.uid, commentId, storyId))
+        if (item?._id) {
+            dispatch(ToggleLikeReplyRequest(item._id, commentId, isLiked))
         }
     }
     const _onReply = () => {
-        onReply(commentId, item.userId || "")
+        if(item?.author?.name) {
+            onReply(commentId, item.author.name || "")
+        }
+        
     }
     return (
         <TouchableOpacity style={{
@@ -27,15 +30,15 @@ const ReplyCommentItem = ({ storyId, item, commentId, onReply }) => {
         }}>
             <View style={{
                 flexDirection: 'row',
-                maxWidth: SCREEN_WIDTH - 30 - 30 - 30
+                maxWidth: SCREEN_WIDTH - 30 - 30 - 30 - 30
             }}>
                 <TouchableOpacity>
                     <Image source={{
-                        uri: item.ownUser?.avatarURL
+                        uri: item?.author?.picture
                     }} style={styles.avatar} />
                 </TouchableOpacity>
                 <View style={{
-                    marginLeft: 10
+                    marginLeft: 10,
                 }}>
                     <View style={{
                         flexDirection: 'row',
@@ -43,7 +46,7 @@ const ReplyCommentItem = ({ storyId, item, commentId, onReply }) => {
                     }}>
                         <TouchableOpacity>
                             <Text style={{ fontWeight: 'bold' }}>
-                                {item.ownUser?.username} </Text>
+                                {item?.author?.name} </Text>
                         </TouchableOpacity>
                         <Text>{item.content}</Text>
                     </View>
@@ -51,12 +54,13 @@ const ReplyCommentItem = ({ storyId, item, commentId, onReply }) => {
                         <View style={styles.infoWrapper}>
                             <Text style={{
                                 color: '#666'
-                            }}>{timestampToString(item.create_at?.toMillis() || 0)}</Text>
+                            }}>{timestampToString(item?.datecreate || 0)}</Text>
                             {item.likes && item.likes.length > 0
                                 && <Text style={{
-                                    color: '#666',
+                                    color: '#700',
                                     fontWeight: '600',
-                                }}>{item.likes.length} {item.likes.length < 2 ? 'like' : 'likes'}
+                                    marginHorizontal: 10
+                                }}>{item.likes.length} {item.likes.length < 2 ? 'thích' : 'thích'}
                                 </Text>
                             }
                             <TouchableOpacity
@@ -65,7 +69,7 @@ const ReplyCommentItem = ({ storyId, item, commentId, onReply }) => {
                                 <Text style={{
                                     color: '#666',
                                     fontWeight: '600',
-                                }}>Reply</Text>
+                                }}>Trả lời</Text>
                             </TouchableOpacity>
                         </View>
                     </View>

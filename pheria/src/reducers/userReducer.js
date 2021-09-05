@@ -48,29 +48,29 @@ const reducer = (state = defaultUserState, action) => {
             state = { ...state, user: {} }
             return state
         case userActionTypes.LOGIN_SUCCESS:
-            action = action
+            
             state = { ...state, user: { ...action.payload.user } }
             return state
         case userActionTypes.LOGIN_FAILURE:
-            action = action
+            
             const message = action.payload.message
             Alert.alert('Error', message)
             return state
         case userActionTypes.LOGOUT_SUCCESS:
             return { user: {} }
         case userActionTypes.LOGOUT_FAILURE:
-            action = action
+            
             Alert.alert('Error', action.payload.message)
             return state
         case userActionTypes.REGISTER_REQUEST:
             state = { ...state, user: {} }
             return state
         case userActionTypes.REGISTER_SUCCESS:
-            action = action
+            
             state = { ...state, user: { ...action.payload.user } }
             return state
         case userActionTypes.REGISTER_FAILURE:
-            action = action
+            
             const message2 = action.payload.message
             Alert.alert('Error', message2)
             return state

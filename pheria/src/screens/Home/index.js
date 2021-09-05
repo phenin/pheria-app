@@ -20,7 +20,8 @@ const index = () => {
     const _loadingDeg = new Animated.Value(0)
     const _scrollRef = useRef(null)
     const [loadingMore, setLoadingMore] = useState(false)
-    
+    const [showCommentInput, setShowCommentInput] = useState(false)
+
     const ref = useRef({
         scrollHeight: 0, preOffsetY: 0,
         commentContents: [], currentCommentId: 0

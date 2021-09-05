@@ -21,10 +21,9 @@ const StoryItem = ({ setStory, item }) => {
     }
     let diffTime = timestampToString(item.datecreate || 0, true)
     const _onViewAllComments = () => {
-        // navigation.navigate('Comment', {
-        //     storyId: item._id,
-        //     ...(setStory ? { storyData: { ...item } } : {})
-        // })
+        navigation.navigate('Comment', {
+            storyId: item._id
+        })
     }
     
     return (

@@ -6,9 +6,7 @@ import {
     fetchUpdateStory,
     fetchHeartStory,
     fetchUnHeartStory,
-    fetchListComment,
-    fetchComment,
-    fetchReplyComment
+    fetchListComment
   } from '../api/story'
 
 export const FetchStoryListRequest = () => {
@@ -117,31 +115,6 @@ export const ToggleLikeStorySuccess = (payload) => {
 // export const LoadMoreStoryListSuccess = (payload) => {
 //     return {
 //         type: storyActionTypes.LOAD_MORE_STORY_LIST_SUCCESS,
-//         payload: payload
-//     }
-// }
-// /**
-//  * Story COMMENTS ACTIONS
-//  */
-// export const StoryCommentRequest = (StoryId,
-//     content,
-//     StoryData,
-//     setStory => {
-//     return async (dispatch) => {
-       
-//     }
-// })
-// export const StoryCommentFailure = () => {
-//     return {
-//         type: storyActionTypes.COMMENT_STORY_FAILURE,
-//         payload: {
-//             message: 'Can not load more Storys!'
-//         }
-//     }
-// }
-// export const StoryCommentSuccess = (payload) => {
-//     return {
-//         type: storyActionTypes.COMMENT_STORY_SUCCESS,
 //         payload: payload
 //     }
 // }

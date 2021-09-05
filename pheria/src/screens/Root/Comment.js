@@ -15,10 +15,9 @@ const index = ({ navigation, route }) => {
     const _onGoBack = () => {
         navigation.goBack()
     }
-    const _onShareToDirect = () => {
-
-    }
+    
     const _onReply = (commentId, targetUsername) => {
+        console.log('_onReply', commentId, targetUsername)
         commentInputRef.current?.focus()
         setCurrentReplyCommentId(commentId)
         setCurrentReplyUsername(targetUsername)

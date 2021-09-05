@@ -1,10 +1,9 @@
 import React from 'react'
-import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView } from 'react-native'
-import { ExtraComment } from '../../reducers/commentReducer'
+import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native'
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { SCREEN_WIDTH } from '../../constants'
 import { useSelector } from '../../reducers'
-import { timestampToString } from '../../utils'
+import { timestampToString } from '../../utils/util'
 import { useDispatch } from 'react-redux'
 import { ToggleLikeCommentRequest } from '../../actions/commentActions'
 import ReplyCommentItem from './ReplyCommentItem'
@@ -12,16 +11,17 @@ import ReplyCommentItem from './ReplyCommentItem'
 const CommentItem = ({ item, onReply, storyId }) => {
     const dispatch = useDispatch()
     const user = useSelector(state => state.user.user)
-    const isLiked = item.likes?.indexOf(user.userInfo?.username || '') !== undefined
-        && item.likes?.indexOf(user.userInfo?.username || '') > -1
+    const isLiked = item?.likes?.indexOf(user.userInfo?._id || '') !== undefined
+        && item.likes?.indexOf(user.userInfo?._id || '') > -1
+
     const _onToggleLikeComment = () => {
-        if (item?.uid) {
-            // dispatch(ToggleLikeCommentRequest(storyId, item.uid))
+        if (item?._id) {
+            dispatch(ToggleLikeCommentRequest(item._id, isLiked))
         }
     }
     const _onReply = () => {
-        if (item.uid && item.userId) {
-            onReply(item.uid, item.userId)
+        if (item?._id && item?.author?._id) {
+            onReply(item._id, item.author.name)
         }
     }
     return (
@@ -35,7 +35,7 @@ const CommentItem = ({ item, onReply, storyId }) => {
                 }}>
                     <TouchableOpacity>
                         <Image source={{
-                            uri: item.ownUser?.avatarURL
+                            uri: item?.author?.picture
                         }} style={styles.avatar} />
                     </TouchableOpacity>
                     <View style={{
@@ -47,20 +47,21 @@ const CommentItem = ({ item, onReply, storyId }) => {
                         }}>
                             <TouchableOpacity>
                                 <Text style={{ fontWeight: 'bold' }}>
-                                    {item.ownUser?.username} </Text>
+                                    {item?.author?.name} </Text>
                             </TouchableOpacity>
-                            <Text>{item.content}</Text>
+                            <Text>{item?.content}</Text>
                         </View>
                         <View>
                             <View style={styles.infoWrapper}>
                                 <Text style={{
                                     color: '#666'
-                                }}>{timestampToString(item.create_at?.toMillis() || 0)}</Text>
-                                {item.likes && item.likes.length > 0
+                                }}>{timestampToString(item.datecreate || 0)}</Text>
+                                {item?.likes && item.likes.length > 0
                                     && <Text style={{
-                                        color: '#666',
+                                        color: '#700',
                                         fontWeight: '600',
-                                    }}>{item.likes.length} {item.likes.length < 2 ? 'like' : 'likes'}
+                                        marginHorizontal: 10
+                                    }}>{item.likes.length} {item.likes.length < 2 ? 'thích' : 'thích'}
                                     </Text>
                                 }
                                 <TouchableOpacity
@@ -69,7 +70,7 @@ const CommentItem = ({ item, onReply, storyId }) => {
                                     <Text style={{
                                         color: '#666',
                                         fontWeight: '600',
-                                    }}>Reply</Text>
+                                    }}>Trả lời</Text>
                                 </TouchableOpacity>
                             </View>
 
@@ -85,11 +86,11 @@ const CommentItem = ({ item, onReply, storyId }) => {
                 </TouchableOpacity>
             </TouchableOpacity>
             <View>
-                {item.replies && item.replies.map((reply, index) => (
+                {item?.replies && item.replies.map((reply, index) => (
                     <ReplyCommentItem
                         storyId={storyId}
                         onReply={onReply}
-                        commentId={item.uid || 0}
+                        commentId={item?._id || 0}
                         key={index}
                         item={reply} />
                 ))}
