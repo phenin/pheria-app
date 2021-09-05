@@ -46,10 +46,10 @@ const CommentItem = ({ item, onReply, storyId }) => {
                             flexWrap: 'wrap'
                         }}>
                             <TouchableOpacity>
-                                <Text style={{ fontWeight: 'bold' }}>
+                                <Text style={{ fontWeight: 'bold', color: '#fff' }}>
                                     {item?.author?.name} </Text>
                             </TouchableOpacity>
-                            <Text>{item?.content}</Text>
+                            <Text style={{ color: '#fff' }}>{item?.content}</Text>
                         </View>
                         <View>
                             <View style={styles.infoWrapper}>
@@ -103,7 +103,7 @@ export default React.memo(CommentItem)
 
 const styles = StyleSheet.create({
     container: {
-        marginVertical: 5,
+        marginVertical: 10,
         minHeight: 44,
         flexDirection: 'row',
         paddingHorizontal: 15,
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
         height: 30,
         width: 30,
         borderRadius: 30,
-        borderColor: '#333',
+        borderColor: '#fff',
         borderWidth: 0.3
     },
     btnLove: {

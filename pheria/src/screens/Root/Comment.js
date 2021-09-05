@@ -17,7 +17,6 @@ const index = ({ navigation, route }) => {
     }
     
     const _onReply = (commentId, targetUsername) => {
-        console.log('_onReply', commentId, targetUsername)
         commentInputRef.current?.focus()
         setCurrentReplyCommentId(commentId)
         setCurrentReplyUsername(targetUsername)
@@ -35,12 +34,13 @@ const index = ({ navigation, route }) => {
                         <TouchableOpacity
                             onPress={_onGoBack}
                             style={styles.btnBack}>
-                            <Icons name="arrow-left" size={20} />
+                            <Icons name="arrow-left" color={'#fff'} size={20} />
                         </TouchableOpacity>
                         <Text style={{
                             fontSize: 16,
-                            fontWeight: '600'
-                        }}>Comments</Text>
+                            fontWeight: '600',
+                            color: '#fff'
+                        }}>Bình luận</Text>
                     </View>
                 </View>
                 <CommentList onReply={_onReply} storyId={storyId} />
@@ -59,7 +59,7 @@ export default index
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#fff',
+        backgroundColor: '#000',
         height: '100%'
     },
     navigationBar: {

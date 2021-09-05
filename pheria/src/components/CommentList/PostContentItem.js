@@ -17,10 +17,16 @@ const CommentItem = ({ item }) => {
                     flexWrap: 'wrap'
                 }}>
                     <TouchableOpacity>
-                        <Text style={{ fontWeight: 'bold' }}>
+                        <Text style={{ fontWeight: 'bold', color: '#fff' }}>
                             {item?.author?.name || '-NaN-'} </Text>
                     </TouchableOpacity>
-                    <Text>{item?.title}</Text>
+                    
+                </View>
+                <View style={{
+                    flexDirection: 'row',
+                    flexWrap: 'wrap'
+                }}>
+                    <Text style={{ fontSize: 20, color: '#fff' }}>{item?.title}</Text>
                 </View>
                 <View style={{
                     flexDirection: 'row',
@@ -38,16 +44,18 @@ export default CommentItem
 
 const styles = StyleSheet.create({
     container: {
-        height: 60,
         flexDirection: 'row',
         alignItems: 'center',
         paddingHorizontal: 15,
         borderBottomColor: "#ddd",
-        borderBottomWidth: 1
+        borderBottomWidth: 1,
+        paddingVertical: 10
     },
     avatar: {
-        height: 30,
-        width: 30,
-        borderRadius: 30
+        height: 40,
+        width: 40,
+        borderRadius: 40,
+        borderColor: '#fff',
+        borderWidth: 0.8
     }
 })

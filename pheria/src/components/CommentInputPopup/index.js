@@ -155,7 +155,7 @@ const index = ({ commentInputRef, preValue,
                     onPress={_storyComment}
                     style={styles.btnStory}>
                     {!commenting && <Text style={{
-                        color: '#318bfb',
+                        color: '#1b6563cc',
                         fontWeight: '600'
                     }}>POST</Text>}
                     {commenting && <Animated.Image
