@@ -307,7 +307,7 @@ export const UserItem = React.memo(({ user }) => {
                     flexDirection: 'row',
                     alignItems: 'center'
                 }}>
-                    <FastImage
+                    <Image
                         source={{
                             uri: user.avatarURL
                         }}
