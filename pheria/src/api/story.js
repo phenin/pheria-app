@@ -17,13 +17,14 @@ export const create = (params) => post(endpoints.story, params)
 export const update = (params) => put(`${endpoints.story}/${params._id}`, params)
 export const heart = (id) => patch(`${endpoints.story}/${id}/heart`)
 export const unHeart = (id) => patch(`${endpoints.story}/${id}/unheart`)
-export const listComment = (_id) => get(`${endpoints.comment}/${_id}`)
+export const listComment = (_id, query) => get(`${endpoints.comment}/${_id}?limit=${query.limit}&offset=${query.offset}`)
 export const comment = (params) => post(`${endpoints.comment}`, params)
 export const replyComment = (params) => put(`${endpoints.comment}/${params.commentId}/reply`, params)
 export const likeComment = (params) => get(`${endpoints.comment}/${params._id}/like`)
 export const unlikeComment = (params) => get(`${endpoints.comment}/${params._id}/unlike`)
 export const likeReplyComment = (params) => get(`${endpoints.comment}/${params._id}/like/${params.replyId}`)
 export const unlikeReplyComment = (params) => get(`${endpoints.comment}/${params._id}/unlike/${params.replyId}`)
+export const showReplies = (_id, query) => get(`${endpoints.comment}/${_id}/replies?limit=${query.limit}&offset=${query.offset}`)
 
 export const fetchListStory = () => {
   return new Promise((resolve, reject) => {
@@ -77,9 +78,9 @@ export const fetchUnHeartStory = (params) => {
   })
 }
 
-export const fetchListComment = (params) => {
+export const fetchListComment = (params, query) => {
   return new Promise((resolve, reject) => {
-    customFetch(listComment, params)
+    customFetch(listComment, params, query)
       .then(data => resolve(data))
       .catch(error => reject(error))
   })
@@ -128,6 +129,14 @@ export const likingReplyComment = (params) => {
 export const unlikingReplyComment = (params) => {
   return new Promise((resolve, reject) => {
     customFetch(unlikeReplyComment, params)
+      .then(data => resolve(data))
+      .catch(error => reject(error))
+  })
+}
+
+export const showRepliesComment = (params, query) => {
+  return new Promise((resolve, reject) => {
+    customFetch(showReplies, params, query)
       .then(data => resolve(data))
       .catch(error => reject(error))
   })

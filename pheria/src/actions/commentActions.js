@@ -6,23 +6,39 @@ import {
   likingComment,
   unlikingComment,
   likingReplyComment,
-  unlikingReplyComment
+  unlikingReplyComment,
+  showRepliesComment
 } from '../api/story'
 
 export const FetchCommentListRequest = (storyId) => {
     return async (dispatch, getState) => {
       let story = getState().storyList.find(e=>e._id === storyId)
-      fetchListComment(storyId).then(res => {
+
+      const query = {
+        limit: 10,
+        offset: 0
+      }
+
+      let res
+      try {
+        res = await fetchListComment(storyId, query)
+      }
+      catch(e){
+        dispatch(FetchCommentListFailure())
+      }
+      if(res.data){
         const payload = {
           comments: res.data.comments,
+          total: res.data.total,
           story: story,
           scrollDown: false
         }
         dispatch(FetchCommentListSuccess(payload))
-      })
-      .catch(e =>{
-          dispatch(FetchCommentListFailure())
-      })
+      }
+      else {
+        dispatch(FetchCommentListFailure())
+      }
+      
     }
 }
 export const FetchCommentListFailure = () => {
@@ -140,30 +156,61 @@ export const StoryReplySuccess = (payload)=> {
 /**
  * LOAD MORE COMMENTS ACTIONS
  */
-// export const LoadMoreCommentListRequest = (storyId) => {
-//     return async (dispatch) => {
-        
-//     }
-// }
+export const LoadMoreCommentListRequest = (storyId) => {
+  return async (dispatch, getState) => {
+    let story = getState().storyList.find(e=>e._id === storyId)
+    let total = getState().comment.total
+    let length = getState().comment.comments.length
+
+    if(total <= length) {
+      return
+    }
+
+    const query = {
+      limit: 10,
+      offset: length
+    }
+
+    let res
+    try {
+      res = await fetchListComment(storyId, query)
+    }
+    catch(e){
+      dispatch(LoadMoreCommentListFailure())
+    }
+    if(res.data){
+      const payload = {
+        comments: res.data.comments,
+        story: story,
+        scrollDown: false
+      }
+      dispatch(LoadMoreCommentListSuccess(payload))
+    }
+    else {
+      dispatch(LoadMoreCommentListFailure())
+    }
+    
+  }
+}
 export const ResetCommentList = () => {
     return {
         type: commentActionTypes.FETCH_COMMENTS_REQUEST,
     }
 }
-// export const LoadMoreCommentListFailure = () => {
-//     return {
-//         type: commentActionTypes.LOAD_MORE_COMMENTS_FAILURE,
-//         payload: {
-//             message: 'Get Comments Failed!'
-//         }
-//     }
-// }
-// export const LoadMoreCommentListSuccess = (payload) => {
-//     return {
-//         type: commentActionTypes.LOAD_MORE_COMMENTS_SUCCESS,
-//         payload: payload
-//     }
-// }
+export const LoadMoreCommentListFailure = () => {
+    return {
+        type: commentActionTypes.LOAD_MORE_COMMENTS_FAILURE,
+        payload: {
+            message: 'Không thể lấy thêm bình luận'
+        }
+    }
+}
+export const LoadMoreCommentListSuccess = (payload) => {
+    return {
+        type: commentActionTypes.LOAD_MORE_COMMENTS_SUCCESS,
+        payload: payload
+    }
+}
 /**
  * TOGGLE LIKE REPLY ACTION
  */
@@ -256,6 +303,73 @@ export const ToggleLikeCommentSuccess = (payload) => {
         payload: payload
     }
 }
+// /**
+//  * TOGGLE LIKE COMMMENT ACTION
+//  */
+
+export const ToggleShowRepliesCommentRequest = (commentId) => {
+  
+  return async (dispatch, getState) => {
+    let comments = getState().comment.comments
+    let currentComment = comments.find(e=>e._id === commentId)
+    const total = currentComment.repliesCount
+    const length = currentComment.replies?.length || 0
+    if(total <= length) {
+      dispatch(ToggleShowRepliesCommentFailure())
+      return
+    }
+    const query = {
+      limit: 4,
+      offset: length
+    }
+
+    let res
+
+    try {
+      res = await showRepliesComment(commentId, query)
+    }
+    catch(e) {
+      dispatch(ToggleShowRepliesCommentFailure())
+      return
+    }
+
+    if(res?.data){
+      comments = comments.map(comment => {
+        if (comment._id === commentId) {
+            const newComment = { ...comment }
+            newComment.replies = [...comment?.replies || [],...res.data?.replies]
+            return newComment
+        }
+        return comment
+      })
+      const payload = {
+        comments: comments,
+        scrollDown: true
+      }
+      dispatch(ToggleShowRepliesCommentSuccess(payload))
+    }
+    else{
+      dispatch(ToggleShowRepliesCommentFailure())
+    }
+  }
+}
+
+export const ToggleShowRepliesCommentFailure = () => {
+  return {
+      type: commentActionTypes.TOGGLE_SHOW_REPLIES_COMMENT_FAILURE,
+      payload: {
+          message: 'Đã xảy ra lỗi, vui lòng thử lại sau lllllll'
+      }
+  }
+}
+
+export const ToggleShowRepliesCommentSuccess = (payload) => {
+  return {
+      type: commentActionTypes.TOGGLE_SHOW_REPLIES_COMMENT_SUCCESS,
+      payload: payload
+  }
+}
+
 // /**
 //  * TOGGLE LIKE COMMMENT ACTION
 //  */
@@ -356,3 +470,4 @@ export const ToggleLikeReplySuccess = (payload) => {
         payload: payload
     }
 }
+

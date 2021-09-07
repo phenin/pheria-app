@@ -18,10 +18,13 @@ export const commentActionTypes = {
     REPLY_COMMENT_SUCCESS: 'REPLY_COMMENT_SUCCESS',
     REPLY_COMMENT_FAILURE: 'REPLY_COMMENT_FAILURE',
     COMMENT_STORY_SUCCESS: 'COMMENT_STORY_SUCCESS',
-    COMMENT_STORY_FAILURE: 'COMMENT_STORY_FAILURE'
+    COMMENT_STORY_FAILURE: 'COMMENT_STORY_FAILURE',
+    TOGGLE_SHOW_REPLIES_COMMENT_FAILURE: 'TOGGLE_SHOW_REPLIES_COMMENT_FAILURE',
+    TOGGLE_SHOW_REPLIES_COMMENT_SUCCESS: 'TOGGLE_SHOW_REPLIES_COMMENT_SUCCESS'
 }
 const defaultState = {
   comments: [],
+  total: 0,
   story: {},
   scrollDown: false
 }
@@ -65,6 +68,7 @@ const reducer = (state = defaultState, action) => {
             state = {
                 ...state,
                 comments: [...action.payload.comments],
+                total: state.total++
             }
             return state
         case commentActionTypes.TOGGLE_LIKE_COMMENT_REQUEST:
@@ -108,6 +112,15 @@ const reducer = (state = defaultState, action) => {
             
             const message5 = action.payload.message
             Alert.alert('Error', message5)
+            return state
+        case commentActionTypes.TOGGLE_SHOW_REPLIES_COMMENT_FAILURE:
+            const message7 = action.payload.message
+            Alert.alert('Error', message7)
+            return state
+        case commentActionTypes.TOGGLE_SHOW_REPLIES_COMMENT_SUCCESS: 
+            state = {
+                ...state, comments: [...action.payload.comments]
+            }
             return state
         default:
             return state

@@ -129,9 +129,9 @@ export function remove(uri, params = {}, config = {}) {
   return axiosInstance.delete(uri, config)
 }
 
-export function customFetch(func, params) {
+export function customFetch(func, params, query) {
   return new Promise((resolve, reject) => {
-    func(params)
+    func(params, query)
       .then(data => {
         if (data) {
           return resolve(data)

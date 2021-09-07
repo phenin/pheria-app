@@ -5,7 +5,7 @@ import { SCREEN_WIDTH } from '../../constants'
 import { useSelector } from '../../reducers'
 import { timestampToString } from '../../utils/util'
 import { useDispatch } from 'react-redux'
-import { ToggleLikeCommentRequest } from '../../actions/commentActions'
+import { ToggleLikeCommentRequest, ToggleShowRepliesCommentRequest } from '../../actions/commentActions'
 import ReplyCommentItem from './ReplyCommentItem'
 
 const CommentItem = ({ item, onReply, storyId }) => {
@@ -17,6 +17,11 @@ const CommentItem = ({ item, onReply, storyId }) => {
     const _onToggleLikeComment = () => {
         if (item?._id) {
             dispatch(ToggleLikeCommentRequest(item._id, isLiked))
+        }
+    }
+    const _onToggleShowReples = () => {
+        if (item?._id) {
+            dispatch(ToggleShowRepliesCommentRequest(item._id))
         }
     }
     const _onReply = () => {
@@ -85,6 +90,16 @@ const CommentItem = ({ item, onReply, storyId }) => {
                     <Icons name={isLiked ? "heart" : "heart-outline"} color={isLiked ? "red" : "#666"} size={20} />
                 </TouchableOpacity>
             </TouchableOpacity>
+            <View style={styles.repliesCount}>
+                {item?.repliesCount > 0 && 
+                    <TouchableOpacity
+                        onPress={_onToggleShowReples}>
+                        <Text style={{color: '#666',fontWeight: '600'}}>
+                            ----------- Hiện {item.repliesCount - (item?.replies?.length | 0)} trả lời
+                        </Text>
+                    </TouchableOpacity>
+                }
+            </View>
             <View>
                 {item?.replies && item.replies.map((reply, index) => (
                     <ReplyCommentItem
@@ -126,6 +141,12 @@ const styles = StyleSheet.create({
         marginVertical: 2,
         flexDirection: 'row',
         width: 160,
+        justifyContent: 'space-between'
+    },
+    repliesCount:{
+        width: 180,
+        marginVertical: 2,
+        marginHorizontal: 50,
         justifyContent: 'space-between'
     }
 })

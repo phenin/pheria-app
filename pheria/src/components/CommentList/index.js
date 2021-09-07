@@ -44,7 +44,7 @@ const index = ({ storyId, onReply }) => {
     const _onLoadMore = async () => {
         if (!loadingMore) {
             setLoadingMore(true)
-            // await dispatch(LoadMoreCommentListRequest(storyId))
+            await dispatch(LoadMoreCommentListRequest(storyId))
             setLoadingMore(false)
         }
     }
