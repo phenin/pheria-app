@@ -135,10 +135,10 @@ const index = ({ commentInputRef, preValue,
                     flexDirection: 'row',
                     alignItems: 'center'
                 }}>
-                    <Image style={styles.avatar} source={{
-                        uri: user.userInfo?.avatarURL,
-                        cache: 'force-cache'
-                    }} />
+                    <Image style={styles.avatar} 
+                    source={user.userInfo?.picture !== ''
+                    ? {uri: user.userInfo?.picture, cache: 'force-cache'}
+                    :require('../../assets/icons/account.png')}/>
                     <TextInput
                         value={text}
                         onChangeText={e => {

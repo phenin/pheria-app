@@ -23,11 +23,7 @@ function HomeScreen({navigation}) {
       appearance={{
         floating: true,
       }}
-      tabBarOptions={{
-        activeTintColor: '#fff',
-        activeBackgroundColor: '#000',
-        inactiveTintColor: '#000',
-      }}>
+      >
       <Tabs.Screen
         name="Home"
         component={ListStoryScreen}

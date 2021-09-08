@@ -23,7 +23,8 @@ const index = () => {
         <RootTab.Navigator
             initialRouteName={logined ? 'HomeTab' : 'AuthStack'}
             screenOptions={navigationOptions}
-            tabBarOptions={tabBarOptions}>
+            tabBarOptions={tabBarOptions}
+            >
             {!logined &&
                 <RootTab.Screen name="AuthStack" component={AuthStack} />
             }

@@ -33,9 +33,9 @@ const ReplyCommentItem = ({ storyId, item, commentId, onReply }) => {
                 maxWidth: SCREEN_WIDTH - 30 - 30 - 30 - 30
             }}>
                 <TouchableOpacity>
-                    <Image source={{
-                        uri: item?.author?.picture
-                    }} style={styles.avatar} />
+                    <Image source={item?.author?.picture !== ''
+                            ? {uri: item?.author?.picture}
+                            :require('../../assets/icons/account.png')} style={styles.avatar} />
                 </TouchableOpacity>
                 <View style={{
                     marginLeft: 10,

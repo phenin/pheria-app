@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Animated, Image, ImageBackground, RefreshControl, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Animated, Image, RefreshControl, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useDispatch } from 'react-redux'
-import { FetchExtraInfoRequest, FetchHighlightRequest } from '../../../actions/userActions'
+import { FetchExtraInfoRequest } from '../../../actions/userActions'
 import AccountGallery from '../../../components/AccountGallery'
 import { getTabBarHeight } from '../../../components/BottomTabBar'
 import { SCREEN_HEIGHT, SCREEN_WIDTH, STATUS_BAR_HEIGHT } from '../../../constants'
@@ -22,7 +22,6 @@ const index = () => {
     const archivePosts = useSelector(state => state.user.archive?.posts || [])
     // const photos = useSelector(state => state.user.photos || [])
         .filter(x => !!!archivePosts.find(y => y.uid === x.uid))
-    const tagPhotos = useSelector(state => state.user.tagPhotos)
     const scrollHRef = useRef(null)
     const scrollVRef = useRef(null)
     const scrollTabRef = useRef(null)
@@ -35,46 +34,7 @@ const index = () => {
         prePopupImage: { pX: 0, pY: 0, w: 0, h: 0 }
     })
     const _tabLineOffsetX = React.useMemo(() => new Animated.Value(0), [])
-    const recommendTasks = [
-        {
-            type: 1,
-            name: 'Add Bio',
-            done: user.userInfo && user.userInfo.bio !== '',
-            description: 'Tell your followers a little bit about yourself.',
-            icon: 'comment-outline',
-            button: 'Add Bio',
-            buttonDone: 'Edit Bio'
-        },
-        {
-            type: 2,
-            name: 'Add Profile Photo',
-            done: user.userInfo && user.userInfo.avatarURL !== '',
-            description: 'Choose a profile photo to represent yourself on Instagram.',
-            icon: 'account-box-outline',
-            button: 'Add Photo',
-            buttonDone: 'Edit Photo'
-
-        },
-        {
-            type: 3,
-            name: 'Add Your Name',
-            done: user.userInfo && user.userInfo.fullname !== '',
-            description: 'Add your full name so your friends know it\'s your. ',
-            icon: 'account-details',
-            button: 'Add Name',
-            buttonDone: 'Edit Name'
-        },
-        {
-            type: 4,
-            name: 'Find People To Follow',
-            done: user.userInfo?.followings && user.userInfo.followings.length > 0,
-            description: 'Follow peple and interests you care about.',
-            icon: 'rss',
-            button: 'Find People',
-            buttonDone: 'Find More'
-        }
-    ].sort((a, b) => (a.done ? 1 : 0) - (b.done ? 1 : 0))
-
+    
     useEffect(() => {
         // if (photos) {
         //     Image.preload(photos.map(post => ({ uri: post.source ? post.source[0].uri : '' })))
@@ -156,13 +116,7 @@ const index = () => {
             })
         }
     }
-    const _onDoTask = (type) => {
-        if (type === 1 || type === 2 || type === 3) {
-            navigate('EditProfile')
-        } else {
-            navigate('DiscoverPeople')
-        }
-    }
+    
     const _onScrollEndDragContainerScroll = ({ nativeEvent: {
         contentOffset: { x }
     } }) => {
@@ -326,61 +280,7 @@ const index = () => {
     }
     return (
         <SafeAreaView style={styles.container}>
-            {selectedPhoto.source && <View
-                style={{
-                    position: 'absolute',
-                    width: '100%',
-                    height: '100%',
-                    left: 0,
-                    top: STATUS_BAR_HEIGHT,
-                    zIndex: 99
-                }}>
-                <ImageBackground
-                    onLayout={_onAnimatePopup}
-                    blurRadius={20} style={{
-                        position: 'relative',
-                        width: '100%',
-                        height: '100%',
-                    }} source={{ uri: selectedPhoto.source[0].uri, cache: 'force-cache' }} >
-                    <Animated.View style={{
-                        width: _popupImageWidth,
-                        position: 'absolute',
-                        top: _popupImageTop,
-                        left: _popupImageLeft,
-                        borderRadius: 20,
-                        overflow: 'hidden'
-                    }}>
-                        <View style={{
-                            backgroundColor: '#fff',
-                            height: 40,
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            width: '100%'
-                        }}>
-                            <Image
-                                style={{
-                                    width: 30,
-                                    height: 30,
-                                    borderRadius: 30,
-                                    marginLeft: 15,
-                                    marginRight: 10,
-                                }}
-                                source={{ uri: user.userInfo?.avatarURL, priority: Image.priority.normal }} />
-                            <Text style={{ fontWeight: '500' }}>{user.userInfo?.username}</Text>
-                        </View>
-                        <Animated.View style={{
-                            height: _popupImageHeight,
-                            width: _popupImageWidth
-                        }}>
-                            <Image style={{
-                                width: '100%',
-                                height: '100%'
-                            }} source={{ uri: selectedPhoto.source[0].uri, priority: Image.priority.high }}
-                            />
-                        </Animated.View>
-                    </Animated.View>
-                </ImageBackground>
-            </View>}
+            
             <ScrollView
                 onScrollEndDrag={_onScrollEndDragContainerScroll}
                 ref={scrollHRef}
@@ -394,14 +294,10 @@ const index = () => {
                         ...styles.profileHeader,
                         zIndex: _headerTabOpacity
                     }}>
-                        <TouchableOpacity
+                        {/* <TouchableOpacity
                             style={styles.btnSwitchAccount}>
-                            <Text style={{
-                                fontWeight: '500',
-                                fontSize: 18
-                            }}>{user?.userInfo?.username}</Text>
-                            <Icon name="chevron-down" size={16} />
-                        </TouchableOpacity>
+                            
+                        </TouchableOpacity> */}
                         <TouchableOpacity
                             onPress={_onShowOptions}
                             style={styles.btnOptions}>
@@ -453,10 +349,9 @@ const index = () => {
                                         onPress={() => navigate('StoryTaker')}
                                         style={styles.avatarWrapper}>
                                         <Image style={styles.mainAvatar}
-                                            source={{ uri: user?.userInfo?.avatarURL }} />
-                                        <View style={styles.plusIcon}>
-                                            <Icon name="plus" size={20} color="#fff" />
-                                        </View>
+                                            source={user?.userInfo?.picture
+                                                ?{ uri: user?.userInfo?.picture }
+                                                :require('../../../assets/icons/account_x2.png')} />
                                     </TouchableOpacity>
                                     <View style={styles.extraInfoWrapper}>
                                         <TouchableOpacity
@@ -504,7 +399,7 @@ const index = () => {
                                 <View style={styles.bioWrapper}>
                                     <Text style={{
                                         fontWeight: '500',
-                                    }}>{user.userInfo?.fullname}</Text>
+                                    }}>{user.userInfo?.name}</Text>
                                     <Text>{user.userInfo?.bio}</Text>
                                 </View>
                                 <TouchableOpacity
@@ -559,99 +454,11 @@ const index = () => {
                                             hidePopupImage={_hidePopupImage}
                                             showPopupImage={_showPopupImage}
                                         />
-                                        <AccountGallery
-                                            photos={tagPhotos || []}
-                                            hidePopupImage={_hidePopupImage}
-                                            showPopupImage={_showPopupImage}
-                                        /> */}
+                                        */}
                                     </TouchableOpacity>
                                 </ScrollView>
                             </View>
-                            <View style={styles.recommend}>
-                                <View style={{
-                                    marginHorizontal: 15
-                                }}>
-                                    <Text style={{
-                                        fontSize: 18,
-                                        fontWeight: '500'
-                                    }}>Complete your profile</Text>
-                                    <Text style={{
-                                        fontSize: 12,
-                                        color: '#666'
-                                    }}>
-                                        <Text style={{
-                                            color: 'green'
-                                        }}>{recommendTasks.filter(x => x.done)
-                                            .length} OF {recommendTasks.length} </Text>
-                                        COMPELTE
-                                    </Text>
-                                </View>
-                                <ScrollView
-                                    bounces={false}
-                                    horizontal={true}
-                                    showsHorizontalScrollIndicator={false}
-                                >
-                                    <TouchableOpacity
-                                        activeOpacity={1}
-                                        style={{
-                                            flexDirection: 'row',
-                                            margin: 15
-                                        }}>
-                                        {recommendTasks.map((task, index) => (
-                                            <View key={index} style={styles.recommendItem}>
-                                                <View style={{
-                                                    ...styles.circleIcon,
-                                                    borderColor: task.done
-                                                        ? '#333' : '#ddd'
-                                                }}>
-                                                    <Icon color={task.done
-                                                        ? '#333' : '#ddd'}
-                                                        name={task.icon}
-                                                        size={24} />
-                                                    <View style={{
-                                                        position: 'absolute',
-                                                        bottom: -5,
-                                                        right: -5
-                                                    }}>
-                                                        <Image style={{
-                                                            width: 24,
-                                                            height: 24,
-                                                            borderRadius: 24,
-                                                            borderWidth: 2,
-                                                            borderColor: '#fff'
-                                                        }} source={require('../../../assets/icons/done.png')} />
-                                                    </View>
-                                                </View>
-                                                <Text style={{
-                                                    margin: 5,
-                                                    fontWeight: '600'
-                                                }}>{task.name}</Text>
-                                                <Text style={{
-                                                    fontSize: 12,
-                                                    width: '80%',
-                                                    textAlign: 'center',
-                                                    color: '#666'
-                                                }}>
-                                                    {task.description}
-                                                </Text>
-                                                <TouchableOpacity
-                                                    onPress={_onDoTask.bind(null, task.type)}
-                                                    style={{
-                                                        ...styles.btnModifyInfo,
-                                                        borderColor: '#ddd',
-                                                        borderWidth: task.done ? 1 : 0,
-                                                        backgroundColor: task.done ? '#fff' : '#318bfb'
-                                                    }}>
-                                                    <Text style={{
-                                                        color: task.done ? '#333' : '#fff',
-                                                        fontWeight: '500'
-                                                    }}>{!task.done ? task.button : task.buttonDone}</Text>
-                                                </TouchableOpacity>
-                                            </View>
-                                        ))}
-                                    </TouchableOpacity>
-                                </ScrollView>
-                            </View>
+                            
                         </TouchableOpacity>
                     </ScrollView>
                 </View>
@@ -660,7 +467,7 @@ const index = () => {
                         <Text style={{
                             fontSize: 16,
                             fontWeight: '500'
-                        }}>{user.userInfo?.username}</Text>
+                        }}>{user.userInfo?.name}</Text>
                     </View>
                     <View style={styles.optionsWrapper}>
                         <TouchableOpacity
@@ -784,19 +591,6 @@ const styles = StyleSheet.create({
         width: 80,
         borderRadius: 80
     },
-    plusIcon: {
-        width: 24,
-        height: 24,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 99,
-        backgroundColor: '#318bfb',
-        position: 'absolute',
-        bottom: 0,
-        right: 0,
-        borderWidth: 2,
-        borderColor: '#fff'
-    },
     extraInfoWrapper: {
         flexDirection: 'row',
         width: SCREEN_WIDTH - 30 - 80,
@@ -841,44 +635,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         width: SCREEN_WIDTH / 2
     },
-
-
-    recommend: {
-        marginVertical: 20
-    },
-    recommendItem: {
-        backgroundColor: '#fff',
-        borderRadius: 5,
-        borderWidth: 1,
-        borderColor: '#ddd',
-        height: SCREEN_WIDTH * 0.6,
-        width: SCREEN_WIDTH * 0.6,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginHorizontal: 5,
-    },
-    circleIcon: {
-        height: 50,
-        width: 50,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 99,
-        borderColor: '#ddd',
-        borderWidth: 1
-    },
-    btnModifyInfo: {
-        marginVertical: 10,
-        paddingVertical: 5,
-        paddingHorizontal: 10,
-        backgroundColor: '#318bfb',
-        borderRadius: 2
-    },
-    btnSwitchAccount: {
-        flexDirection: 'row',
-        height: 44,
-        paddingHorizontal: 10,
-        alignItems: 'center'
-    },
+    
     profileOptions: {
         width: SCREEN_WIDTH / 2,
         height: SCREEN_HEIGHT,
@@ -909,8 +666,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff'
     },
     btnOptions: {
+        flexDirection: 'row',
+        width: '100%',
         height: 44,
         paddingHorizontal: 10,
-        justifyContent: 'center'
+        justifyContent: 'flex-end',
     }
 })

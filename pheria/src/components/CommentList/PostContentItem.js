@@ -1,6 +1,5 @@
 import React from 'react'
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
-import { ExtraPost } from '../../reducers/postReducer'
 import { timestampToString } from '../../utils/util'
 
 const CommentItem = ({ item }) => {
@@ -8,7 +7,9 @@ const CommentItem = ({ item }) => {
         <View style={styles.container}>
             <Image
                 style={styles.avatar}
-                source={{ uri: item?.author?.picture }} />
+                source={item?.author?.picture !== ''
+                            ? {uri: item?.author?.picture}
+                            :require('../../assets/icons/account.png')} />
             <View style={{
                 marginLeft: 10
             }}>
