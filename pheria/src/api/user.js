@@ -12,7 +12,8 @@ const endpoints = {
   get_user: '/api/user/profile',
   update_user: '/api/user/update-user/',
   get_users_list_story: '/api/story/get-users-list-story/',
-  get_my_list_story: '/api/story/get-my-list-story/mylist'
+  get_my_list_story: '/api/story/get-my-list-story/mylist',
+  validateName: '/api/user/validateName'
 }
 
 export const login = (params) => post(endpoints.login, params, {
@@ -28,6 +29,7 @@ export const getUser = () => get(endpoints.get_user)
 export const getUserListStory = (id) => get(endpoints.get_users_list_story + id)
 export const getMyListStory = () => get(endpoints.get_my_list_story )
 export const updateUser = (params) => put(endpoints.update_user + params._id, params)
+export const checkName = (name) => post(endpoints.validateName, {name})
 
 export const fetchLoginByGG = (params) => {
   return new Promise((resolve, reject) => {
@@ -79,7 +81,7 @@ export const fetchMyListStory = () =>{
   })
 }
 
-export const fetchUpdateUser = (params) =>{
+export const updateUserInfoRequest = (params) =>{
   return new Promise((resolve, reject) => {
     customFetch(updateUser, params)
       .then(data => resolve(data))
@@ -88,3 +90,11 @@ export const fetchUpdateUser = (params) =>{
   })
 }
 
+export const checkExistUsername = (name) =>{
+  return new Promise((resolve, reject) => {
+    customFetch(checkName, name)
+      .then(data => resolve(data))
+      .catch(error => { console.log(error)
+        reject(error)})
+  })
+}

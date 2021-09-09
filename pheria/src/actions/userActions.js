@@ -6,9 +6,11 @@ import {
     fetchUser,
     fetchUserListStory,
     fetchMyListStory,
-    fetchUpdateUser
+    updateUserInfoRequest
 }  from '../api/user'
 import { getToken, setToken } from "../utils/util"
+import axios from 'axios';
+
 
 export const LoginRequest = (params) => {
     return (dispatch) => {
@@ -78,5 +80,82 @@ export const RegisterFailure = (e) => {
             message: e
         },
         type: userActionTypes.REGISTER_FAILURE
+    }
+}
+
+export const UploadAvatarRequest = (uri, extension) => {
+    return async (dispatch) => {
+        const data = new FormData();
+        data.append('image', {
+            name: extension,
+            uri:
+            Platform.OS === 'android'
+                ? uri
+                : uri.replace('file://', ''),
+        });
+        // Change file upload URL
+        const config = {
+            method: 'post',
+            url: 'https://api.imgur.com/3/image',
+            headers: {
+            Authorization: 'Client-ID 574f96546392ad0',
+            Accept: 'multipart/form-data',
+            'Content-Type': 'multipart/form-data',
+            },
+            data: data,
+        };
+
+        axios(config)
+            .then(response => {
+                dispatch(UpdateUserInfoRequest({
+                    picture: response.data.data.link
+                }))
+
+            })
+            .catch(error => {
+                console.log('lỗi upload ảnh', error);
+            });
+       
+    }
+}
+
+export const UpdateUserInfoRequest = (updateUserData) => {
+    return async (dispatch, getState) => {
+        const me = getState().user.user?.userInfo
+        const data = {
+            _id: me._id,
+            name: me.name,
+            picture: me.picture,
+            description: me.description,
+            locale: me.locale,
+            ...updateUserData,
+        }
+        updateUserInfoRequest(data).then(res => {
+            if(res.data){
+                
+                dispatch(UpdateUserInfoSuccess(res.data))
+            }
+            else {
+                dispatch(UpdateUserInfoFailure())
+            }
+        })
+        .catch(error => {
+            console.log('error ccc', error);
+        });
+       
+    }
+}
+export const UpdateUserInfoFailure = () => {
+    return {
+        type: userActionTypes.UPDATE_USER_INFO_FAILURE,
+        payload: {
+            message: `Can't update now, try again!`
+        }
+    }
+}
+export const UpdateUserInfoSuccess = (user) => {
+    return {
+        type: userActionTypes.UPDATE_USER_INFO_SUCCESS,
+        payload: user
     }
 }

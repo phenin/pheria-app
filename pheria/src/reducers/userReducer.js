@@ -9,6 +9,8 @@ export const userActionTypes = {
     REGISTER_REQUEST: 'REGISTER_REQUEST',
     REGISTER_SUCCESS: 'REGISTER_SUCCESS',
     REGISTER_FAILURE: 'REGISTER_FAILURE',
+    UPDATE_USER_INFO_FAILURE: 'UPDATE_USER_INFO_FAILURE',
+    UPDATE_USER_INFO_SUCCESS: 'UPDATE_USER_INFO_SUCCESS'
 }
 export const defaultUserState = {
     user: {},
@@ -73,6 +75,19 @@ const reducer = (state = defaultUserState, action) => {
             
             const message2 = action.payload.message
             Alert.alert('Error', message2)
+            return state
+        case userActionTypes.UPDATE_USER_INFO_SUCCESS:
+            state = {
+                ...state, user: {
+                    ...state.user,
+                    userInfo: {
+                        ...action.payload
+                    }
+                }
+            }
+            return state
+        case userActionTypes.UPDATE_USER_INFO_FAILURE:
+            Alert.alert('Error', action.payload.message)
             return state
         default:
             return state

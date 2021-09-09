@@ -18,7 +18,7 @@ const index = () => {
             display: 'none'
         }
     }
-    const logined = !!user?.user?.userInfo
+    const logined = !!user?.user
     return (
         <RootTab.Navigator
             initialRouteName={logined ? 'HomeTab' : 'AuthStack'}

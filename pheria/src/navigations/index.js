@@ -6,6 +6,7 @@ import { navigationRef } from './rootNavigation';
 import Comment from '../screens/Root/Comment';
 import StoryTaker from '../screens/Others/StoryTaker';
 import EditProfile from '../screens/Home/Account/EditProfile';
+import GalleryChooser from '../screens/Home/Account/GalleryChooser';
 
 const RootStack = createStackNavigator()
 const index = ()=> {
@@ -23,12 +24,15 @@ const index = ()=> {
           <RootStack.Screen name="RootTab" component={RootTab} />
           <RootStack.Screen name="Comment" component={Comment} />
           <RootStack.Screen options={{
-                    animationEnabled: false,
-                    cardStyle: { backgroundColor: 'transparent' }
-                }} name="EditProfile" component={EditProfile} />
+                animationEnabled: false,
+                cardStyle: { backgroundColor: 'transparent' }
+            }} name="EditProfile" component={EditProfile} />
           <RootStack.Screen options={{
-                    ...TransitionPresets.ModalTransition,
-                }} name="StoryTaker" component={StoryTaker} />
+                ...TransitionPresets.ModalTransition,
+            }} name="StoryTaker" component={StoryTaker} />
+          <RootStack.Screen options={{
+                ...TransitionPresets.ModalTransition,
+            }} name="GalleryChooser" component={GalleryChooser} />
         </RootStack.Navigator>
       </NavigationContainer>
   )

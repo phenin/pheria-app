@@ -3,7 +3,6 @@ import { Animated, Image, RefreshControl, SafeAreaView, ScrollView, StyleSheet, 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useDispatch } from 'react-redux'
 import { FetchExtraInfoRequest } from '../../../actions/userActions'
-import AccountGallery from '../../../components/AccountGallery'
 import { getTabBarHeight } from '../../../components/BottomTabBar'
 import { SCREEN_HEIGHT, SCREEN_WIDTH, STATUS_BAR_HEIGHT } from '../../../constants'
 import { navigate } from '../../../navigations/rootNavigation'

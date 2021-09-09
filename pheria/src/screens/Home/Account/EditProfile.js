@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Animated, Image, KeyboardAvoidingView, SafeAreaView, StyleSheet, Text, TouchableOpacity, View, TextInput, Alert } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { UpdateUserInfoRequest } from '../../../actions/userActions'
+import { checkExistUsername }  from '../../../api/user'
 import MaterialInput from '../../../components/MaterialInput'
 import NavigationBar from '../../../components/NavigationBar'
 import { SCREEN_HEIGHT, SCREEN_WIDTH, STATUS_BAR_HEIGHT, DEFAULT_PHOTO_URI } from '../../../constants'
@@ -12,10 +13,10 @@ import { string } from 'yup'
 import { useSelector } from '../../../reducers'
 const EditProfile = () => {
     const dispatch = useDispatch()
-    const preUser = store.getState().user.user.userInfo
-    const [name, setName] = useState(preUser?.name || '')
-    const [description, setDescription] = useState(preUser?.description || '')
+    
     const user = useSelector(state => state.user.user.userInfo)
+    const [name, setName] = useState(user?.name || '')
+    const [description, setDescription] = useState(user?.description || '')
     const [email, setEmail] = useState(user?.email || '')
     const [showModal, setShowModal] = useState(false)
     const _topOffsetMainContent = React.useMemo(() => new Animated.Value(1), [])
@@ -39,8 +40,17 @@ const EditProfile = () => {
     }, [])
     useEffect(() => {
         clearTimeout(ref.current.timeout)
-        ref.current.timeout = setTimeout(() => {
-            checkExistUsername(name, user?.name, setUsernameError)
+        ref.current.timeout = setTimeout( async () => {
+            try{
+                const result = await checkExistUsername(name)
+                if(result.data.status === 200){
+                    setUsernameError('')
+                }
+            }
+            catch(e) {
+                setUsernameError('Tên đã tồn tại')
+            }
+
         }, 300);
     }, [name])
     const _onAnimateMainContent = () => {
@@ -225,6 +235,7 @@ const EditProfile = () => {
                                     marginVertical: 10
                                 }}
                                 name="Tên tài khoản"
+                                errorMsg={usernameError.length > 0 ? usernameError : undefined}
                                 value={name}
                                 onChangeText={setName}
                             />
@@ -371,18 +382,3 @@ const styles = StyleSheet.create({
     },
     
 })
-function checkExistUsername(usr, curUsername, setUsernameError ) {
-    if (usr === curUsername) return setUsernameError("");
-    const pattern = /^[a-zA-Z0-9._]{4,}$/g
-    if (!pattern.test(usr)) return setUsernameError("name is not available.")
-
-    // firestore().collection('users')
-    //     .where('name', '==', usr.trim())
-    //     .get()
-    //     .then(snap => {
-    //         if (snap.size > 0) {
-    //             setUsernameError("name is existed.")
-    //         } else
-    //             setUsernameError('')
-    //     }).catch(e => e)
-}
