@@ -59,7 +59,7 @@ const reducer = (state = defaultUserState, action) => {
             Alert.alert('Error', message)
             return state
         case userActionTypes.LOGOUT_SUCCESS:
-            return { user: {} }
+            return { user: null }
         case userActionTypes.LOGOUT_FAILURE:
             
             Alert.alert('Error', action.payload.message)

@@ -285,7 +285,6 @@ function scrollEventHandlers(onYearChange, onMonthIndexChange, onDateChange, act
         const offsetY = nativeEvent.contentOffset.y;
 
         const offsetForScroll = offsetY / 44 - Math.floor(offsetY / 44);
-        console.log(offsetForScroll)
         let nextIndex = 0;
         if (offsetForScroll > 0.5) {
             nextIndex = Math.floor(offsetY / 44) + 1;

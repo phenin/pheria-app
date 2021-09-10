@@ -3,7 +3,6 @@ import { StyleSheet, View } from 'react-native'
 import StoryItem from './StoryItem'
 
 const index = ({ data, showCommentInput }) => {
-    console.log(data)
     useEffect(() => {
     }, [])
     return (

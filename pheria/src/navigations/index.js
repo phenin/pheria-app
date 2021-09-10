@@ -7,6 +7,7 @@ import Comment from '../screens/Root/Comment';
 import StoryTaker from '../screens/Others/StoryTaker';
 import EditProfile from '../screens/Home/Account/EditProfile';
 import GalleryChooser from '../screens/Home/Account/GalleryChooser';
+import Logout from '../screens/Home/Account/Logout';
 
 const RootStack = createStackNavigator()
 const index = ()=> {
@@ -33,6 +34,10 @@ const index = ()=> {
           <RootStack.Screen options={{
                 ...TransitionPresets.ModalTransition,
             }} name="GalleryChooser" component={GalleryChooser} />
+          <RootStack.Screen options={{
+                animationEnabled: false,
+                cardStyle: { backgroundColor: 'transparent' }
+            }} name="Logout" component={Logout} />
         </RootStack.Navigator>
       </NavigationContainer>
   )

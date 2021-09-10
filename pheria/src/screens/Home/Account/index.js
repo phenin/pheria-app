@@ -469,28 +469,12 @@ const index = () => {
                         }}>{user.userInfo?.name}</Text>
                     </View>
                     <View style={styles.optionsWrapper}>
-                        <TouchableOpacity
-                            onPress={() => navigate('Archive')}
-                            activeOpacity={0.8} style={styles.optionItem}>
-                            <Icon name="history" size={30} color="#333" />
-                            <Text style={{
-                                fontSize: 16,
-                                marginLeft: 5,
-                            }}>Archive</Text>
-                        </TouchableOpacity>
                         <TouchableOpacity activeOpacity={0.8} style={styles.optionItem}>
                             <Icon name="camera-timer" size={30} color="#333" />
                             <Text style={{
                                 fontSize: 16,
                                 marginLeft: 5,
-                            }}>Your Activity</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity activeOpacity={0.8} style={styles.optionItem}>
-                            <Icon name="qrcode-scan" size={30} color="#333" />
-                            <Text style={{
-                                fontSize: 16,
-                                marginLeft: 5,
-                            }}>Nametag</Text>
+                            }}>Hoạt động</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
                             onPress={() => navigate('Saved')}
@@ -499,25 +483,7 @@ const index = () => {
                             <Text style={{
                                 fontSize: 16,
                                 marginLeft: 5,
-                            }}>Saved</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            onPress={() => navigate('CloseFriends')}
-                            activeOpacity={0.8} style={styles.optionItem}>
-                            <Icon name="playlist-star" size={30} color="#333" />
-                            <Text style={{
-                                fontSize: 16,
-                                marginLeft: 5,
-                            }}>Close Friends</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            onPress={() => navigate('DiscoverPeople')}
-                            activeOpacity={0.8} style={styles.optionItem}>
-                            <Icon name="account-plus-outline" size={30} color="#333" />
-                            <Text style={{
-                                fontSize: 16,
-                                marginLeft: 5,
-                            }}>Discover People</Text>
+                            }}>Đã lưu</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
                             onPress={_onBackToMainScreen}
@@ -528,15 +494,9 @@ const index = () => {
                                 marginLeft: 5,
                             }}>Back</Text>
                         </TouchableOpacity>
-
                     </View>
                     <TouchableOpacity
-                        onPress={() => {
-                            navigate('Setting')
-                            setTimeout(() => {
-                                _onBackToMainScreen()
-                            }, 1000);
-                        }}
+                        onPress={() => navigate('Logout')}
                         activeOpacity={0.8}
                         style={{
                             ...styles.optionItem,
@@ -550,7 +510,7 @@ const index = () => {
                         <Text style={{
                             fontSize: 16,
                             marginLeft: 5,
-                        }}>Setting</Text>
+                        }}>Đăng xuất</Text>
                     </TouchableOpacity>
                 </View>
             </ScrollView>
