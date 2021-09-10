@@ -16,21 +16,16 @@ const Register = () => {
     const _loadingDeg = new Animated.Value(0)
     const _loadingOpacity = new Animated.Value(0)
     const [email, setEmail] = useState('')
-    const [phone, setPhone] = useState('')
     const [step, setStep] = useState(1)
-    const [currentTab, setCurrentTab] = useState(1)
-    const _onToggleTab = (type) => setCurrentTab(type)
     
     const _onValidatedStep1 = (values) => {
         setStep(step + 1)
         setEmail(values.email)
-        setPhone(values.phone)
     }
     const _onValidatedStep2 = (values) => {
         const params = {
-            phone,
             email,
-            fullname: values.fullname,
+            name: values.name,
             password: values.password,
         }
         navigation.navigate('Welcome', params)
@@ -50,17 +45,10 @@ const Register = () => {
         }).start()
     }
     const SchemaStep1 = yup.object().shape({
-        phone: yup.string().when('email', {
-            is: (email) => !email || currentTab === 1,
-            then: yup.string().min(6).matches(/[0-9]{6,}/).required()
-        }),
-        email: yup.string().when('phone', {
-            is: (phone) => !phone || currentTab === 2,
-            then: yup.string().email().required()
-        })
+        email: yup.string().email().required()
     }, [['phone', 'email']])
     const SchemaStep2 = yup.object().shape({
-        fullname: yup.string().matches(/[a-zA-Z]+/).required(),
+        name: yup.string().matches(/[a-zA-Z]+/).required(),
         password: yup.string().min(6, 'Mật khẩu cần ít nhất 6 ký tự').required(),
     })
     
@@ -93,74 +81,21 @@ const Register = () => {
                                     <View style={styles.navigationTabs}>
                                         <TouchableOpacity
                                             activeOpacity={0.8}
-                                            onPress={_onToggleTab.bind(null, 1)}
                                             style={{
                                                 ...styles.navigationTab,
                                             }}>
                                             <Text style={{
                                                 ...styles.tabTitle,
-                                                color: currentTab === 1 ? '#fff' : "#666"
-                                            }}>Số điện thoại</Text>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity
-                                            activeOpacity={0.8}
-                                            onPress={_onToggleTab.bind(null, 2)}
-                                            style={{
-                                                ...styles.navigationTab,
-                                            }}>
-                                            <Text style={{
-                                                ...styles.tabTitle,
-                                                color: currentTab === 2 ? '#fff' : "#666"
+                                                color: '#fff'
                                             }}>Địa chỉ email</Text>
                                         </TouchableOpacity>
                                         <View style={{
                                             ...styles.activeTypeLine,
-                                            left: currentTab === 1 ? 0 : '50%'
+                                            left: 0
                                         }} />
                                     </View>
                                     <View style={styles.usernameForm}>
-                                        {currentTab === 1 && (<View style={styles.usePhone}>
-                                            <View style={{
-                                                ...styles.inputWrapper,
-                                                borderColor: formikProps.touched.phone
-                                                    && formikProps.errors.phone ? 'red' : '#ddd'
-                                            }}>
-                                                <TouchableOpacity style={styles.btnPhoneCode}>
-                                                    <View style={styles.phoneCodeTitleWrapper}>
-                                                        <Text style={{
-                                                            fontWeight: '600',
-                                                            color: '#666'
-                                                        }}>VN +84</Text>
-                                                    </View>
-                                                </TouchableOpacity>
-                                                <TextInput
-                                                    onBlur={formikProps.handleBlur('phone')}
-                                                    onChangeText={(e) => {
-                                                        formikProps.handleChange('phone')(e)
-                                                        formikProps.setFieldTouched('phone', false, false)
-                                                    }}
-                                                    autoFocus={true}
-                                                    placeholder="Số điện thoại"
-                                                    keyboardType="number-pad"
-                                                    returnKeyType="done"
-                                                    style={styles.inputPhone}
-                                                    value={formikProps.values.phone} />
-
-                                                <TouchableOpacity
-                                                    onPress={() => formikProps.setFieldValue('phone', '')}
-                                                    style={styles.btnReset}>
-                                                    {formikProps.values.phone.length > 0
-                                                        && <Text>✕</Text>}
-                                                </TouchableOpacity>
-                                            </View>
-                                            {formikProps.touched.phone
-                                                && formikProps.errors.phone &&
-                                                <Text style={styles.errorText}>
-                                                    Vui lòng nhập đúng số điện thoại.
-                                            </Text>
-                                            }
-                                        </View>)}
-                                        {currentTab === 2 && (<View style={styles.useEmail}>
+                                        <View style={styles.useEmail}>
                                             <View style={{
                                                 ...styles.inputWrapper,
                                                 borderColor: formikProps.touched.email
@@ -195,7 +130,7 @@ const Register = () => {
                                                     Vui lòng nhập đúng địa chỉ email.
                                             </Text>
                                             }
-                                        </View>)}
+                                        </View>
                                         <TouchableOpacity
                                             onPress={() => {
                                                 _startLoadingAnimation(1)
@@ -241,14 +176,16 @@ const Register = () => {
                         validateOnChange={false}
                         validationSchema={SchemaStep2}
                         initialValues={{
-                            fullname: '',
+                            name: '',
                             password: '',
                         }}
                     >
                         {(formikProps) => (
                             <View style={styles.step2Wrapper}>
                                 <View style={styles.step2Title}>
-                                    <Text style={{
+                                    <Text 
+                                    autoCapitalize="none"
+                                    style={{
                                         fontWeight: 'bold',
                                         color: '#fff'
                                     }}>Tên và mật khẩu</Text>
@@ -257,37 +194,37 @@ const Register = () => {
                                     <View style={styles.formGroupWrapper}>
                                         <View style={{
                                             ...styles.inputWrapper,
-                                            borderColor: formikProps.touched.fullname
-                                                && formikProps.errors.fullname ? 'red' : '#ddd'
+                                            borderColor: formikProps.touched.name
+                                                && formikProps.errors.name ? 'red' : '#ddd'
                                         }}>
                                             <TextInput
                                                 autoCorrect={false}
                                                 autoCapitalize='none'
-                                                onBlur={formikProps.handleBlur('fullname')}
+                                                onBlur={formikProps.handleBlur('name')}
                                                 onChangeText={(e) => {
-                                                    formikProps.handleChange('fullname')(e)
-                                                    formikProps.setFieldTouched('fullname', false, false)
-                                                    formikProps.setErrors({ fullname: undefined })
+                                                    formikProps.handleChange('name')(e)
+                                                    formikProps.setFieldTouched('name', false, false)
+                                                    formikProps.setErrors({ name: undefined })
                                                 }}
                                                 autoFocus={true}
                                                 placeholder="Tên hiển thị"
                                                 keyboardType="default"
                                                 returnKeyType="done"
                                                 style={styles.input}
-                                                value={formikProps.values.fullname} />
+                                                value={formikProps.values.name} />
 
                                             <TouchableOpacity
                                                 onPress={
                                                     () => formikProps
-                                                        .setFieldValue('fullname', '')
+                                                        .setFieldValue('name', '')
                                                 }
                                                 style={styles.btnReset}>
-                                                {formikProps.values.fullname.length > 0
+                                                {formikProps.values.name.length > 0
                                                     && <Text>✕</Text>}
                                             </TouchableOpacity>
                                         </View>
-                                        {formikProps.touched.fullname
-                                            && formikProps.errors.fullname &&
+                                        {formikProps.touched.name
+                                            && formikProps.errors.name &&
                                             <Text style={styles.errorText}>
                                                 Vui lòng nhập tên hiển thị.
                                             </Text>
@@ -305,7 +242,7 @@ const Register = () => {
                                                     formikProps.handleChange('password')(e)
                                                     formikProps
                                                         .setFieldTouched('password', false, false)
-                                                    formikProps.setErrors({ fullname: undefined })
+                                                    formikProps.setErrors({ name: undefined })
                                                 }}
                                                 secureTextEntry={true}
                                                 placeholder="Mật khẩu"

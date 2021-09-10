@@ -5,11 +5,13 @@ import {
 import userReducer from './userReducer'
 import storyReducer from './storyReducer'
 import commentReducer from './commentReducer'
+import profileXReducer, { ProfileX } from './profileXReducer'
 
 const rootReducer = combineReducers({
   user: userReducer,
   storyList: storyReducer,
   comment: commentReducer,
+  profileX: profileXReducer,
 })
 export const useSelector = useReduxSelector
 export default rootReducer

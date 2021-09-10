@@ -26,6 +26,7 @@ export const signUp = (params) => post(endpoints.sign_up, params, {
   token_required: false
 })
 export const getUser = () => get(endpoints.get_user)
+export const getUserX = (name) => post(endpoints.get_user, {name} )
 export const getUserListStory = (id) => get(endpoints.get_users_list_story + id)
 export const getMyListStory = () => get(endpoints.get_my_list_story )
 export const updateUser = (params) => put(endpoints.update_user + params._id, params)
@@ -60,6 +61,14 @@ export const fetchSignUp = (params) => {
 export const fetchUser = () => {
   return new Promise((resolve, reject) => {
     customFetch(getUser)
+      .then(data => resolve(data))
+      .catch(error => reject(error))
+  })
+}
+
+export const fetchUserX = (name) => {
+  return new Promise((resolve, reject) => {
+    customFetch(getUserX, name)
       .then(data => resolve(data))
       .catch(error => reject(error))
   })

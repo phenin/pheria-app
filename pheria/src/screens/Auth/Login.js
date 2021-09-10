@@ -1,12 +1,16 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Animated, Image, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useDispatch } from 'react-redux'
-import { ThunkDispatch } from 'redux-thunk'
-import { LoginRequest } from '../../actions/userActions'
+import { LoginRequest, LoginRequestByGoogle } from '../../actions/userActions'
 import { SCREEN_HEIGHT, SCREEN_WIDTH, STATUS_BAR_HEIGHT } from '../../constants'
 import { navigation } from '../../navigations/rootNavigation'
-import { userAction } from '../../reducers/userReducer'
+
+import {
+    GoogleSignin,
+    statusCodes,
+} from 'react-native-google-signin';
+
 const Login = () => {
     const dispatch = useDispatch()
     const [loading, setLoading] = useState(false)
@@ -15,6 +19,7 @@ const Login = () => {
     const [password, setPassword] = useState('')
     const [allowLogin, setallowLogin] = useState(false)
     const _loadingDeg = new Animated.Value(0)
+
     const _animationLoadingDeg = () => {
         Animated.timing(_loadingDeg, {
             useNativeDriver: true,
@@ -25,15 +30,52 @@ const Login = () => {
             if (loading) _animationLoadingDeg()
         })
     }
+
+    useEffect(() => {
+        GoogleSignin.configure({
+          scopes: ['https://www.googleapis.com/auth/drive.readonly'],
+          offlineAccess: true,
+          webClientId: '279484816241-tt5n888b74m6kulj3i97bmfo3c0d9n10.apps.googleusercontent.com',
+          iosClientId: '279484816241-bdjh239kofibe3cgnlt4cdvlvkoqevdh.apps.googleusercontent.com',
+        });
+    }, []);
+
+    const _signInByGoogle = async () =>{
+        try {
+            await GoogleSignin.hasPlayServices({
+              showPlayServicesUpdateDialog: true,
+            });
+            const userInfo = await GoogleSignin.signIn();
+            console.log(userInfo.idToken)
+            dispatch(LoginRequestByGoogle({token: userInfo.idToken}))
+            
+            
+          } catch (error) {
+            if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+              alert('User Cancelled the Login Flow');
+            } else if (error.code === statusCodes.IN_PROGRESS) {
+              alert('Signing In');
+            } else if (
+                error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE
+              ) {
+              alert('Play Services Not Available or Outdated');
+            } else {
+              alert(error.message);
+            }
+        }
+    }
+
     const {
         _onChangeUsername,
         _onChangePassword,
         _onPressToggleHidePassword,
         _onLogin,
-        _onPressRegister } = getEventHandlers(
-            sethidePassword,
-            hidePassword, password, setallowLogin,
-            setUsername, username, setPassword, setLoading, dispatch)
+        _onPressRegister 
+    } = getEventHandlers(
+        sethidePassword,
+        hidePassword, password, setallowLogin,
+        setUsername, username, setPassword, setLoading, dispatch)
+
     return (
         <SafeAreaView style={styles.container}>
             {loading && <View style={styles.loadingWrapper}>
@@ -128,7 +170,8 @@ const Login = () => {
                             }}>OR</Text>
                         </View>
                     </View>
-                    <TouchableOpacity style={styles.btnLoginWithGoogle}>
+                    <TouchableOpacity style={styles.btnLoginWithGoogle}
+                        onPress={() => _signInByGoogle()}>
                         <Icon name="google" color="#1b6563cc" size={20} />
                         <Text style={{
                             color: '#1b6563cc',

@@ -38,6 +38,35 @@ export const LoginRequest = (params) => {
         })
     }
 }
+
+export const LoginRequestByGoogle = (params) => {
+    return (dispatch) => {
+        fetchLoginByGG(params).then(rs => {
+            if(rs.data){
+                console.log(rs.data)
+                setToken("accessToken", rs.data.token.accessToken);
+                setToken("refreshToken", rs.data.token.refreshToken);
+                fetchUser().then(res => {
+                    const user = {
+                        logined: true,
+                        token: rs.data.token.accessToken,
+                        userInfo: res.data
+                    }
+                    dispatch(LoginSuccess({user}))
+                })
+                .catch(e =>{
+                    dispatch(LoginFailure())
+                })
+            }
+            else dispatch(LoginFailure())
+            
+        })
+        .catch(e =>{
+            dispatch(LoginFailure())
+        })
+    }
+}
+
 export const LoginFailure = () => {
     return {
         type: userActionTypes.LOGIN_FAILURE,
@@ -71,7 +100,24 @@ export const LogoutRequest = () => {
 }
 export const RegisterRequest = (userData) => {
     return (dispatch => {
+        fetchSignUp(userData).then(rs =>{
+            if(rs.data){
+                console.log(rs.data)
+                dispatch(LoginRequest({
+                    email: userData.email,
+                    password: userData.password,
+                }))
+                .catch(e =>{
+                    dispatch(RegisterFailure(`${e}`))
+                })
+            }
+            else dispatch(RegisterFailure(`${e}`))
             
+        })
+        .catch(e =>{
+            dispatch(RegisterFailure(`${e}`))
+        })
+        
     })
 }
 export const RegisterFailure = (e) => {

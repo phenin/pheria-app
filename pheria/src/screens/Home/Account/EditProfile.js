@@ -46,6 +46,9 @@ const EditProfile = () => {
                 if(result.data.status === 200){
                     setUsernameError('')
                 }
+                else{
+                    setUsernameError('Tên đã tồn tại')
+                }
             }
             catch(e) {
                 setUsernameError('Tên đã tồn tại')

@@ -8,6 +8,7 @@ import StoryTaker from '../screens/Others/StoryTaker';
 import EditProfile from '../screens/Home/Account/EditProfile';
 import GalleryChooser from '../screens/Home/Account/GalleryChooser';
 import Logout from '../screens/Home/Account/Logout';
+import ProfileXScreen from '../screens/Home/Explore/ProfileX';
 
 const RootStack = createStackNavigator()
 const index = ()=> {
@@ -38,6 +39,8 @@ const index = ()=> {
                 animationEnabled: false,
                 cardStyle: { backgroundColor: 'transparent' }
             }} name="Logout" component={Logout} />
+          <RootStack.Screen name="ProfileX" component={ProfileXScreen} />
+
         </RootStack.Navigator>
       </NavigationContainer>
   )

@@ -1,26 +1,36 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Animated, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { useDispatch } from 'react-redux'
-// import { RegisterRequest } from '../../actions/userActions'
+import { RegisterRequest } from '../../actions/userActions'
 import { SCREEN_HEIGHT, SCREEN_WIDTH, STATUS_BAR_HEIGHT } from '../../constants'
+import { checkExistUsername }  from '../../api/user'
 
 const Welcome = ({ navigation, route }) => {
     const dispatch = useDispatch()
     // const user = useSelector(state => state.user.user)
     const [usernameError, setUsernameError] = useState(false)
     const [chagingUsername, setChagingUsername] = useState(false)
-    const [username, setUsername] = useState(route.params.fullname)
+    const [username, setUsername] = useState(route.params.name)
     const _loadingDeg = new Animated.Value(0)
     const [loading, setLoading] = useState(false)
     const typingTimeoutRef = useRef()
-    // useEffect(() => {
-    //     console.log(route)
-    //     const usr = route.params.email.split('@')[0]
-    //     checkExistUsername(usr, setUsernameError, setChagingUsername)
-    //     return () => {
-    //         if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current)
-    //     }
-    // }, [])
+    useEffect(async () => {
+        try{
+            const result = await checkExistUsername(username)
+            if(result.data.status === 200){
+                setUsernameError(false)
+            }
+            else{
+                setUsernameError(true)
+            }
+        }
+        catch(e) {
+            setUsernameError(false)
+        }
+        return () => {
+            if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current)
+        }
+    }, [])
     // useEffect(() => {
     //     if (user.logined) {
     //         navigation.navigate('HomeTab')
@@ -41,18 +51,29 @@ const Welcome = ({ navigation, route }) => {
     }
     const _validateUsername = (usrname) => {
         if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current)
-        typingTimeoutRef.current = setTimeout(() => {
-            checkExistUsername(usrname, setUsernameError)
+        typingTimeoutRef.current = setTimeout(async() => {
+            try{
+                const result = await checkExistUsername(usrname)
+                if(result.data.status === 200){
+                    setUsernameError(false)
+                }
+                else{
+                    setUsernameError(true)
+                }
+            }
+            catch(e) {
+                setUsernameError(true)
+            }
         }, 200);
 
     }
     const _onRegister = async () => {
         if (usernameError) return;
         setLoading(true)
-        // await dispatch(RegisterRequest({
-        //     ...route.params,
-        //     username,
-        // }))
+        await dispatch(RegisterRequest({
+            ...route.params,
+            name: username,
+        }))
         setLoading(false)
 
     }
@@ -99,21 +120,23 @@ const Welcome = ({ navigation, route }) => {
                         {!chagingUsername && <Text style={{
                             color: '#666',
                             textAlign: 'center'
-                        }}>Find people to follow and start sharing photos.</Text>}
-                        <Text style={{
-                            color: '#666',
-                            textAlign: 'center'
-                        }}>{chagingUsername ? 'Pick username for your account. You can always change it later.' : 'You can change you username anytime.'}</Text>
+                        }}>Bắt đầu chia sẻ tâm sự của bạn</Text>}
+                        {
+                            usernameError && <Text style={{
+                                color: 'red',
+                                textAlign: 'center'
+                            }}>Tên của bạn đã bị trùng, mời bạn chọn lại tên khác</Text>
+                        }
                     </View>
                 </View>
                 {chagingUsername &&
-                    <>
+                    <View>
                         <View style={styles.usernameInputWrapper}>
                             <TextInput
                                 autoCapitalize="none"
                                 onChangeText={e => {
-                                    setUsername(e.toLowerCase())
-                                    _validateUsername(e.toLowerCase())
+                                    setUsername(e)
+                                    _validateUsername(e)
                                 }
                                 }
                                 value={username}
@@ -121,16 +144,22 @@ const Welcome = ({ navigation, route }) => {
                             <View style={styles.validIcon}>
                                 {usernameError
                                     ? <Text style={{ color: 'red' }}>✕</Text>
-                                    : <Text style={{ color: 'green' }}>✓</Text>}
+                                    : <Text style={{ color: 'green' }}>✓</Text>
+                                }
                             </View>
 
                         </View>
-                        {usernameError && <Text style={{
-                            width: SCREEN_WIDTH * 0.9,
-                            color: 'red',
-                            marginVertical: 3
-                        }}>You can't not use this username.</Text>}
-                    </>
+                        {/* {
+                            usernameError && 
+                            <View>
+                            <Text style={{
+                                width: SCREEN_WIDTH * 0.9,
+                                color: 'red',
+                                marginVertical: 3
+                            }}>Bạn không thể sử dụng tên này</Text>
+                            </View>
+                        } */}
+                    </View>
                 }
                 <TouchableOpacity
                     onPress={_onRegister}
@@ -156,10 +185,9 @@ const Welcome = ({ navigation, route }) => {
                     fontSize: 12,
                     fontWeight: '500',
                     color: '#666'
-                }}>Nhấn tiếp tục, bạn sẽ đồng ý với <Text style={{
-                    color: '#000',
-                }}>
-                    Chính sách của chúng tôi</Text></Text>
+                }}>Nhấn tiếp tục, bạn sẽ đồng ý với 
+                    <Text style={{color: '#000'}}>Chính sách của chúng tôi</Text>
+                </Text>
             </View>
         </SafeAreaView>
     )
@@ -234,9 +262,4 @@ const styles = StyleSheet.create({
         right: 0
     }
 })
-function checkExistUsername(usr, setUsernameError, setChagingUsername) {
-    const pattern = /^[a-zA-Z0-9._]{4,}$/g
-    if (!pattern.test(usr)) return setUsernameError(true)
-    
-}
 
