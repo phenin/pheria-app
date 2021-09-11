@@ -271,7 +271,7 @@ export const UserMessageItem = React.memo(({ item }) => {
                     </View>
                 </View>
                 <TouchableOpacity
-                    onPress={() => navigate('StoryTaker', {
+                    onPress={() => navigate('StoryPreCreate', {
                         sendToDirect: true,
                         username: item.ownUser.username
                     })}

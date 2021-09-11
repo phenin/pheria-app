@@ -345,7 +345,7 @@ const index = () => {
                             <View onLayout={_onSetHeaderHeight}>
                                 <View style={styles.infoWrapper}>
                                     <TouchableOpacity
-                                        onPress={() => navigate('StoryTaker')}
+                                        onPress={() => navigate('StoryPreCreate')}
                                         style={styles.avatarWrapper}>
                                         <Image style={styles.mainAvatar}
                                             source={user?.userInfo?.picture

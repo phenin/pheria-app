@@ -1,14 +1,14 @@
 import { BlurView } from "@react-native-community/blur"
 import React, { useEffect, useRef, useState } from 'react'
-import { Animated, Image, ImageBackground, Keyboard, KeyboardAvoidingView, NativeScrollEvent, NativeSyntheticEvent, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { PanGestureHandler, PanGestureHandlerGestureEvent, PinchGestureHandler, PinchGestureHandlerGestureEvent, RotationGestureHandler, RotationGestureHandlerGestureEvent, State, TextInput } from 'react-native-gesture-handler'
+import { Animated, Image, ImageBackground, Keyboard, KeyboardAvoidingView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { PanGestureHandler, PinchGestureHandler, RotationGestureHandler, State, TextInput } from 'react-native-gesture-handler'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import TextGradient from '../../components/TextGradient'
 import { SCREEN_HEIGHT, SCREEN_WIDTH, STATUS_BAR_HEIGHT } from '../../constants'
 import { useKeyboardStatus } from '../../hooks/useKeyboardStatus'
 import { goBack, navigate } from '../../navigations/rootNavigation'
 import { useSelector } from '../../reducers'
-// import { uploadSuperImages, Timestamp } from '../../utils'
+import { uploadSuperImages } from '../../utils/util'
 // import { PostStoryRequest, FetchStoryListRequest } from "../../actions/storyActions"
 // import { storyPermissions } from "../../reducers/storyReducer"
 import { useDispatch } from "react-redux"
@@ -490,37 +490,37 @@ const StoryProcessor = ({ route }) => {
         if (mode === 4 && /^((\#\w+)|\#)$/g.test(txt)) setText(txt)
     }
     const _onNext = async () => {
-        // if (sendToDirect && username) {
-            // const superImagesList = await Promise.all(uploadSuperImages(ref.current.processImages))
-            // const messages = superImagesList.map((source, index) => ({
-            //     uid: new Date().getTime() + index,
-            //     // type: messagesTypes.SUPER_IMAGE,
-            //     create_at: new Date().getTime(),
-            //     seen: 0,
-            //     superImageId: source.sourceId,
-            // }))
-            // messages.map(msg => dispatch(CreateMessageRequest(msg, username)))
-            // navigate('Conversation', {
-            //     username
-            // })
-        // } else navigate('PreUploadSuperImage', {
-        //     images: ref.current.processImages
-        // })
+        if (sendToDirect && username) {
+            const superImagesList = await Promise.all(uploadSuperImages(ref.current.processImages))
+            const messages = superImagesList.map((source, index) => ({
+                uid: new Date().getTime() + index,
+                // type: messagesTypes.SUPER_IMAGE,
+                create_at: new Date().getTime(),
+                seen: 0,
+                superImageId: source.sourceId,
+            }))
+            messages.map(msg => dispatch(CreateMessageRequest(msg, username)))
+            navigate('Conversation', {
+                username
+            })
+        } else navigate('PreUploadSuperImage', {
+            images: ref.current.processImages
+        })
     }
     const _onFastUpload = async () => {
-        // const superImagesList = await Promise.all(uploadSuperImages(ref.current.processImages))
-        // const storyImages = superImagesList.map(source => ({
-        //     // permission: storyPermissions.ALL,
-        //     // create_at: Timestamp(),
-        //     seenList: [],
-        //     source: source.sourceId,
-        //     userId: myUsername,
-        //     messagesList: [],
-        //     reactions: [],
-        //     hashtags: source.hashtags,
-        //     address: source.address,
-        //     mention: source.mention
-        // }))
+        const superImagesList = await Promise.all(uploadSuperImages(ref.current.processImages))
+        const storyImages = superImagesList.map(source => ({
+            // permission: storyPermissions.ALL,
+            // create_at: Timestamp(),
+            seenList: [],
+            source: source.sourceId,
+            userId: myUsername,
+            messagesList: [],
+            reactions: [],
+            hashtags: source.hashtags,
+            address: source.address,
+            mention: source.mention
+        }))
         // await dispatch(PostStoryRequest(storyImages))
         // dispatch(FetchStoryListRequest())
         // navigate('HomeIndex')

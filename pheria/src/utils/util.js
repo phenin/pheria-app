@@ -41,3 +41,48 @@ export const timestampToString = (create_at, suffix) => {
   }
   return diffTime
 }
+
+export const uploadSuperImages = (images) => {
+  const ref = firestore()
+  const myUsername = store.getState().user.user.userInfo?.username || ''
+  return images.map(async (img, index) => {
+      let uid = new Date().getTime() + index
+      img.texts = img.texts.map(txt => {
+          delete txt.animRatio
+          delete txt.animX
+          delete txt.animY
+          return txt
+      })
+      img.labels = img.labels.map(label => {
+          delete label.animRatio
+          delete label.animX
+          delete label.animY
+          return label
+      })
+      const blob = await uriToBlob(img.uri)
+      const rq = await storage()
+          .ref(`story/${myUsername || 'others'}/${new Date().getTime() + Math.random()}.${img.extension.toLowerCase()}`)
+          .put(blob, {
+              contentType: `image/${img.extension.toLowerCase()}`
+          })
+      const downloadUri = await rq.ref.getDownloadURL()
+      ref.collection('superimages').doc(`${uid}`).set({
+          ...img,
+          uri: downloadUri,
+          uid,
+          userId: myUsername
+      })
+      return {
+          sourceId: uid,
+          hashtags: Array.from(new Set(img.labels
+              .filter(x => x.type === 'hashtag').map(x => x.text))),
+          mention: Array.from(new Set(img.labels
+              .filter(x => x.type === 'people').map(x => x.text.slice(1)))),
+          address: Array.from(new Set(img.labels
+              .filter(x => x.type === 'address').map(x => ({
+                  place_name: x.text,
+                  id: x.address_id
+              })))),
+      }
+  })
+}
