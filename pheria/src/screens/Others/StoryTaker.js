@@ -5,7 +5,7 @@ import { Image, StyleSheet, Text, TouchableOpacity, View, Animated, FlatList, Sc
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { SCREEN_HEIGHT, SCREEN_WIDTH, STATUS_BAR_HEIGHT } from '../../constants'
 import { goBack, navigate } from '../../navigations/rootNavigation'
-// import CameraRoll from '@react-native-community/cameraroll'
+import CameraRoll from '@react-native-community/cameraroll'
 import { PanGestureHandler, PanGestureHandlerGestureEvent, State } from 'react-native-gesture-handler'
 import NavigationBar from '../../components/NavigationBar'
 import { SuperRootStackParamList } from '../../navigations'
@@ -33,29 +33,29 @@ const StoryTaker = ({ route }) => {
     })
     useEffect(() => {
         if (focused) {
-            // CameraRoll.getPhotos({ assetType: 'Photos', first: 1000 })
-            //     .then(result => {
-            //         const photos = result.edges
-            //         const groupList = Array.from(new Set(photos.map(photo => photo.node.group_name)))
-            //         setGroups(groupList)
-            //         if (groupList.length > 0) setSelectedGroupIndex(0)
-            //     })
+            CameraRoll.getPhotos({ assetType: 'Photos', first: 1000 })
+                .then(result => {
+                    const photos = result.edges
+                    const groupList = Array.from(new Set(photos.map(photo => photo.node.group_name)))
+                    setGroups(groupList)
+                    if (groupList.length > 0) setSelectedGroupIndex(0)
+                })
         }
         return () => {
         }
     }, [focused])
     useEffect(() => {
         if (selectedGroupIndex > -1) {
-            // CameraRoll.getPhotos({
-            //     assetType: 'Photos',
-            //     first: 9 * page,
-            //     groupName: groups[selectedGroupIndex]
-            // })
-            //     .then(result => {
-            //         const photos = result.edges
-            //         setPhotos(photos)
-            //         if (photos.length > 0 && selectedIndex < 0) setSelectedIndex(0)
-            //     })
+            CameraRoll.getPhotos({
+                assetType: 'Photos',
+                first: 9 * page,
+                groupName: groups[selectedGroupIndex]
+            })
+                .then(result => {
+                    const photos = result.edges
+                    setPhotos(photos)
+                    if (photos.length > 0 && selectedIndex < 0) setSelectedIndex(0)
+                })
         }
     }, [selectedGroupIndex, page])
     const _onTakePhoto = async () => {

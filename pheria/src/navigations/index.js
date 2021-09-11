@@ -9,6 +9,7 @@ import EditProfile from '../screens/Home/Account/EditProfile';
 import GalleryChooser from '../screens/Home/Account/GalleryChooser';
 import Logout from '../screens/Home/Account/Logout';
 import ProfileXScreen from '../screens/Home/Explore/ProfileX';
+import StoryProcessor from '../screens/Others/StoryProcessor';
 
 const RootStack = createStackNavigator()
 const index = ()=> {
@@ -40,6 +41,9 @@ const index = ()=> {
                 cardStyle: { backgroundColor: 'transparent' }
             }} name="Logout" component={Logout} />
           <RootStack.Screen name="ProfileX" component={ProfileXScreen} />
+          <RootStack.Screen options={{
+                ...TransitionPresets.ModalTransition,
+            }} component={StoryProcessor} name="StoryProcessor" />
 
         </RootStack.Navigator>
       </NavigationContainer>
