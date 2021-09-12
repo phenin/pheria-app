@@ -1,18 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { View, ScrollView, StyleSheet, Keyboard, TouchableOpacity, KeyboardAvoidingView, 
-  Animated, Text, TextInput, ImageBackground, Image, Modal } from 'react-native'
-import { PanGestureHandler, PinchGestureHandler, State, RotationGestureHandler } from 'react-native-gesture-handler'
+import { View, ScrollView, StyleSheet, Keyboard, TouchableOpacity, 
+  Animated, Text, ImageBackground, Image } from 'react-native'
+import { PanGestureHandler, PinchGestureHandler, State, RotationGestureHandler, TapGestureHandler } from 'react-native-gesture-handler'
 import { SCREEN_HEIGHT, SCREEN_WIDTH, STATUS_BAR_HEIGHT } from '../../constants'
 import { goBack } from '../../navigations/rootNavigation'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { BlurView } from "@react-native-community/blur"
 import TextGradient from '../../components/TextGradient'
-const textColors = [
-  '#000', '#fff', '#318bfb', '#6cc070', '#ffcc00',
-  '#f37121', '#c70039', '#512b58', '#ff926b', '#fff3cd', '#ffe277'
-  , '#4d3e3e', '#3f3f44'
-]
-export const emojiList = ['😀', '😁', '😂', '🤣', '😃', '😄', '😅', '😆', '😉', '😊', '😋', '😎', '😍', '😘', '😗', '😙', '😚', '☺', '🙂', '🤗', '🤩', '🤔', '🤨', '😐', '😑', '😶', '🙄', '😏', '😣', '😥', '😮', '🤐', '😯', '😪', '😫', '😴', '😌', '😛', '😜', '😝', '🤤', '😒', '😓', '😔', '😕', '🙃', '🤑', '😲', '🙁', '😖', '😞', '😟', '😤', '😢', '😭', '😦', '😧', '😨', '😩', '🤯', '😬', '😰', '😱', '😳', '🤪', '😵', '😡', '😠', '🤬', '😷', '🤒', '🤕', '🤢', '🤮', '🤧', '😇', '🤠', '🤡', '🤥', '🤫', '🤭', '🧐', '🤓', '🤪']
+import ListTemplate from '../../components/ListTemplate'
+import StoryText from '../../components/StoryText'
+import DoubleTap from '../../components/DoubleTap'
 
 const StoryCreate = ({ route }) => {
 
@@ -28,6 +24,7 @@ const StoryCreate = ({ route }) => {
   const [textColor, setTextColor] = useState('#fff')
   const [textAlign, setTextAlign] = useState('center')
   const [textBg, setTextBg] = useState(false)
+  const [textEdit, setTextEdit] = useState(null)
 
   const _hScrollRef = useRef(null)
 
@@ -90,7 +87,6 @@ const StoryCreate = ({ route }) => {
   }
 
   const _onLabelOptionsContainerTranslate = ({ nativeEvent: { translationY } }) => {
-    console.log(translationY)
     if (mode !== 1) return;
     ref.current.labelContainerY = -(SCREEN_HEIGHT - STATUS_BAR_HEIGHT - translationY)
     if (ref.current.labelContainerY + translationY < -(SCREEN_HEIGHT - STATUS_BAR_HEIGHT - 50) || ref.current.labelContainerY + translationY > 0) {
@@ -124,13 +120,6 @@ const StoryCreate = ({ route }) => {
 
   const _showLabelOptionsContainer = () => {
     setModalVisible(true)
-    // setShowLabelOptions(true)
-    // Animated.timing(_labeLWrapperYAnim, {
-    //     duration: 250,
-    //     toValue: -(SCREEN_HEIGHT - STATUS_BAR_HEIGHT - 50),
-    //     useNativeDriver: true
-    // }).start()
-    // ref.current.labelContainerY = -(SCREEN_HEIGHT - STATUS_BAR_HEIGHT - 50)
   }
 
   const refreshTextState = () => {
@@ -138,6 +127,7 @@ const StoryCreate = ({ route }) => {
     setTextAlign('center')
     setTextBg(false)
     setTextColor('#fff')
+    setTextEdit(null)
   }
 
   const _onSelectedEmoji = (emoji) => {
@@ -152,7 +142,7 @@ const StoryCreate = ({ route }) => {
         animY: new Animated.Value((SCREEN_HEIGHT - 55) / 2),
         x: (SCREEN_WIDTH - 55) / 2,
         y: (SCREEN_HEIGHT - 55) / 2,
-        fontSize: 40,
+        fontSize: 20,
         height: 55,
         width: 55,
         ratio: 1,
@@ -176,25 +166,28 @@ const StoryCreate = ({ route }) => {
         )
         const textZindexList = ref.current.processImages[currentImageIndex].texts.map(x => x.zIndex)
         const labelZindexList = ref.current.processImages[currentImageIndex].labels.map(x => x.zIndex)
-        let maxlabelZindex = Math.max(...textZindexList.concat(labelZindexList))
+        let maxlabelZindex =  Math.max(...textZindexList.concat(labelZindexList))
         maxlabelZindex = maxlabelZindex !== -Infinity ? maxlabelZindex : 0
         const storyText = {
             zIndex: maxlabelZindex + 1,
             color: textColor,
-            fontSize: 40,
+            fontSize: 20,
             text,
             textAlign,
             textBg,
-            x: offsetX,
-            y: (SCREEN_HEIGHT - ref.current.textHeight) / 2,
-            animX: new Animated.Value(offsetX),
-            animY: new Animated.Value((SCREEN_HEIGHT - ref.current.textHeight) / 2),
+            x: textEdit ? textEdit.x : offsetX,
+            y: textEdit ? textEdit.y :(SCREEN_HEIGHT - ref.current.textHeight) / 2,
+            animX: textEdit ? textEdit.animX : new Animated.Value(offsetX),
+            animY: textEdit ? textEdit.animY : new Animated.Value((SCREEN_HEIGHT - ref.current.textHeight) / 2),
             height: ref.current.textHeight,
             width: ref.current.textWidth,
             ratio: 1,
             animRatio: new Animated.Value(1)
         }
+        
         ref.current.processImages[currentImageIndex].texts.push(storyText)
+        
+        
     }
     setMode(1)
   }
@@ -400,6 +393,22 @@ const _onLabelTranslateChangeState = (index,
       }
   }
 
+  const _onContentSizeChange = (e) =>{
+    ref.current.textHeight = e.nativeEvent.contentSize.height
+    ref.current.textWidth = e.nativeEvent.contentSize.width
+  }
+
+  const _onDoubleTap = (index) => {
+      const label = ref.current.processImages[currentImageIndex].texts[index]
+      setText(label.text)
+      setTextAlign(label.align)
+      setTextBg(label.textBg)
+      setTextColor(label.color)
+      setTextEdit(label)
+      setMode(2)
+      ref.current.processImages[currentImageIndex].texts.splice(index, 1)
+  }
+
   return (
     <PanGestureHandler
       onHandlerStateChange={_onLabelOptionsContainerTranslateChangeState}
@@ -428,97 +437,11 @@ const _onLabelTranslateChangeState = (index,
             </View>
           }
           {mode === 2 &&
-              <KeyboardAvoidingView
-                  behavior="height"
-                  style={styles.textToolWrapper}>
-                  <View style={styles.textTopOptions}>
-                      <TouchableOpacity
-                          onPress={_onChangeTextAlign}
-                          style={styles.btnTopOption}>
-                          <Icon name={textAlign === 'center' ? 'format-align-center' : (
-                              textAlign === 'flex-start' ? 'format-align-left' : 'format-align-right'
-                          )} size={30} color='#fff' />
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                          onPress={setTextBg.bind(null, !textBg)}
-                          style={styles.btnTopOption}>
-                          <Icon name={textBg ? 'alpha-a-box' : "alpha-a"} size={30} color='#fff' />
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                          onPress={_onDoneText}
-                          style={{
-                              ...styles.btnTopOption,
-                              width: 60
-                          }}>
-                          <Text style={{
-                              fontWeight: 'bold',
-                              color: '#fff',
-                              fontSize: 18
-                          }}>Done</Text>
-                      </TouchableOpacity>
-                  </View>
-                  <View style={{
-                      ...styles.textWrapper,
-                      justifyContent: textAlign
-                  }}>
-                      <TouchableOpacity style={{
-                          backgroundColor: textBg === true ? textColor :
-                              'rgba(0,0,0,0)',
-                          padding: 5,
-                          borderRadius: 5
-                      }}>
-                          <TextInput
-                              onContentSizeChange={e => {
-                                  ref.current.textHeight = e.nativeEvent.contentSize.height
-                                  ref.current.textWidth = e.nativeEvent.contentSize.width
-                              }}
-                              multiline={true}
-                              autoFocus={true}
-                              autoCapitalize="none"
-                              value={text}
-                              onChangeText={setText}
-                              style={{
-                                  textAlign: textAlign === 'flex-start' ? 'left' : (
-                                      textAlign === 'flex-end' ? 'right' : 'center'
-                                  ),
-                                  fontSize: 40,
-                                  fontWeight: '800',
-                                  color: textBg ? '#000' : textColor,
-                                  maxWidth: SCREEN_WIDTH - 30,
-                              }}
-                          />
-                      </TouchableOpacity>
-                  </View>
-                  <View style={styles.textBottompOptions}>
-                      <View style={{
-                          ...styles.circleSelectedColor,
-                          backgroundColor: textColor
-                      }}>
-                          <Icon name="eyedropper-variant" size={20} color={
-                              textColor === '#fff' ? '#000' : '#fff'
-                          } />
-                      </View>
-                      <ScrollView
-                          showsHorizontalScrollIndicator={false}
-                          style={{
-                              width: SCREEN_WIDTH - 50
-                          }}
-                          keyboardShouldPersistTaps="always"
-                          horizontal={true}>
-                          {textColors.map((tColor, index) => (
-                              <TouchableOpacity
-                                  key={index}
-                                  onPress={() => setTextColor(tColor)}
-                                  style={{
-                                      ...styles.circleTextColor,
-                                      backgroundColor: tColor
-                                  }}>
-
-                              </TouchableOpacity>
-                          ))}
-                      </ScrollView>
-                  </View>
-              </KeyboardAvoidingView>
+              <StoryText text={text} textAlign={textAlign} 
+              textBg={textBg} textColor={textColor} _onContentSizeChange={_onContentSizeChange}
+              _onChangeTextAlign={_onChangeTextAlign}
+              _onDoneText={_onDoneText} setTextColor={setTextColor} 
+              setTextBg={setTextBg} setText={setText} />
           }
           <ScrollView
             onScrollEndDrag={_onEndDrag}
@@ -528,169 +451,177 @@ const _onLabelTranslateChangeState = (index,
             horizontal={true}
             style={styles.scrollView}>
               {ref.current.processImages.map((photo, index) => (
-                        <ImageBackground
-                            key={index}
-                            style={styles.backgroundContainer}
-                            source={require('../../assets/backgrounds/Black.png')}
-                            blurRadius={10}
+                <ImageBackground
+                    key={index}
+                    style={styles.backgroundContainer}
+                    source={require('../../assets/backgrounds/Black.png')}
+                    blurRadius={10}
+                >
+                      {photo.texts.map((txtLabel, labelIndex) => (
+                        <PanGestureHandler
+                            key={labelIndex}
+                            onGestureEvent={e => {
+                                _onTextLabelTranslateHandler(labelIndex, e)
+                            }}
+                            onHandlerStateChange={e => {
+                                _onTextLabelTranslateChangeState(labelIndex, e)
+                            }}
                         >
-                             {photo.texts.map((txtLabel, labelIndex) => (
-                                <PanGestureHandler
-                                    key={labelIndex}
-                                    onGestureEvent={e => {
-                                        _onTextLabelTranslateHandler(labelIndex, e)
-                                    }}
-                                    onHandlerStateChange={e => {
-                                        _onTextLabelTranslateChangeState(labelIndex, e)
-                                    }}
-                                >
-                                    <PinchGestureHandler
-                                        onGestureEvent={e => {
-                                            _onTextLabelZoomHandler(labelIndex, e)
-                                        }}
-                                        onHandlerStateChange={e => {
-                                            _onTextLabelZoomChangeState(labelIndex, e)
-                                        }}
-                                    >
-                                        <Animated.View style={{
-                                            zIndex: txtLabel.zIndex,
-                                            backgroundColor: txtLabel.textBg ? txtLabel.color : 'rgba(0,0,0,0)',
-                                            padding: 5,
-                                            borderRadius: 5,
-                                            position: 'absolute',
-                                            top: 0,
-                                            left: 0,
-                                            transform: [{
-                                                translateX: txtLabel.animX,
-                                            },
-                                            {
-                                                translateY: txtLabel.animY
-                                            },
-                                            {
-                                                scale: txtLabel.animRatio
-                                            }
-                                            ]
-                                        }}>
-                                            <Text
-                                                style={{
-                                                    width: txtLabel.width,
-                                                    height: txtLabel.height + 5,
-                                                    textAlign: txtLabel.textAlign === 'flex-start' ? 'left' : (
-                                                        txtLabel.textAlign === 'flex-end' ? 'right' : 'center'
-                                                    ),
-                                                    fontSize: 40,
-                                                    fontWeight: '800',
-                                                    color: txtLabel.textBg ? '#000' : txtLabel.color,
-
-                                                }}
-                                            >
-                                                {txtLabel.text}
-                                            </Text>
-                                        </Animated.View>
-                                    </PinchGestureHandler>
-                                </PanGestureHandler>
-                            ))}
-                            {photo.labels.map((label, labelIndex) => (
-                                <PanGestureHandler
-                                    key={labelIndex}
-                                    onGestureEvent={e => {
-                                        _onLabelTranslateHandler(labelIndex, e)
-                                    }}
-                                    onHandlerStateChange={e => {
-                                        _onLabelTranslateChangeState(labelIndex, e)
-                                    }}
-                                >
-
-                                    <PinchGestureHandler
-                                        onGestureEvent={e => {
-                                            _onLabelZoomHandler(labelIndex, e)
-                                        }}
-                                        onHandlerStateChange={e => {
-                                            _onLabelZoomChangeState(labelIndex, e)
-                                        }}
-                                    >
-                                        <Animated.View style={{
-                                            zIndex: label.zIndex,
-                                            backgroundColor: label.type === 'emoji' ? 'rgba(0,0,0,0)' : '#fff',
-                                            borderRadius: 5,
-                                            position: 'absolute',
-                                            width: label.width,
-                                            height: label.height,
-                                            justifyContent: 'center',
-                                            alignItems: 'center',
-                                            top: 0,
-                                            left: 0,
-                                            transform: [
-                                                {
-                                                    translateX: label.animX,
-                                                },
-                                                {
-                                                    translateY: label.animY
-                                                },
-                                                {
-                                                    scale: label.animRatio
-                                                }
-                                            ]
-                                        }}>
-                                            {label.type === 'emoji' ? (
-                                                <Text style={{
-                                                    fontSize: label.fontSize,
-                                                }}>
-                                                    {label.text}
-                                                </Text>
-                                            ) : (
-                                                    <TextGradient
-                                                        {...(label.type === 'address' ? {
-                                                            icon: {
-                                                                name: 'map-marker',
-                                                                size: label.fontSize
-                                                            }
-                                                        } : {})}
-                                                        text={label.text}
-                                                        numberOfLines={1}
-                                                        style={{
-                                                            fontSize: label.fontSize,
-                                                            maxWidth: label.width
-                                                                - (label.type === 'address' ? label.fontSize : 0)
-                                                        }}
-                                                    />
-                                                )}
-                                        </Animated.View>
-                                    </PinchGestureHandler>
-                                </PanGestureHandler>
-                            ))} 
-                            <PanGestureHandler
-                                enabled={enableGesture}
-                                minPointers={2}
-                                onHandlerStateChange={_onTranslateStateChange}
-                                onGestureEvent={_onTranslateHandler}
+                            <PinchGestureHandler
+                                onGestureEvent={e => {
+                                    _onTextLabelZoomHandler(labelIndex, e)
+                                }}
+                                onHandlerStateChange={e => {
+                                    _onTextLabelZoomChangeState(labelIndex, e)
+                                }}
                             >
-                                <RotationGestureHandler
-                                    enabled={enableGesture}
-                                    onHandlerStateChange={_onRotateStateChange}
-                                    ref={_rotationRefList[index]}
-                                    simultaneousHandlers={_pinchRefList[index]}
-                                    onGestureEvent={_onRotateHandler}>
-                                    <PinchGestureHandler
-                                        enabled={enableGesture}
-                                        onHandlerStateChange={_onZoomStateChange}
-                                        ref={_pinchRefList[index]}
-                                        simultaneousHandlers={_rotationRefList[index]}
-                                        onGestureEvent={_onZoomHandler}>
-                                            <Image
-                                                resizeMode="contain"
-                                                style={{
-                                                    width: '100%',
-                                                    height: "100%"
-                                                }}
-                                                source={{
-                                                  uri: photo.uri
-                                                }} />
-                                    </PinchGestureHandler>
-                                </RotationGestureHandler>
-                            </PanGestureHandler>
-                        </ImageBackground>
+                                <Animated.View style={{
+                                    zIndex: txtLabel.zIndex,
+                                    backgroundColor: txtLabel.textBg ? txtLabel.color : 'rgba(0,0,0,0)',
+                                    padding: 5,
+                                    borderRadius: 5,
+                                    position: 'absolute',
+                                    top: 0,
+                                    left: 0,
+                                    transform: [{
+                                        translateX: txtLabel.animX,
+                                    },
+                                    {
+                                        translateY: txtLabel.animY
+                                    },
+                                    {
+                                        scale: txtLabel.animRatio
+                                    }
+                                    ]
+                                }}>
+                                  {/* <TapGestureHandler waitFor={doubleTapRef} onHandlerStateChange={()=>{}}>
+                                      <TapGestureHandler ref={doubleTapRef}
+                                        onHandlerStateChange={(e)=>_onDoubleTap(labelIndex, e)} numberOfTaps={2}> */}
+                                        <DoubleTap onDoubleTap={(e)=>_onDoubleTap(labelIndex, e)}>
+                                          <Text
+                                            style={{
+                                                width: txtLabel.width,
+                                                height: txtLabel.height + 5,
+                                                textAlign: txtLabel.textAlign === 'flex-start' ? 'left' : (
+                                                    txtLabel.textAlign === 'flex-end' ? 'right' : 'center'
+                                                ),
+                                                fontSize: 20,
+                                                fontWeight: '800',
+                                                color: txtLabel.textBg ? '#000' : txtLabel.color,
+
+                                            }}
+                                          >
+                                              {txtLabel.text}
+                                          </Text>
+                                        </DoubleTap>
+                                      {/* </TapGestureHandler>
+                                    
+                                  </TapGestureHandler> */}
+                                </Animated.View>
+                            </PinchGestureHandler>
+                        </PanGestureHandler>
                     ))}
+                    {photo.labels.map((label, labelIndex) => (
+                        <PanGestureHandler
+                            key={labelIndex}
+                            onGestureEvent={e => {
+                                _onLabelTranslateHandler(labelIndex, e)
+                            }}
+                            onHandlerStateChange={e => {
+                                _onLabelTranslateChangeState(labelIndex, e)
+                            }}
+                        >
+
+                            <PinchGestureHandler
+                                onGestureEvent={e => {
+                                    _onLabelZoomHandler(labelIndex, e)
+                                }}
+                                onHandlerStateChange={e => {
+                                    _onLabelZoomChangeState(labelIndex, e)
+                                }}
+                            >
+                                <Animated.View style={{
+                                    zIndex: label.zIndex,
+                                    backgroundColor: label.type === 'emoji' ? 'rgba(0,0,0,0)' : '#fff',
+                                    borderRadius: 5,
+                                    position: 'absolute',
+                                    width: label.width,
+                                    height: label.height,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    top: 0,
+                                    left: 0,
+                                    transform: [
+                                        {
+                                            translateX: label.animX,
+                                        },
+                                        {
+                                            translateY: label.animY
+                                        },
+                                        {
+                                            scale: label.animRatio
+                                        }
+                                    ]
+                                }}>
+                                  {label.type === 'emoji' ? (
+                                      <Text style={{
+                                          fontSize: label.fontSize,
+                                      }}>
+                                          {label.text}
+                                      </Text>
+                                  ) : (
+                                      <TextGradient
+                                          {...(label.type === 'address' ? {
+                                              icon: {
+                                                  name: 'map-marker',
+                                                  size: label.fontSize
+                                              }
+                                          } : {})}
+                                          text={label.text}
+                                          numberOfLines={1}
+                                          style={{
+                                              fontSize: label.fontSize,
+                                              maxWidth: label.width
+                                                  - (label.type === 'address' ? label.fontSize : 0)
+                                          }}
+                                      />
+                                    )}
+                                </Animated.View>
+                            </PinchGestureHandler>
+                        </PanGestureHandler>
+                    ))} 
+                    <PanGestureHandler
+                        enabled={enableGesture}
+                        minPointers={2}
+                        onHandlerStateChange={_onTranslateStateChange}
+                        onGestureEvent={_onTranslateHandler}
+                    >
+                        <RotationGestureHandler
+                            enabled={enableGesture}
+                            onHandlerStateChange={_onRotateStateChange}
+                            ref={_rotationRefList[index]}
+                            simultaneousHandlers={_pinchRefList[index]}
+                            onGestureEvent={_onRotateHandler}>
+                            <PinchGestureHandler
+                                enabled={enableGesture}
+                                onHandlerStateChange={_onZoomStateChange}
+                                ref={_pinchRefList[index]}
+                                simultaneousHandlers={_rotationRefList[index]}
+                                onGestureEvent={_onZoomHandler}>
+                                  <Image
+                                      resizeMode="contain"
+                                      style={{
+                                          width: '100%',
+                                          height: "100%"
+                                      }}
+                                      source={{
+                                        uri: photo.uri
+                                      }} />
+                            </PinchGestureHandler>
+                        </RotationGestureHandler>
+                    </PanGestureHandler>
+                </ImageBackground>
+            ))}
           </ScrollView>
           {draggingLabel &&
             <View style={{
@@ -721,90 +652,8 @@ const _onLabelTranslateChangeState = (index,
                 </Animated.View>
             </View>
           }
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={modalVisible}
-            onRequestClose={() => {
-              setModalVisible(!modalVisible);
-            }}
-          >
-            <BlurView
-                style={{
-                    width: "100%",
-                    height: '100%',
-                }}
-                blurType="dark"
-                blurAmount={5}
-                reducedTransparencyFallbackColor="white"
-            >
-                  <View style={styles.labelOptionsTitleWrapper}>
-                      <View style={styles.dragBar} />
-                      <View style={styles.labelOptionsSearchWrapper}>
-                          <View style={styles.searchIcon}>
-                              <Icon name="magnify" size={24} color="#fff" />
-                          </View>
-                          <TextInput
-                              style={styles.labelOptionsSearch}
-                              placeholder="Search"
-                              placeholderTextColor="#fff"
-                          />
-                      </View>
-                  </View>
-                  <ScrollView
-                      contentContainerStyle={{
-                          flexDirection: 'row',
-                          flexWrap: 'wrap'
-                      }}
-                      bounces={false}
-                      showsVerticalScrollIndicator={true}
-                  >
-                      <TouchableOpacity
-                          onPress={() => _onSelectLabel('address')}
-                          style={styles.labelItemWrapper}>
-                          <View style={styles.mainLabel}>
-                              <TextGradient
-                                  icon={{
-                                      name: 'map-marker',
-                                      size: 16
-                                  }}
-                                  text="LOCATION" style={{
-                                      fontSize: 16
-                                  }} />
-                          </View>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                          onPress={() => _onSelectLabel('people')}
-                          style={styles.labelItemWrapper}>
-                          <View style={styles.mainLabel}>
-                              <TextGradient text="@MENTION" style={{
-                                  fontSize: 16
-                              }} />
-                          </View>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                          onPress={() => _onSelectLabel('hashtag')}
-                          style={styles.labelItemWrapper}>
-                          <View style={styles.mainLabel}>
-                              <TextGradient text="#HASHTAG" style={{
-                                  fontSize: 16
-                              }} />
-                          </View>
-                      </TouchableOpacity>
-                      {emojiList.map((emoji, index) => (
-                          <TouchableOpacity
-                              key={index}
-                              onPress={() => _onSelectLabel('emoji', emoji)}
-                              style={styles.labelItemWrapper}>
-                              <Text style={{
-                                  fontSize: 40
-                              }}>{emoji}</Text>
-                          </TouchableOpacity>
-                      ))}
 
-                  </ScrollView>
-              </BlurView>
-          </Modal>
+          <ListTemplate modalVisible={modalVisible} _onSelectLabel={_onSelectLabel} />
         </View>
     </PanGestureHandler>
   )
@@ -842,93 +691,5 @@ const styles = StyleSheet.create({
     height: 44,
     justifyContent: 'center',
     alignItems: 'center'
-  },
-  labelOptionsTitleWrapper: {
-    backgroundColor: 'rgba(0,0,0,0.8)',
-    marginTop: 200,
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  dragBar: {
-    marginTop: 15,
-    width: 50,
-    height: 3,
-    borderRadius: 1,
-    backgroundColor: '#fff'
-  },
-  labelOptionsSearchWrapper: {
-    height: 44,
-    flexDirection: 'row',
-    width: SCREEN_WIDTH - 30,
-    marginHorizontal: 15,
-    borderBottomColor: '#fff',
-    borderBottomWidth: 1,
-    alignItems: 'center'
-  },
-  labelOptionsSearch: {
-    fontSize: 16,
-    color: '#fff',
-    width: SCREEN_WIDTH - 30 - 44,
-  },
-  searchIcon: {
-    width: 44,
-    height: 44,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  labelItemWrapper: {
-    width: SCREEN_WIDTH / 3,
-    height: SCREEN_WIDTH / 3,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  mainLabel: {
-    flexDirection: 'row',
-    paddingHorizontal: 10,
-    height: 36,
-    backgroundColor: "#fff",
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 5
-  },
-  textToolWrapper: {
-    position: 'absolute',
-    zIndex: 1,
-    top: 0,
-    left: 0,
-    height: SCREEN_HEIGHT,
-    width: SCREEN_WIDTH,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: "space-between"
-  },
-  textTopOptions: {
-    flexDirection: 'row',
-    height: 50 + STATUS_BAR_HEIGHT,
-    paddingTop: STATUS_BAR_HEIGHT,
-    alignItems: 'center',
-    justifyContent: 'space-between'
-  },
-  textBottompOptions: {
-    minHeight: 36,
-    marginVertical: 10,
-    alignItems: 'center',
-    flexDirection: 'row'
-  },
-  circleSelectedColor: {
-      width: 36,
-      marginHorizontal: 5,
-      height: 36,
-      borderRadius: 36,
-      justifyContent: 'center',
-      alignItems: 'center'
-  },
-  circleTextColor: {
-      height: 24,
-      width: 24,
-      borderRadius: 24,
-      borderColor: '#fff',
-      borderWidth: 2,
-      marginHorizontal: 5
-  },
+  }
 })
