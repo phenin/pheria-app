@@ -1,10 +1,9 @@
-import React, { useRef, useState, useEffect } from 'react'
-import { Image, StyleSheet, SafeAreaView, Text, TouchableOpacity, KeyboardAvoidingView, View, Animated, FlatList, ScrollView } from 'react-native'
-import { PanGestureHandler, TextInput } from 'react-native-gesture-handler'
+import React, { useState, useEffect } from 'react'
+import { Image, StyleSheet, Text, TouchableOpacity, KeyboardAvoidingView, View, FlatList } from 'react-native'
+import { TextInput } from 'react-native-gesture-handler'
 import CameraRoll from '@react-native-community/cameraroll'
-import { goBack } from '../../navigations/rootNavigation'
+import { goBack, navigate } from '../../navigations/rootNavigation'
 import { SCREEN_HEIGHT, SCREEN_WIDTH, STATUS_BAR_HEIGHT } from '../../constants'
-import { alignItems, width } from 'styled-system'
 import { useIsFocused } from '@react-navigation/native'
 
 
@@ -16,6 +15,8 @@ const StoryTaker = ({ route }) => {
   const [selectedGroupIndex, setSelectedGroupIndex] = useState(-1)
   const [selectedIndex, setSelectedIndex] = useState(-1)
   const [photos, setPhotos] = useState([])
+  const [photoSelect, setPhotoSelect] = useState(null)
+  const [disable, setDisable] = useState(true)
 
   useEffect(() => {
     if (focused) {
@@ -51,11 +52,29 @@ const StoryTaker = ({ route }) => {
 
   const _onSelectImage = (index) => {
     setSelectedIndex(index)
+    const image = {
+        width: photos[index].node.image.width,
+        height: photos[index].node.image.height,
+        uri: photos[index].node.image.uri,
+        base64: '',
+        extension: photos[index].node.image.filename.split('.').pop() || 'jpg'
+    }
+    setPhotoSelect(image)
+    if(text !== '' && text)  setDisable(false)
+  }
+
+  const _onChangeText = (e) =>{
+    setText(e)
+    if(photoSelect)  setDisable(false)
   }
 
   const _onDoneText = () => {
-
-  }
+    if(disable) return
+    navigate('StoryCreate', {
+      avatarStory: photoSelect,
+      title: text
+    })
+  } 
 
   return (
     <>
@@ -87,7 +106,7 @@ const StoryTaker = ({ route }) => {
                   }}>
                   <Text style={{
                       fontWeight: 'bold',
-                      color: '#fff',
+                      color: disable ?'#666':'#fff',
                       fontSize: 18
                   }}>Tiếp</Text>
               </TouchableOpacity>
@@ -107,7 +126,7 @@ const StoryTaker = ({ route }) => {
                       autoFocus={true}
                       autoCapitalize="none"
                       value={text}
-                      onChangeText={setText}
+                      onChangeText={(e)=>_onChangeText(e)}
                       style={{
                           textAlign: 'center',
                           alignContent: 'center',
