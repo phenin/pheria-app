@@ -65,7 +65,7 @@ const StoryText = ({
                             textAlign: textAlign === 'flex-start' ? 'left' : (
                                 textAlign === 'flex-end' ? 'right' : 'center'
                             ),
-                            fontSize: 40,
+                            fontSize: 20,
                             fontWeight: '800',
                             color: textBg ? '#000' : textColor,
                             maxWidth: SCREEN_WIDTH - 30,
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
     zIndex: 1,
     top: 0,
     left: 0,
-    height: SCREEN_HEIGHT,
+    height: SCREEN_HEIGHT - STATUS_BAR_HEIGHT - 50,
     width: SCREEN_WIDTH,
     backgroundColor: 'rgba(0,0,0,0.5)',
     justifyContent: "space-between"

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { View, ScrollView, StyleSheet, Keyboard, TouchableOpacity, 
   Animated, Text, ImageBackground, Image } from 'react-native'
-import { PanGestureHandler, PinchGestureHandler, State, RotationGestureHandler, TapGestureHandler } from 'react-native-gesture-handler'
+import { PanGestureHandler, PinchGestureHandler, State, RotationGestureHandler } from 'react-native-gesture-handler'
 import { SCREEN_HEIGHT, SCREEN_WIDTH, STATUS_BAR_HEIGHT } from '../../constants'
 import { goBack } from '../../navigations/rootNavigation'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -67,36 +67,26 @@ const StoryCreate = ({ route }) => {
 
   const _onLabelOptionsContainerTranslateChangeState = ({ nativeEvent: { translationY, state } }) => {
     if (state === State.END) {
-      if (ref.current.labelContainerY + translationY < -(SCREEN_HEIGHT - STATUS_BAR_HEIGHT - 50) / 2) {
-          Animated.timing(_labeLWrapperYAnim, {
-              duration: 250,
-              toValue: -(SCREEN_HEIGHT - STATUS_BAR_HEIGHT - 50),
-              useNativeDriver: true
-          }).start()
-          ref.current.labelContainerY = -(SCREEN_HEIGHT - STATUS_BAR_HEIGHT - 50)
-      } else {
-          Animated.timing(_labeLWrapperYAnim, {
-              duration: 250,
-              toValue: 0,
-              useNativeDriver: true
-          }).start(() => setShowLabelOptions(false))
-          ref.current.labelContainerY = 0
-          Keyboard.dismiss()
-      }
+      setShowLabelOptions(false)
+      // console.log(ref)
     }
   }
 
-  const _onLabelOptionsContainerTranslate = ({ nativeEvent: { translationY } }) => {
+  const _onLabelOptionsContainerTranslate = ({ nativeEvent: { translationX, translationY } }) => {
     if (mode !== 1) return;
-    ref.current.labelContainerY = -(SCREEN_HEIGHT - STATUS_BAR_HEIGHT - translationY)
-    if (ref.current.labelContainerY + translationY < -(SCREEN_HEIGHT - STATUS_BAR_HEIGHT - 50) || ref.current.labelContainerY + translationY > 0) {
-      console.log('bbbbbb')
-    };
-    // if (!showLabelOptions) setShowLabelOptions(true)
-    _labeLWrapperYAnim.setValue(ref.current.labelContainerY + translationY)
+    if (!showLabelOptions) setShowLabelOptions(true)
+
+    
+    ref.current.labelContainerY = ref.current.labelContainerY -= translationY
+    ref.current.processImages[0].texts.forEach((text, index) => {
+      text.animY = new Animated.Value(text.y + translationY / 10)
+      text.y = text.y + translationY /10
+      console.log(translationY % 10)
+    })
   }
 
   const _onEndDrag = ({ nativeEvent: {contentOffset: { x }} }) => {
+    console.log('_onEndDrag')
     const tabIndex = Math.floor(x / SCREEN_WIDTH)
     const percentOffset = (x - tabIndex * SCREEN_WIDTH) / SCREEN_WIDTH
     let nextTabIndex = 0
@@ -114,11 +104,13 @@ const StoryCreate = ({ route }) => {
   }
 
   const _onText = () => {
+    console.log('_onText')
     setMode(2)
     refreshTextState()
   }
 
   const _showLabelOptionsContainer = () => {
+    console.log('_showLabelOptionsContainer')
     setModalVisible(true)
   }
 
@@ -131,6 +123,7 @@ const StoryCreate = ({ route }) => {
   }
 
   const _onSelectedEmoji = (emoji) => {
+    console.log('_onSelectedEmoji')
     const textZindexList = ref.current.processImages[currentImageIndex].texts.map(x => x.zIndex)
     const labelZindexList = ref.current.processImages[currentImageIndex].labels.map(x => x.zIndex)
     let maxlabelZindex = Math.max(...textZindexList.concat(labelZindexList)) || 0
@@ -154,12 +147,14 @@ const StoryCreate = ({ route }) => {
   }
 
   const _onChangeTextAlign = () => {
+    console.log('_onChangeTextAlign')
     if (textAlign === 'center') setTextAlign('flex-start')
     else if (textAlign === 'flex-start') setTextAlign('flex-end')
     else if (textAlign === 'flex-end') setTextAlign('center')
   }
 
   const _onDoneText = () => {
+    console.log('_onDoneText')
     if (text.length > 0) {
         const offsetX = textAlign === 'center' ? (SCREEN_WIDTH - ref.current.textWidth) / 2 : (
             textAlign === 'flex-start' ? 15 : SCREEN_WIDTH - ref.current.textWidth - 15
@@ -193,6 +188,7 @@ const StoryCreate = ({ route }) => {
   }
 
   const _onSelectLabel = (type, value) => {
+    console.log('_onSelectLabel')
     switch (type) {
       case 'address':
           // navigate('LocationChooser', {
@@ -220,7 +216,6 @@ const StoryCreate = ({ route }) => {
         translationX, translationY
     } }
   ) => {
-
     if (!draggingLabel) setDraggingLabel(true)
     const label = ref.current.processImages[currentImageIndex].texts[index]
 
@@ -266,6 +261,7 @@ const StoryCreate = ({ route }) => {
         scale
     } }
   ) => {
+    console.log('_onTextLabelZoomHandler')
     const label = ref.current.processImages[currentImageIndex].texts[index]
     label.animRatio.setValue(label.ratio * scale)
   }
@@ -274,6 +270,7 @@ const StoryCreate = ({ route }) => {
         scale, state
     } }
   ) => {
+    console.log('_onTextLabelZoomChangeState')
     if (state === State.END) {
         const label = ref.current.processImages[currentImageIndex].texts[index]
         label.ratio *= scale
@@ -283,8 +280,7 @@ const StoryCreate = ({ route }) => {
     { nativeEvent: {
         translationX, translationY
     } }
-) => {
-
+  ) => {
     if (!draggingLabel) setDraggingLabel(true)
     const label = ref.current.processImages[currentImageIndex].labels[index]
 
@@ -305,14 +301,15 @@ const StoryCreate = ({ route }) => {
     }
     label.animX.setValue((label.x + translationX) * label.ratio)
     label.animY.setValue((label.y + translationY) * label.ratio)
-}
-const _onLabelTranslateChangeState = (index,
+  }
+  const _onLabelTranslateChangeState = (index,
     { nativeEvent: {
         translationX, translationY, state
     } }
-) => {
+  ) => {
     setDraggingLabel(false)
     if (state === State.END) {
+      
         const label = ref.current.processImages[currentImageIndex].labels[index]
         label.x += translationX
         label.y += translationY
@@ -331,6 +328,7 @@ const _onLabelTranslateChangeState = (index,
         scale
     } }
   ) => {
+    console.log('_onLabelZoomHandler')
     const label = ref.current.processImages[currentImageIndex].labels[index]
     label.animRatio.setValue(label.ratio * scale)
   }
@@ -339,6 +337,7 @@ const _onLabelTranslateChangeState = (index,
         scale, state
     } }
   ) => {
+    console.log('_onLabelZoomChangeState')
     if (state === State.END) {
         const label = ref.current.processImages[currentImageIndex].labels[index]
         label.ratio *= scale
@@ -348,6 +347,7 @@ const _onLabelTranslateChangeState = (index,
     translationX,
     translationY,
   } }) => {
+    console.log('_onTranslateHandler')
     _translateXAnimList[currentImageIndex].setValue(
         ref.current.processImages[currentImageIndex].translateX + translationX
     )
@@ -360,6 +360,7 @@ const _onLabelTranslateChangeState = (index,
     translationY,
     state,
   } }) => {
+    console.log('_onTranslateStateChange')
     if (state === State.END) {
         ref.current.processImages[currentImageIndex].translateX += translationX
         ref.current.processImages[currentImageIndex].translateY += translationY
@@ -368,12 +369,14 @@ const _onLabelTranslateChangeState = (index,
   const _onZoomHandler = ({ nativeEvent: {
     scale
   } }) => {
+    console.log('_onZoomHandler')
     _scaleAnimList[currentImageIndex].setValue(
         ref.current.processImages[currentImageIndex].ratio * scale)
   }
   const _onZoomStateChange = ({ nativeEvent: {
     scale, state
   } }) => {
+    console.log('_onZoomStateChange')
     if (state === State.END) {
         ref.current.processImages[currentImageIndex].ratio *= scale
 
@@ -382,23 +385,27 @@ const _onLabelTranslateChangeState = (index,
   const _onRotateHandler = ({ nativeEvent: {
     rotation
   } }) => {
+    console.log('_onRotateHandler')
     _rotateAnimList[currentImageIndex].setValue(
         ref.current.processImages[currentImageIndex].rotateDeg + rotation)
   }
   const _onRotateStateChange = ({ nativeEvent: {
       rotation, state
   } }) => {
+    console.log('_onRotateStateChange')
       if (state === State.END) {
           ref.current.processImages[currentImageIndex].rotateDeg += rotation
       }
   }
 
   const _onContentSizeChange = (e) =>{
+    console.log('_onContentSizeChange')
     ref.current.textHeight = e.nativeEvent.contentSize.height
     ref.current.textWidth = e.nativeEvent.contentSize.width
   }
 
   const _onDoubleTap = (index) => {
+    console.log('_onDoubleTap')
       const label = ref.current.processImages[currentImageIndex].texts[index]
       setText(label.text)
       setTextAlign(label.align)
@@ -420,7 +427,7 @@ const _onLabelTranslateChangeState = (index,
                     onPress={goBack}
                     style={styles.btnTopOption}>
                     <Text style={{
-                        fontSize: 30,
+                        fontSize: 20,
                         color: '#fff',
                     }}>✕</Text>
                 </TouchableOpacity>
@@ -494,29 +501,25 @@ const _onLabelTranslateChangeState = (index,
                                     }
                                     ]
                                 }}>
-                                  {/* <TapGestureHandler waitFor={doubleTapRef} onHandlerStateChange={()=>{}}>
-                                      <TapGestureHandler ref={doubleTapRef}
-                                        onHandlerStateChange={(e)=>_onDoubleTap(labelIndex, e)} numberOfTaps={2}> */}
-                                        <DoubleTap onDoubleTap={(e)=>_onDoubleTap(labelIndex, e)}>
-                                          <Text
-                                            style={{
-                                                width: txtLabel.width,
-                                                height: txtLabel.height + 5,
-                                                textAlign: txtLabel.textAlign === 'flex-start' ? 'left' : (
-                                                    txtLabel.textAlign === 'flex-end' ? 'right' : 'center'
-                                                ),
-                                                fontSize: 20,
-                                                fontWeight: '800',
-                                                color: txtLabel.textBg ? '#000' : txtLabel.color,
+                                  
+                                  <DoubleTap onDoubleTap={(e)=>_onDoubleTap(labelIndex, e)}>
+                                    <Text
+                                      style={{
+                                          width: txtLabel.width,
+                                          height: txtLabel.height + 5,
+                                          textAlign: txtLabel.textAlign === 'flex-start' ? 'left' : (
+                                              txtLabel.textAlign === 'flex-end' ? 'right' : 'center'
+                                          ),
+                                          fontSize: 20,
+                                          fontWeight: '800',
+                                          color: txtLabel.textBg ? '#000' : txtLabel.color,
 
-                                            }}
-                                          >
-                                              {txtLabel.text}
-                                          </Text>
-                                        </DoubleTap>
-                                      {/* </TapGestureHandler>
-                                    
-                                  </TapGestureHandler> */}
+                                      }}
+                                    >
+                                        {txtLabel.text}
+                                    </Text>
+                                  </DoubleTap>
+                                      
                                 </Animated.View>
                             </PinchGestureHandler>
                         </PanGestureHandler>
