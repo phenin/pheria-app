@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { View, ScrollView, StyleSheet, Keyboard, TouchableOpacity, 
   Animated, Text, ImageBackground, Image } from 'react-native'
-import { PanGestureHandler, PinchGestureHandler, State, RotationGestureHandler } from 'react-native-gesture-handler'
+import { PanGestureHandler, PinchGestureHandler, State, RotationGestureHandler, LongPressGestureHandler } from 'react-native-gesture-handler'
 import { SCREEN_HEIGHT, SCREEN_WIDTH, STATUS_BAR_HEIGHT } from '../../constants'
 import { goBack } from '../../navigations/rootNavigation'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -25,6 +25,10 @@ const StoryCreate = ({ route }) => {
   const [textAlign, setTextAlign] = useState('center')
   const [textBg, setTextBg] = useState(false)
   const [textEdit, setTextEdit] = useState(null)
+  const [scroll, setScroll] = useState({
+    height: SCREEN_HEIGHT - STATUS_BAR_HEIGHT - 100,
+    top: 0
+  })
 
   const _hScrollRef = useRef(null)
 
@@ -67,6 +71,7 @@ const StoryCreate = ({ route }) => {
 
   const _onLabelOptionsContainerTranslateChangeState = ({ nativeEvent: { translationY, state } }) => {
     if (state === State.END) {
+      
       setShowLabelOptions(false)
       // console.log(ref)
     }
@@ -75,18 +80,15 @@ const StoryCreate = ({ route }) => {
   const _onLabelOptionsContainerTranslate = ({ nativeEvent: { translationX, translationY } }) => {
     if (mode !== 1) return;
     if (!showLabelOptions) setShowLabelOptions(true)
-
     
-    ref.current.labelContainerY = ref.current.labelContainerY -= translationY
-    ref.current.processImages[0].texts.forEach((text, index) => {
-      text.animY = new Animated.Value(text.y + translationY / 10)
-      text.y = text.y + translationY /10
-      console.log(translationY % 10)
-    })
+    // ref.current.labelContainerY = ref.current.labelContainerY -= translationY
+    // ref.current.processImages[0].texts.forEach((text, index) => {
+    //   text.animY = new Animated.Value(text.y + translationY / 10)
+    //   text.y = text.y + translationY /10
+    // })
   }
 
   const _onEndDrag = ({ nativeEvent: {contentOffset: { x }} }) => {
-    console.log('_onEndDrag')
     const tabIndex = Math.floor(x / SCREEN_WIDTH)
     const percentOffset = (x - tabIndex * SCREEN_WIDTH) / SCREEN_WIDTH
     let nextTabIndex = 0
@@ -104,13 +106,11 @@ const StoryCreate = ({ route }) => {
   }
 
   const _onText = () => {
-    console.log('_onText')
     setMode(2)
     refreshTextState()
   }
 
   const _showLabelOptionsContainer = () => {
-    console.log('_showLabelOptionsContainer')
     setModalVisible(true)
   }
 
@@ -123,7 +123,6 @@ const StoryCreate = ({ route }) => {
   }
 
   const _onSelectedEmoji = (emoji) => {
-    console.log('_onSelectedEmoji')
     const textZindexList = ref.current.processImages[currentImageIndex].texts.map(x => x.zIndex)
     const labelZindexList = ref.current.processImages[currentImageIndex].labels.map(x => x.zIndex)
     let maxlabelZindex = Math.max(...textZindexList.concat(labelZindexList)) || 0
@@ -147,14 +146,12 @@ const StoryCreate = ({ route }) => {
   }
 
   const _onChangeTextAlign = () => {
-    console.log('_onChangeTextAlign')
     if (textAlign === 'center') setTextAlign('flex-start')
     else if (textAlign === 'flex-start') setTextAlign('flex-end')
     else if (textAlign === 'flex-end') setTextAlign('center')
   }
 
   const _onDoneText = () => {
-    console.log('_onDoneText')
     if (text.length > 0) {
         const offsetX = textAlign === 'center' ? (SCREEN_WIDTH - ref.current.textWidth) / 2 : (
             textAlign === 'flex-start' ? 15 : SCREEN_WIDTH - ref.current.textWidth - 15
@@ -181,14 +178,20 @@ const StoryCreate = ({ route }) => {
         }
         
         ref.current.processImages[currentImageIndex].texts.push(storyText)
-        
-        
+
+        const newHeight = (SCREEN_HEIGHT - ref.current.textHeight) / 2 + ref.current.textHeight
+        if(newHeight > SCREEN_HEIGHT){
+          SCREEN_HEIGHT - STATUS_BAR_HEIGHT - 100
+          setScroll({
+            ...scroll,
+            height: (SCREEN_HEIGHT / newHeight) * (SCREEN_HEIGHT - STATUS_BAR_HEIGHT - 100)
+          })
+        }
     }
     setMode(1)
   }
 
   const _onSelectLabel = (type, value) => {
-    console.log('_onSelectLabel')
     switch (type) {
       case 'address':
           // navigate('LocationChooser', {
@@ -254,14 +257,23 @@ const StoryCreate = ({ route }) => {
             setState({})
         }
         ref.current.zoomTrashCan = false
+
+        const newHeight = label.y + label.height
+        if(newHeight > SCREEN_HEIGHT){
+          SCREEN_HEIGHT - STATUS_BAR_HEIGHT - 100
+          setScroll({
+            ...scroll,
+            height: (SCREEN_HEIGHT / newHeight) * (SCREEN_HEIGHT - STATUS_BAR_HEIGHT - 100)
+          })
+        }
     }
+
   }
   const _onTextLabelZoomHandler = (index,
     { nativeEvent: {
         scale
     } }
   ) => {
-    console.log('_onTextLabelZoomHandler')
     const label = ref.current.processImages[currentImageIndex].texts[index]
     label.animRatio.setValue(label.ratio * scale)
   }
@@ -270,7 +282,6 @@ const StoryCreate = ({ route }) => {
         scale, state
     } }
   ) => {
-    console.log('_onTextLabelZoomChangeState')
     if (state === State.END) {
         const label = ref.current.processImages[currentImageIndex].texts[index]
         label.ratio *= scale
@@ -328,7 +339,6 @@ const StoryCreate = ({ route }) => {
         scale
     } }
   ) => {
-    console.log('_onLabelZoomHandler')
     const label = ref.current.processImages[currentImageIndex].labels[index]
     label.animRatio.setValue(label.ratio * scale)
   }
@@ -337,7 +347,6 @@ const StoryCreate = ({ route }) => {
         scale, state
     } }
   ) => {
-    console.log('_onLabelZoomChangeState')
     if (state === State.END) {
         const label = ref.current.processImages[currentImageIndex].labels[index]
         label.ratio *= scale
@@ -347,7 +356,6 @@ const StoryCreate = ({ route }) => {
     translationX,
     translationY,
   } }) => {
-    console.log('_onTranslateHandler')
     _translateXAnimList[currentImageIndex].setValue(
         ref.current.processImages[currentImageIndex].translateX + translationX
     )
@@ -360,7 +368,6 @@ const StoryCreate = ({ route }) => {
     translationY,
     state,
   } }) => {
-    console.log('_onTranslateStateChange')
     if (state === State.END) {
         ref.current.processImages[currentImageIndex].translateX += translationX
         ref.current.processImages[currentImageIndex].translateY += translationY
@@ -369,14 +376,12 @@ const StoryCreate = ({ route }) => {
   const _onZoomHandler = ({ nativeEvent: {
     scale
   } }) => {
-    console.log('_onZoomHandler')
     _scaleAnimList[currentImageIndex].setValue(
         ref.current.processImages[currentImageIndex].ratio * scale)
   }
   const _onZoomStateChange = ({ nativeEvent: {
     scale, state
   } }) => {
-    console.log('_onZoomStateChange')
     if (state === State.END) {
         ref.current.processImages[currentImageIndex].ratio *= scale
 
@@ -385,27 +390,23 @@ const StoryCreate = ({ route }) => {
   const _onRotateHandler = ({ nativeEvent: {
     rotation
   } }) => {
-    console.log('_onRotateHandler')
     _rotateAnimList[currentImageIndex].setValue(
         ref.current.processImages[currentImageIndex].rotateDeg + rotation)
   }
   const _onRotateStateChange = ({ nativeEvent: {
       rotation, state
   } }) => {
-    console.log('_onRotateStateChange')
       if (state === State.END) {
           ref.current.processImages[currentImageIndex].rotateDeg += rotation
       }
   }
 
   const _onContentSizeChange = (e) =>{
-    console.log('_onContentSizeChange')
     ref.current.textHeight = e.nativeEvent.contentSize.height
     ref.current.textWidth = e.nativeEvent.contentSize.width
   }
 
   const _onDoubleTap = (index) => {
-    console.log('_onDoubleTap')
       const label = ref.current.processImages[currentImageIndex].texts[index]
       setText(label.text)
       setTextAlign(label.align)
@@ -414,6 +415,25 @@ const StoryCreate = ({ route }) => {
       setTextEdit(label)
       setMode(2)
       ref.current.processImages[currentImageIndex].texts.splice(index, 1)
+  }
+
+  const _onScroll = ({ nativeEvent: { translationY } }) => {
+    setShowLabelOptions(true)
+    ref.current.labelContainerY = ref.current.labelContainerY -= translationY
+    ref.current.processImages[0].texts.forEach((text) => {
+      text.animY = new Animated.Value(text.y + translationY / 10)
+      text.y = text.y + translationY /10
+    })
+    setScroll({
+      ...scroll,
+      top: -translationY /10
+    })
+  }
+
+  const __onScrollStateChange = ({ nativeEvent: { translationY, state } }) => {
+    if (state === State.END) {
+      setShowLabelOptions(false)
+    }
   }
 
   return (
@@ -626,6 +646,15 @@ const StoryCreate = ({ route }) => {
                 </ImageBackground>
             ))}
           </ScrollView>
+          <View style={styles.scrollBackground}>
+            <PanGestureHandler
+              onHandlerStateChange={__onScrollStateChange}
+              onGestureEvent={_onScroll}>
+              <View style={[styles.scroll,scroll]} >
+
+              </View>
+            </PanGestureHandler>
+          </View>
           {draggingLabel &&
             <View style={{
                 position: 'absolute',
@@ -694,5 +723,21 @@ const styles = StyleSheet.create({
     height: 44,
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  scrollBackground: {
+    width: 10,
+    height: SCREEN_HEIGHT - STATUS_BAR_HEIGHT - 100,
+    backgroundColor: '#2b2b2b',
+    borderRadius: 10,
+    position: 'absolute',
+    top: STATUS_BAR_HEIGHT + 50,
+    left: 5,
+  },
+  scroll: {
+    width: 10,
+    backgroundColor: '#ffffff',
+    borderRadius: 10,
+    position: 'absolute',
+    top: STATUS_BAR_HEIGHT + 50,
   }
 })
